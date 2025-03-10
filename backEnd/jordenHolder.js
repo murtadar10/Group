@@ -10,20 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // إضافة الكلاس النشط للعنصر المحدد
             item.classList.add('active');
 
-            // إظهار القسم المقابل
-            const target = document.querySelector(item.getAttribute('data-target'));
-            document.querySelectorAll('.JordenHolder-section').forEach(sec => sec.classList.remove('active'));
-            target.classList.add('active');
-
-            // تحريك العنصر المحدد إلى أعلى القائمة
-            const nav = document.querySelector('.JordenHolder-nav');
-            const itemHeight = item.offsetHeight;
-            const itemOffsetTop = item.offsetTop;
-            const navScrollTop = itemOffsetTop - (nav.offsetHeight / 2) + (itemHeight / 2);
-
-            // حساب المسافة المطلوبة لتحريك العنصر إلى أعلى
-            nav.scrollTop = navScrollTop;
-
+           
             // عرض الوصف
             description.textContent = item.getAttribute('data-description');
             description.style.display = 'block';
@@ -34,13 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.querySelectorAll('.JordenHolder-menu-item').forEach(item => {
     item.addEventListener('click', () => {
+        // الحصول على الـ target من data-target
         const target = item.getAttribute('data-target');
+
+        // إزالة كلاس active من جميع الـ sections
         document.querySelectorAll('.JordenHolder-section').forEach(section => {
             section.classList.remove('active');
         });
+
+        // إضافة كلاس active للـ section المرتبط بالعنصر المختار
         document.querySelector(target).classList.add('active');
+        
+        // إضافة كلاس active للعنصر في القائمة لتحديد العنصر النشط
+        document.querySelectorAll('.JordenHolder-menu-item').forEach(menuItem => {
+            menuItem.classList.remove('active');
+        });
+        item.classList.add('active');
     });
 });
+
 
 
 // Placeholder for each program's script

@@ -52,8 +52,8 @@ const composition = {
     R270: "R90",
     V: "H",
     H: "V",
-    D1: "D1",
-    D2: "D2",
+    D1: "D2",
+    D2: "D1",
   },
   R270: {
     I: "R270",
