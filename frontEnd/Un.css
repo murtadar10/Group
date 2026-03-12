@@ -1,100 +1,78 @@
+/* واجهة زمرة الوحدة للموبايل */
 #Un {
     display: none;
     background-color: #333;
-    padding: 20px;
-    border-radius: 8px;
-   
+    padding: 15px;
+    border-radius: 12px;
     border: 1px solid #555;
     color: white;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    margin-top: 15px;
 }
+
+/* زر التبديل بين الزمرتين */
 #UnModeBtn {
+    width: 100%;
     font-weight: bold;
-    margin: 5%;
+    margin: 15px 0;
     background: linear-gradient(145deg, #0d3b66, #065a82);
     color: #ffffff;
-    font-size: 0.7em;
-    padding: 0.5em 1em;
-    border-radius: 50px;
+    font-size: 1em;
+    padding: 15px;
+    border-radius: 8px;
     border: 2px solid #0074e4;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    letter-spacing: 2px;
     cursor: pointer;
-    z-index: 2;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-#UnModeBtn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300%;
-    height: 300%;
-    background: radial-gradient(circle, rgba(0,255,255,0.7), rgba(0,255,255,0) 70%);
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 0.5s ease;
-    z-index: -1;
-}
-
-#UnModeBtn:hover::before {
-    transform: translate(-50%, -50%) scale(1);
-}
-
-#UnModeBtn:hover {
+#UnModeBtn:active {
     background: linear-gradient(145deg, #0074e4, #065a82);
-    color: #000000;
-    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff, 0 0 45px #00ffff;
-    border-color: #00ffff;
+    box-shadow: 0 0 15px #00ffff;
 }
-
 
 #Un input[type="number"] {
-    width: 10%;
-    padding: 10px;
-
-    margin: 10px;
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+    text-align: center;
+    margin: 10px 0;
     border: 1px solid #555;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: #444;
-    color: #e0e0e0;border: 1px solid #ccc;
+    color: #fff;
+    box-sizing: border-box;
 }
 
-
-.mo{
-    display: block;
-    font-weight: bold;
-    margin: 10px;
-}
-
- .result {
+.result {
     margin-top: 20px;
     padding: 15px;
     background-color: #222;
     border-radius: 8px;
     text-align: center;
+    overflow-wrap: break-word;
 }
 
- table {
+/* جعل حاوية الجداول قابلة للتمرير */
+#tableContainer {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 8px;
+}
+
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
- th, td {
-    padding: 10px;
+th, td {
+    padding: 12px;
     border: 1px solid #555;
     text-align: center;
+    min-width: 40px; /* لضمان عدم صغر الخلايا جداً */
 }
 
- th {
-    background-color: #009eff;
-    color: #fff;
-}
-
- td {
-    background-color: #444;
-    color: #e0e0e0;
-}
+th { background-color: #009eff; color: #fff; }
+td { background-color: #444; color: #e0e0e0; }

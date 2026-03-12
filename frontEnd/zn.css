@@ -1,127 +1,95 @@
+/* ========================================= */
+/* 1. إصلاح حاوية الزمرة المعيارية بالكامل */
+/* ========================================= */
 
 #Zngroup {
-  width: 110%;
-  font-family: 'Georgia', serif;
-    background-color: #1e1e1e;
-    color: #ccc;
-    padding: 1%;
-    border-radius: 8px;
-    max-width: 700px;
-    margin: 30px auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid #b5a57a;
-}
-.container {
-  background-color: #333;
-  padding: 1%;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  padding: 0;
+  margin: 0 auto;
+  background-color: transparent; /* إزالة الخلفية المزدوجة */
+  border: none;
+  box-shadow: none;
+  box-sizing: border-box;
 }
 
+#znContainer {
+  width: 100%;
+  background-color: #222533; /* لون خلفية أنيق */
+  padding: 20px 15px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================= */
+/* 2. إصلاح ترتيب حرف Z بجانب حقل الإدخال */
+/* ========================================= */
 
 .input-group {
+  display: grid;
+  /* تقسيم الشاشة: جزء صغير للـ Z، والباقي لحقل الإدخال */
+  grid-template-columns: auto 1fr; 
+  grid-template-areas:
+    "label label"
+    "z input"
+    "btn btn";
+  gap: 15px;
+  align-items: center;
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .input-group label {
+  grid-area: label;
   font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
+  font-size: 1.1em;
+  color: #fff;
+  text-align: center;
 }
 
-.input-group input {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #555;
-  background-color: #444;
-  color: #e0e0e0;
-  width: calc(100% - 150px);
-  margin-right: 10px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.input-group input:focus {
-  border-color: #007bff;
-}
-.Zngroup button {
-  margin-left: 5%;
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-button:active {
-  background-color: #00408d;
-  transform: translateY(0);
-}
-
-.Zngroup .results {
-  margin-top: 20px;
-}
-
-.Zngroup .results p {
-  color: white;
-  display: block;
-  border-radius: 5px;
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #444;
-  min-height: 25px;
-  text-align: left;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+.input-group span {
+  grid-area: z;
+  color: #ffd700; /* لون ذهبي لحرف Z ليتماشى مع شعار التطبيق */
+  line-height: 1;
+  margin-right: 5px;
 }
 
 #modulus {
-  background-color: #444444;
-  width: 10%;
-  border-radius: 5px;
+  grid-area: input;
+  width: 100%;
+  padding: 12px;
+  font-size: 1.5em;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #333;
   color: white;
-  border: 1px solid #ccc;
+  border: 2px solid #009eff;
+  margin: 0; /* إزالة الهوامش لمنع تمدد الحقل خارج الشاشة */
+  box-sizing: border-box;
 }
 
-#allElements {
-  margin-top: 20px;
+#modulus:focus {
+  border-color: #ffd700;
+  outline: none;
 }
 
-.can,
-.can2 {
+#ShowResultOfZn {
+  grid-area: btn;
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2em;
   margin: 0;
-  padding: 0;
 }
 
-.Zngroup .order,
-.Zngroup .subgroups {
-  margin: 0;
-  padding: 5px;
-}
-
-#allElements button {
-  background-color: #dc3545;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-}
-
-#allElements button:hover {
-  background-color: #c82333;
-}
-
-.zn p {
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  max-height: 150px;
-  overflow: auto;
+/* ========================================= */
+/* 3. تنسيق الأزرار السفلية (الحاسبة وزمرة Un) */
+/* ========================================= */
+#showCalc, #UnModeBtn {
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  box-sizing: border-box;
 }

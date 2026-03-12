@@ -119,20 +119,16 @@ function calculateZn() {
   const generators = calculateGenerators(modulus);
   const AllSubgroups = calculateAllSubgroups(modulus);
 
-  document.getElementById(
-    "groupElements"
-  ).textContent = `Z${modulus} = { ${groupelements.join(", ")} }`;
-  document.getElementById("subgroups").textContent = `Proper subgroups = { ${subgroups.map(item => `<${item}>`).join(", ")} }`;
+  document.getElementById("groupElements").innerHTML =
+    `<span class="label">Z${modulus} =</span> { ${groupelements.join(", ")} }`;
+  document.getElementById("subgroups").innerHTML =
+    `<span class="label">Proper subgroups =</span> { ${subgroups.map((item) => `<${item}>`).join(", ")} }`;
 
-  document.getElementById(
-    "AllSubgroups"
-  ).textContent = `All subgroups = { ${AllSubgroups.map(item => `<${item}>`).join(", ")} }`;
-  document.getElementById(
-    "generators"
-  ).textContent = `Generators = { ${generators.map(item => `<${item}>`).join(", ")} }`;
+  document.getElementById("AllSubgroups").innerHTML =
+    `<span class="label">All subgroups =</span> { ${AllSubgroups.map((item) => `<${item}>`).join(", ")} }`;
+  document.getElementById("generators").innerHTML =
+    `<span class="label">Generators =</span> { ${generators.map((item) => `<${item}>`).join(", ")} }`;
 }
-
-
 
 // دالة لتوليد العناصر المولدة
 function gener(ele, mod) {
@@ -166,7 +162,9 @@ function allOrders() {
 
   // حساب الأوردرات
   for (let i = 0; i < groupelements.length; i++) {
-    Arryoforders.push(`Order of ${i} =  |${i}| = ${modulus}/gcd(${i},${modulus}) = ${modulus}/${gcd(i, modulus)} =  ${modulus / gcd(i, modulus)}`);
+    Arryoforders.push(
+      `Order of ${i} =  |${i}| = ${modulus}/gcd(${i},${modulus}) = ${modulus}/${gcd(i, modulus)} =  ${modulus / gcd(i, modulus)}`,
+    );
   }
 
   // حساب الزمر الجزئية
@@ -178,7 +176,7 @@ function allOrders() {
   let can2 = document.createElement("div");
   can.classList.add("can");
   can2.classList.add("can2");
-  let ordrLaw = document.createTextNode('Order Of a = |a| = n/gcd(a,n) =>')
+  let ordrLaw = document.createTextNode("Order Of a = |a| = n/gcd(a,n) =>");
   can.appendChild(ordrLaw);
   // إنشاء العناصر للأوامر
   Arryoforders.forEach((item) => {
@@ -225,12 +223,9 @@ document.getElementById("allElements").addEventListener("click", (e) => {
   }
 });
 document.getElementById("ShowResultOfZn").addEventListener("click", (e) => {
- 
   document.getElementById("resultsOfZn").style.display = "block";
   calculateZn();
 });
-
-
 
 document.getElementById("kellyTableZn").addEventListener("click", () => {
   let table = document.getElementById("kleinTable");
@@ -241,7 +236,7 @@ document.getElementById("kellyTableZn").addEventListener("click", () => {
     table.style.display = "block";
     document.getElementById("kellyTableZn").textContent = "hiden table";
   }
-  kellyTableZn();  // استدعاء الدالة الصحيحة
+  kellyTableZn(); // استدعاء الدالة الصحيحة
 });
 
 function kellyTableZn() {
@@ -255,26 +250,26 @@ function kellyTableZn() {
   headerRow.appendChild(emptyCell);
 
   for (let i = 0; i < mods; i++) {
-      let th = document.createElement("th");
-      th.textContent = i;
-      headerRow.appendChild(th);
+    let th = document.createElement("th");
+    th.textContent = i;
+    headerRow.appendChild(th);
   }
   table.appendChild(headerRow);
 
   // إنشاء محتوى الجدول
   for (let i = 0; i < mods; i++) {
-      let row = document.createElement("tr");
-      let rowHeader = document.createElement("th");
-      rowHeader.textContent = i;
-      row.appendChild(rowHeader);
+    let row = document.createElement("tr");
+    let rowHeader = document.createElement("th");
+    rowHeader.textContent = i;
+    row.appendChild(rowHeader);
 
-      for (let j = 0; j < mods; j++) {
-          let cell = document.createElement("td");
-          cell.textContent = (i + j) % mods; // حساب العملية المعيارية
-          row.appendChild(cell);
-      }
-      table.appendChild(row);
+    for (let j = 0; j < mods; j++) {
+      let cell = document.createElement("td");
+      cell.textContent = (i + j) % mods; // حساب العملية المعيارية
+      row.appendChild(cell);
+    }
+    table.appendChild(row);
   }
 
-  console.log()
+  console.log();
 }

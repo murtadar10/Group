@@ -23,9 +23,9 @@
   </head>
 
   <body>
-    <div class="logo-container">
+    <!-- <div class="logo-container">
       <h1 class="logo">Group Theory</h1>
-    </div>
+    </div> -->
     
     <nav class="sidebar" id="sidebar">
       <ul>
@@ -59,8 +59,8 @@
     </nav>
      
     <main id="main-content">
-      <div id="front" class="front" ><h1> صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا </h1>
-      <img src="photos/front.jpg" alt=""></div>
+      <div id="front" class="front" >
+      </div>
       <section id="group-test" class="hidden">
         <h2>Group Test Interface</h2>
         <div class="isGroup" > 
@@ -225,13 +225,12 @@
         <div class="Permutation">
           <aside class="sidebar">
               <button onclick="openPage('page1')">تفاصيل الزمرة</button>
-              <button onclick="openPage('page2')">الاوردر و المعكوس</button>
+              <button onclick="openPage('page2')">تحليل التبديل (خصائص)</button>
               <button onclick="openPage('page3')">رفع التبديل الى قوى</button>
               <button onclick="openPage('page4')">اجراء عملية التركيب مع القوى</button>
           </aside>
           <main id="permoMain-content">
-            <!--تفاصيل الزمرة  p1 -->
-              <div id="page1" class="page">
+            <div id="page1" class="page">
                 <div class="Permo">
         <h1>Symmetric Group Permutations</h1>
         <label for="groupOrder">Enter the order of the symmetric group :</label><br>
@@ -243,21 +242,19 @@
     </div>
               </div>
 
-              <!-- page2 invers & Oreder -->
               <div id="page2" class="page">
-                <h1>Permutation Order and Inverse Calculator</h1>
+                <h1>Permutation Analyzer</h1>
                     <label for="permutation-input">Enter a Permutation:</label>
-                    <input type="text" id="permutation-input" placeholder="e.g., 1 2 3" />
+                    <input type="text" id="permutation-input" placeholder="e.g., (1 2)(2 3 4)" />
             
-                    <button type="button" onclick="calculateOrderInverse()">Calculate</button>
+                    <button type="button" onclick="calculateOrderInverse()">Analyze Permutation</button>
             
-                <div id="res4Or&Inv">
+                <div id="res4OrInv">
                     <h3>Results:</h3>
-                </div>
+                    </div>
 
               </div>
 
-              <!-- page 3 power  -->
               <div id="page3" class="page">
                 <div class="powerOfPermo">
                   <h1>Power calculation</h1>
@@ -272,7 +269,6 @@
               </div>
               </div>
 
-              <!-- page 4 position -->
               <div id="page4" class="page">
                 <div class="Composition">
                   <h1>Permutation Composition Calculator</h1>
@@ -281,40 +277,17 @@
         <br>
                   <div id="permutationsContainer">
                     
-                    <input
-                      type="text"
-                      id="permutation1"
-                      class="permutation-input"
-                    />
+                    <input type="text" id="permutation1" class="permutation-input" />
                     <input type="text" id="power1" class="power-input"  />
                     <span> O </span>
-                    <input
-                      type="text"
-                      id="permutation2"
-                      class="permutation-input"
-            
-                      />
-            
+                    <input type="text" id="permutation2" class="permutation-input" />
                     <input type="text" id="power2" class="power-input"  />
                     <span> O </span>
-                    <input
-                      type="text"
-                      id="permutation3"
-                      class="permutation-input"
-            
-                      />
-            
+                    <input type="text" id="permutation3" class="permutation-input" />
                     <input type="text" id="power3" class="power-input"  />
                     <span> O </span>
-                    <input
-                      type="text"
-                      id="permutation4"
-                      class="permutation-input"
-            
-                      />
-            
+                    <input type="text" id="permutation4" class="permutation-input" />
                     <input type="text" id="power4" class="power-input"  />
-            
                     
                   </div>
               <div id="resOfPow" class="resultOfComposition"></div>
@@ -323,7 +296,6 @@
                   </button>
                 
                 </div>
-            
               </div>
           </main>
       </div>
@@ -336,7 +308,7 @@
             <h1>Symmetry Group D4 Composition</h1>
             <div id="D4ShowBox" class="input-container">
               <!-- ================================ -->
-              
+              <!-- D4 -->
                <!-- ================================ -->
               <span id="D4l1" class="bracket">(</span>
               <input class="element" id="element1" type="text"   />
@@ -452,11 +424,66 @@
       </div>
   
       </section>
-
+<!-- نهاية الزمرة الدوارة وبداية التشاكل  -->
       <section id="isomorphism" class="hidden">
+        <div class="comingsoon-loading">
+  <p class="static-text">Please, wait for</p>
+  <h1 data-text="ME">ME</h1>
+</div>
+<style>
+.comingsoon-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #0000;
+  gap: 20px;
+}
+
+/* النص العلوي ثابت */
+.static-text {
+  font-size: 2em;
+  color: #4f8cff;       /* نفس لون النص المتحرك */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+/* النص المتحرك ME */
+.comingsoon-loading h1 {
+  margin: 0;
+  position: relative;
+  font-size: 8vw;
+  color: transparent;
+  -webkit-text-stroke: 2px #4f8cff;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* تأثير تعبئة النص المتحرك */
+.comingsoon-loading h1::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 0;
+  color: #4f8cff;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: fillText 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
+@keyframes fillText {
+  0%, 20%, 100% { width: 0; }
+  50%, 80% { width: 100%; }
+}
+</style>
+
       </section>
 
-      <section id="jordan-holder" class="hidden">
+
+      <!-- =====================jorden Start===================== -->
+
+<section id="jordan-holder" class="hidden">
         <h2>Jordan-Hölder Theorem</h2>
         <div class="JordenHolder">
             <nav class="JordenHolder-nav">
@@ -468,10 +495,9 @@
                 </ul>
             </nav>
         
-            
           <div class="JordenHolder-content">
-            <section id="JordenHolder-section1" class="JordenHolder-section active">
-                <!-- Compo start -->
+            
+            <div id="JordenHolder-section1" class="JordenHolder-section active">
                 <div class="jorden-container">
                     <h1>Check Composition Series</h1>
                     <label for="originalGroup">Enter original group order:</label>
@@ -479,8 +505,8 @@
             
                     <div id="Jorden-subgroups" class="jorden-input-group-container">
                         <div class="jorden-sups">
-                            <button  class="jorden-remove-btn" onclick="removeSubgroupComp(this)">x</button>
-                            <input  type="number"class="JordenHolderinput" min="1" />
+                            <button class="jorden-remove-btn" onclick="removeSubgroupComp(this)">x</button>
+                            <input type="number" class="JordenHolderinput" min="1" />
                         </div>
                     </div>
                     <button class="buttonJord" onclick="addSubgroupCompJord()">Add Subgroup</button>
@@ -488,10 +514,8 @@
                     <div class="jorden-result" id="resultComp"></div>
                     <div class="jorden-steps" id="stepsComp"></div>
                 </div>
-                 <!-- Comp End  -->
-            </section>
-            <section id="JordenHolder-section2" class="JordenHolder-section">
-                <!-- Solvble Start -->
+            </div>
+            <div id="JordenHolder-section2" class="JordenHolder-section">
                 <div class="jorden-container">
                     <h1>Check Solvability of a Group</h1>
                     <label for="groupOrderSolv">Enter order of the group:</label>
@@ -499,7 +523,7 @@
             
                     <div id="normalSubgroupsSolv" class="jorden-input-group-container">
                         <div class="jorden-sups">
-                            <button  class="jorden-remove-btn" onclick="removeSubgroupSolv(this)">x</button>
+                            <button class="jorden-remove-btn" onclick="removeSubgroupSolv(this)">x</button>
                             <input class="JordenHolderinput" type="number" placeholder="Subgroup order" min="1" />
                         </div>
                     </div>
@@ -508,14 +532,12 @@
                     <div class="jorden-resultSolv" id="resultSolv"></div>
                     <div class="jorden-stepsSolv" id="stepsSolv"></div>
                 </div>
-                <!-- Solv End -->
-            </section>
-            <section id="JordenHolder-section3" class="JordenHolder-section">
-                <!-- P-Gp start  -->
+            </div>
+            <div id="JordenHolder-section3" class="JordenHolder-section">
                 <div class="jorden-container">
                     <h1>Check p-Group</h1>
                     <label for="groupOrder">Enter order of the group:</label>
-                    <input class="JordenHolderinput" type="number" id="groupOrder" min="1" placeholder="Enter order" />
+                    <input class="JordenHolderinput" type="number" id="groupOrderToPgroup" min="1" placeholder="Enter order" />
             
                     <label for="primeNumber">Enter prime number p:</label>
                     <input class="JordenHolderinput" type="number" id="primeNumber" min="2" placeholder="Enter prime number" />
@@ -523,10 +545,8 @@
                     <button class="buttonJord" onclick="checkPGroup()">Check p-Group</button>
                     <div class="jorden-result-P" id="result-P"></div>
                 </div>
-                <!-- P-Group End -->
-            </section>
-            <section id="JordenHolder-section4" class="JordenHolder-section">
-                <!-- Sylow Start -->
+            </div>
+            <div id="JordenHolder-section4" class="JordenHolder-section">
                 <div class="jorden-container">
                     <h1>Sylow p-Subgroup Detailed Checker</h1>
                     <div class="jorden-input-group">
@@ -536,16 +556,12 @@
                     
                     <button class="buttonJord" onclick="checkSylowPSubgroups()">Check Sylow p-Subgroups</button>
                     <div class="jorden-resultSylow" id="resultSylow"></div>
-                </di>
-                <!-- Sylow End -->
-            </section>
+                </div>
+            </div>
+            </div>
         </div>
-    </div>
- 
-
+      </section>
     
-       <!-- jorden End -->
-    </section>
     </main>
     
       <p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved.EMAN</p>

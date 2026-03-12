@@ -194,7 +194,7 @@ function compose() {
   
     document.getElementById(
       "composition"
-    ).textContent = `Composition of (${element1}^${D4pow1}) o (${element2}^${D4pow2}) o (${element3}^${D4pow3}) o (${element4}^${D4pow4}) = ${finalResult}.`;
+    ).textContent = ` = ${finalResult}.`;
     let showBox = document.getElementById("D4ShowBox");
   let resultElement = document.createElement("p");
   resultElement.id = "D4resOfThis";

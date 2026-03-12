@@ -1,5 +1,9 @@
+/* =========================================================
+   محرك زمرة التباديل الذكي (Smart Permutation Engine)
+   تم حل مشكلة قراءة الأرقام المتصلة (مثل 12) والمسافات
+========================================================= */
+
 function openPage(pageId) {
-  // Hide all pages with animation
   const pages = document.querySelectorAll(".page");
   pages.forEach((page) => {
     if (page.classList.contains("active")) {
@@ -8,7 +12,6 @@ function openPage(pageId) {
     }
   });
 
-  // Show the selected page with animation
   const selectedPage = document.getElementById(pageId);
   if (selectedPage) {
     selectedPage.classList.remove("hidden");
@@ -16,63 +19,121 @@ function openPage(pageId) {
   }
 }
 
-// Optionally, you can show the first page by default
 document.addEventListener("DOMContentLoaded", () => {
   openPage("page1");
 });
 
-// =========== تفاصي الزمرة
+// ==========================================
+// 1. القارئ الذكي والمحرك الرياضي (Smart Parser & Engine)
+// ==========================================
+
+function parsePermutation(input) {
+  if (!input) return [];
+  let str = String(input).trim();
+  
+  // إذا نسي المستخدم الأقواس، قم بإضافتها برمجياً
+  if (!str.includes("(")) {
+      str = `(${str})`;
+  }
+  
+  const cycles = str.match(/\(([^)]+)\)/g);
+  return cycles ? cycles.map(parseCycle).filter(c => c.length > 0) : [];
+}
+
+function parseCycle(cycleStr) {
+  if (typeof cycleStr !== "string") return [];
+  let inner = cycleStr.replace(/[()]/g, "").trim();
+  
+  if (inner === "I" || inner === "1" || inner === "") return [];
+  
+  let nums;
+  // إذا وضع المستخدم مسافة أو فاصلة (مثال: 1 2 3 أو 1,2,3)
+  if (inner.includes(" ") || inner.includes(",")) {
+    nums = inner.match(/\d+/g);
+  } else {
+    // إذا كتب الأرقام متصلة (مثال: 123) نفصلها حرفاً حرفاً
+    nums = inner.split("").filter(c => /\d/.test(c));
+  }
+  return nums ? nums.map(Number) : [];
+}
+
+function invertPermutation(permCycles) {
+  return permCycles.map(cycle => [...cycle].reverse());
+}
+
+function applyCyclesToArray(cycles, arr) {
+  return arr.map(val => {
+    let result = val;
+    for (let i = cycles.length - 1; i >= 0; i--) {
+      let cycle = cycles[i];
+      let idx = cycle.indexOf(result);
+      if (idx !== -1) {
+        result = cycle[(idx + 1) % cycle.length];
+      }
+    }
+    return result;
+  });
+}
+
+function convertToCycles(arr) {
+  const cycles = [];
+  const visited = Array(arr.length).fill(false);
+  for (let i = 0; i < arr.length; i++) {
+    if (!visited[i]) {
+      let cycle = [];
+      let x = i;
+      while (!visited[x]) {
+        visited[x] = true;
+        cycle.push(x + 1);
+        x = arr[x] - 1;
+      }
+      if (cycle.length > 1) {
+        cycles.push(`(${cycle.join(" ")})`);
+      }
+    }
+  }
+  return cycles.length > 0 ? cycles.join("") : "(1)";
+}
+
+function lcm(a, b) { return !b ? a : Math.abs(a * b) / gcd(a, b); }
+function gcd(a, b) { return !b ? a : gcd(b, a % b); }
+function lcmOfArray(arr) { return arr.length > 0 ? arr.reduce((acc, val) => lcm(acc, val), 1) : 1; }
+
+// ==========================================
+// 2. تفاصيل الزمرة (Page 1)
+// ==========================================
 function generatePermutations() {
   const n = parseInt(document.getElementById("groupOrder").value);
-  if (isNaN(n) || n < 1) {
-    document.getElementById("groupInfo").innerText =
-      "Please enter a valid number greater than 0.";
-    document.getElementById("permutations").innerHTML = "";
-    return;
-  }
-    let OrderGroup = 1;
-    for (let i = 2; i <= n; i++) {
-      OrderGroup *= i;
-    }
+  if (isNaN(n) || n < 1) return;
   
+  let OrderGroup = 1;
+  for (let i = 2; i <= n; i++) OrderGroup *= i;
   
-  
-  const permutations = getAllPermutations(
-    Array.from({ length: n }, (_, i) => i + 1)
-  );
+  const baseArray = Array.from({ length: n }, (_, i) => i + 1);
+  const permutations = getAllPermutations(baseArray);
   const container = document.getElementById("permutations");
   const groupInfo = document.getElementById("groupInfo");
   container.innerHTML = "";
-  const OrderLawOfpermo= document.createTextNode('order Of a = lcm(L1,L2,L3,.....)')
-  container.appendChild(OrderLawOfpermo)
-  groupInfo.innerHTML = `  <P id="OrderOfGrop"> Order Of Group = ${OrderGroup} </P> <strong> S${n}=</strong> { ${permutations
-    .map((perm) => convertToCycles(perm))
-    .join(" , ")} }`;
+  
+  groupInfo.innerHTML = `<p><strong>Order Of Group |S${n}| = </strong> ${OrderGroup} </p> <strong> S${n} = </strong> { ${permutations.map(p => convertToCycles(p)).join(" , ")} }`;
 
-  permutations.forEach((perm, index) => {
-    const cycles = convertToCycles(perm);
-    let arr4Order = []
-    const splitChar = "(";
-    
-    // الحصول على المصفوفات الفرعية بعد تقسيم النص
-    let orderCycs = splitIntoSubarrays(cycles, splitChar);
-    // تطبيق دالة inversPerm على كل مصفوفة فرعية، مع إزالة الأقواس وتحويل العناصر إلى أرقام
-    orderCycs.map((cyc) => {
-      arr4Order.push(
-        cyc.join("").replace(/[()]/g, "").split("").map(Number).length
-      );
-    });
+  permutations.forEach((permArray) => {
+    const cyclesStr = convertToCycles(permArray);
+    let orderCycs = parsePermutation(cyclesStr);
+    let arr4Order = orderCycs.map(c => c.length);
     let OrderCycle = lcmOfArray(arr4Order);
-
-     const order = cycles.replace(/[(" ")]/g, "").length ;
-    const generatedCycles = generateCycles(perm, order);
+    
+    const generatedCycles = ["(1)"];
+    let currentArr = [...baseArray];
+    for (let i = 1; i < OrderCycle; i++) {
+      currentArr = currentArr.map(val => permArray[val - 1]);
+      let c = convertToCycles(currentArr);
+      if (c !== "(1)") generatedCycles.push(c);
+    }
     
     const permutationInfo = document.createElement("div");
     permutationInfo.className = "permutation-info";
-    permutationInfo.innerHTML = ` ${cycles} = { ${generatedCycles} } => order of <strong>|${cycles}|=</strong> 
-    ${OrderCycle} `;
-
-
+    permutationInfo.innerHTML = ` ${cyclesStr} = { ${generatedCycles.join(" , ")} } => order of <strong>|${cyclesStr}| = </strong> ${OrderCycle} `;
     container.appendChild(permutationInfo);
   });
 }
@@ -83,359 +144,140 @@ function getAllPermutations(arr) {
   for (let i = 0; i < arr.length; i++) {
     const rest = [...arr.slice(0, i), ...arr.slice(i + 1)];
     const permutations = getAllPermutations(rest);
-    for (const perm of permutations) {
-      result.push([arr[i], ...perm]);
-    }
+    for (const perm of permutations) result.push([arr[i], ...perm]);
   }
   return result;
 }
 
-function convertToCycles(perm) {
-  const cycles = [];
-  const visited = Array(perm.length).fill(false);
-  for (let i = 0; i < perm.length; i++) {
-    if (!visited[i]) {
-      let cycle = [];
-      let x = i;
-      while (!visited[x]) {
-        visited[x] = true;
-        cycle.push(x + 1);
-        x = perm[x] - 1;
-      }
-      if (cycle.length > 1) {
-        cycles.push(`(${cycle.join(" ")})`);
-      }
-    }
-  }
-  return cycles.length > 0 ? cycles.join("") : "(I)";
-}
-
-// -===================================
-// ================= حساب الاوردر =====================
-function calcuatePermOrder(permo) {
-  let arr4Order = [];
-  const splitChar = "(";
-  let cy = permo.value;
-  // الحصول على المصفوفات الفرعية بعد تقسيم النص
-  let orderCycs = splitIntoSubarrays(cy, splitChar);
-  // تطبيق دالة inversPerm على كل مصفوفة فرعية، مع إزالة الأقواس وتحويل العناصر إلى أرقام
-  let result = orderCycs.map((cyc) => {
-    arr4Order.push(
-      cyc.join("").replace(/[()]/g, "").split("").map(Number).length
-    );
-  });
-  let Order = lcmOfArray(arr4Order);
-
-  return Order;
-}
-
-function applyPermutation(perm, arr) {
-  const result = Array(arr.length);
-  for (let i = 0; i < perm.length; i++) {
-    result[perm[i] - 1] = arr[i];
-  }
-  return result;
-}
-
-function arraysEqual(a, b) {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
-
-function generateCycles(perm, order) {
-  const cycles = ["I"];
-  let current = Array.from({ length: perm.length }, (_, i) => i + 1);
-  for (let i = 0; i < order; i++) {
-    current = applyPermutation(perm, current);
-    const cycle = convertToCycles(current);
-    if (cycle !== "(I)") {
-      cycles.push(cycle);
-    }
-  }
-  return cycles.length > 0 ? cycles.join(" , ") : "(I)";
-}
-// ===================================
-// داله لايجاد المعكوس
-// دالة لعكس العناصر مع تثبيت العنصر الأول
-function inversPerm(arr) {
-  if (arr.length <= 1) {
-    return arr; // إذا كانت المصفوفة تحتوي على عنصر واحد أو أقل، تعود كما هي.
-  }
-
-  // استخراج العنصر الأول
-  const firstElement = arr[0];
-
-  // عكس العناصر المتبقية
-  const reversedRest = arr.slice(1).reverse();
-
-  // دمج العنصر الأول مع بقية العناصر المعكوسة
-  return [firstElement, ...reversedRest];
-}
-
-// دالة لتقسيم النص إلى مصفوفات فرعية
-
-
-// ===========================================================
-// دالة لحساب العكس للتبديلات
-function calcuatePermoInvers(cycs) {
-  const splitChar = "(";
-
-  // الحصول على المصفوفات الفرعية بعد تقسيم النص
-  let invCycs = splitIntoSubarrays(cycs.value, splitChar);
-
-  // تطبيق دالة inversPerm على كل مصفوفة فرعية، مع إزالة الأقواس وتحويل العناصر إلى أرقام
-  let Inmers = invCycs.map(
-    (perm) =>
-      `(${inversPerm(
-        perm.join("").replace(/[()]/g, "").split("").map(Number)
-      ).join(" ")})`
-  );
-
-  return Inmers;
-}
-// 
-function gcd(a, b) {
-  if (!b) {
-    return a;
-  }
-  return gcd(b, a % b);
-}
-
-function lcm(a, b) {
-  return Math.abs(a * b) / gcd(a, b);
-}
-function lcmOfArray(arr) {
-  return arr.reduce((acc, val) => lcm(acc, val), 1);
-}
-
-// inverse ======================================
-
+// ==========================================
+// 3. تحليل التبديل (Page 2)
+// ==========================================
 function calculateOrderInverse() {
-  let input = document.getElementById("permutation-input");
+  let input = document.getElementById("permutation-input").value.trim();
+  if (!input) return;
 
-  let order = calcuatePermOrder(input);
-  let invers = calcuatePermoInvers(input);
+  let permCycles = parsePermutation(input);
+  if (permCycles.length === 0) {
+    document.getElementById("res4OrInv").innerHTML = `<p>Identity Permutation (1)</p>`;
+    return;
+  }
 
-  document.getElementById(
-    "res4Or&Inv"
-  ).innerHTML = ` <p> Order = ${order} </p><p> Invers = ${invers} </p>`;
+  const n = permCycles.reduce((max, cycle) => Math.max(max, ...cycle), 0);
+  let baseArray = Array.from({ length: n }, (_, i) => i + 1);
+  
+  let resultArray = applyCyclesToArray(permCycles, baseArray);
+  let disjointStr = convertToCycles(resultArray);
+  
+  let disjointCycles = parsePermutation(disjointStr);
+  let order = disjointCycles.length > 0 ? lcmOfArray(disjointCycles.map(c => c.length)) : 1;
+  let inverseCycles = invertPermutation(disjointCycles);
+  let inverseStr = inverseCycles.length > 0 ? inverseCycles.map(c => `(${c.join(" ")})`).join("") : "(1)";
+  
+  let transpositions = 0;
+  disjointCycles.forEach(cycle => { transpositions += (cycle.length - 1); });
+  let parity = (transpositions % 2 === 0) ? "Even" : "Odd";
+
+  document.getElementById("res4OrInv").innerHTML = `
+    <p><strong>Disjoint Cycles:</strong> ${disjointStr}</p>
+    <p><strong>Order:</strong> ${order}</p>
+    <p><strong>Inverse:</strong> ${inverseStr}</p>
+    <p><strong>Parity:</strong> <span style="color:${parity==='Even'?'#00ff88':'#ff4d4d'}">${parity} Permutation</span></p>
+  `;
 }
 
-// ==================== ايجاد القوى ==============================
-
-function parsePermutation(input) {
-  const cycles = input.match(/\(([^)]+)\)/g);
-  return cycles ? cycles.map(parseCycle) : [];
-}
-
-function applyPermutation4pow(perm, arr) {
-  const result = [...arr];
-  perm.forEach((cycle) => {
-    const n = cycle.length;
-    for (let i = 0; i < n; i++) {
-      result[cycle[i] - 1] = arr[cycle[(i + 1) % n] - 1];
-    }
-  });
-  return result;
- }
-function invertPermutation(perm) {
-  return perm.map((cycle) => [...cycle].reverse());
-}
-
+// ==========================================
+// 4. القوى (Page 3)
+// ==========================================
 function calculatePowerPerm() {
-  const input = document.getElementById("input4Pow").value;
-  const power = parseInt(document.getElementById("input4Pow2").value);
-  const perm = parsePermutation(input);
-  if (perm.length === 0 || isNaN(power)) {
+  const input = document.getElementById("input4Pow").value.trim();
+  let powerStr = document.getElementById("input4Pow2").value.trim();
+  const power = powerStr === "" ? 1 : parseInt(powerStr);
+  
+  if (!input || isNaN(power)) {
     document.getElementById("res4Pow").innerText = "Invalid input.";
     return;
   }
+  
+  let result = calculatePowerForCycles(input, power);
+  document.getElementById("res4Pow").innerHTML = `<p>Result: <strong>${result}</strong></p>`;
+}
 
-  const n = perm.reduce((max, cycle) => Math.max(max, ...cycle), 0);
-  let resultArray = Array.from({ length: n }, (_, i) => i + 1);
-  let effectivePerm = power < 0 ? invertPermutation(perm) : perm;
+function calculatePowerForCycles(input, power, sizeOverride = 0) {
+  let cycles = parsePermutation(input);
+  if (cycles.length === 0 || isNaN(power)) return "(1)";
+  
+  let n = sizeOverride || cycles.reduce((max, cycle) => Math.max(max, ...cycle), 0);
+  if (n === 0) return "(1)";
+
+  let effectiveCycles = power < 0 ? invertPermutation(cycles) : cycles;
   let absPower = Math.abs(power);
+  
+  let arr = Array.from({ length: n }, (_, i) => i + 1);
   for (let i = 0; i < absPower; i++) {
-    resultArray = applyPermutation4pow(effectivePerm, resultArray);
-  }
-
-  const resultCycles = convertToCycles(resultArray);
-  if (resultCycles === "(1)") {
-  }
-
-  document.getElementById("res4Pow").innerText = `Result: ${resultCycles}`;
-}
-
-
-
-// // ==================== التركيب مع القوى ================
-
-
-function calcCompoWithPow() {
-  
-  let firstpow = parseFloat(document.getElementById("power1").value) || 1;
-  let secondpow = parseFloat(document.getElementById("power2").value) || 1;
-  let thirdpow = parseFloat(document.getElementById("power3").value) || 1;
-  let fourthpow = parseFloat(document.getElementById("power4").value) || 1;
-  let firstinput = document.getElementById("permutation1").value ||  "(1)";
-  let secondinput = document.getElementById("permutation2").value || "(1)";
-  let thirdinput = document.getElementById("permutation3").value ||  "(1)";
-  let fourthinput = document.getElementById("permutation4").value || "(1)";
-  let permutationOrder = parseFloat(
-    document.getElementById("permutationOrder").value
-  );
-  
-  if (isNaN(permutationOrder)) {
-    alert("ادخل رقم الزمرة");
-  }
-  let errorArr = []
-  document.querySelectorAll(".power-input").forEach((e)=>errorArr.push(e.value))
-  errorArr.map((e)=> {
-    if (isNaN(e)) {
-    alert("ادخل رقم صحبح للاس ");
-  }
-  })
-
-  if (!isValidOrder([...parsePermutation(firstinput), ...parsePermutation(secondinput), ...parsePermutation(thirdinput)], permutationOrder)) {
-    alert("رقم الزمرة صغير جدًا ولا يتناسب مع أرقام الدورات المدخلة");
-    return;
+    arr = applyCyclesToArray(effectiveCycles, arr);
   }
   
-
-   let firstpermo = calculatePowerPerm4comp(firstinput, Math.abs(firstpow)); // القوس الاول مرفوع الى قوى
-   if (firstpow < 0) {
-     firstpermo = calcuatePermoInvers(
-       calculatePowerPerm4comp(firstinput, Math.abs(firstpow))
-     ).join("");
-   }
-   let secondpermo = calculatePowerPerm4comp(secondinput, Math.abs(secondpow)); // القوس الثاني  مرفوع الى قوى
-   if (secondpow < 0) {
-     secondpermo = calcuatePermoInvers(
-       calculatePowerPerm4comp(secondinput, Math.abs(secondpow))
-     ).join("");
-   }
-   let thirdpermo = calculatePowerPerm4comp(thirdinput, Math.abs(thirdpow)); // القوس الثالث مرفوع الى قوى
-   if (thirdpow < 0) {
-     thirdpermo = calcuatePermoInvers(
-       calculatePowerPerm4comp(thirdinput, Math.abs(thirdpow))
-     ).join("");
-   }
-   let fourthpermo = calculatePowerPerm4comp(fourthinput, Math.abs(fourthpow)); // القوس الرابع مرفوع الى قوى
-   if (fourthpow < 0) {
-     fourthpermo = calcuatePermoInvers(
-       calculatePowerPerm4comp(fourthinput, Math.abs(fourthpow))
-     ).join("");
-   }
-
-  firstbracket = compusation(firstpermo, secondpermo, permutationOrder);
-  secondbracket = compusation(thirdpermo, fourthpermo, permutationOrder);
-
-  let resultOfComposition = compusation(
-    firstbracket,
-    secondbracket,
-    permutationOrder
-  );
-
-  document.getElementById("resOfPow").innerHTML=`= <P> ${firstbracket} o ${secondbracket} = </P> <P> ${resultOfComposition}</P>`;
- 
-
-}
-// // =============== المكتبة ==============================
-
-function calculatePowerPerm4comp(input, power) {
-  const perm = parsePermutation(input);
-  if (perm.length === 0 || isNaN(power)) {
-    document.getElementById("resOfPow").innerText = "Invalid power input.";
-    return;
-  }
-
-  const n = perm.reduce((max, cycle) => Math.max(max, ...cycle), 0);
-  let resultArray = Array.from({ length: n }, (_, i) => i + 1);
-  let effectivePerm = power < 0 ? invertPermutation(perm) : perm;
-  let absPower = Math.abs(power);
-  for (let i = 0; i < absPower; i++) {
-    resultArray = applyPermutation4pow(effectivePerm, resultArray);
-  }
-
-  const resultCycles = convertToCycles(resultArray);
-  if (resultCycles === "(1)") {
-    return "(I)";
-  }
-
-  return resultCycles;
-}
-function isValidOrder(cycles, permutationOrder) {
-  return cycles.every(cycle => {
-    return cycle.every(num => num <= permutationOrder);
-  });
-}
-function compusation(permutation1, permutation2, permutationOrder) {
-
-  let firstpermo = parsePermutation(permutation1);
-  let secondpermo = parsePermutation(permutation2);
-  
-  
-  
-  return composeSeparateCycles(firstpermo, secondpermo, permutationOrder);
-}
-
-function composeSeparateCycles(cycles, otherCycles, size) {
-  let arr = Array.from({ length: size }, (_, i) => i + 1);
-
-  // Apply each cycle from the second permutation to the original array
-  otherCycles.forEach((cycle) => {
-    arr = applySingleCycle(cycle, arr);
-  });
-
-  // Apply each cycle from the first permutation to the resulting array
-  cycles.forEach((cycle) => {
-    arr = applySingleCycle(cycle, arr);
-  });
-
   return convertToCycles(arr);
 }
 
-
-
-function parseCycle(cycleStr) {
-  if (typeof cycleStr !== "string") {
-    throw new TypeError("Expected a string");
-  }
-
-  return cycleStr.replace(/[()]/g, "").split(" ").map(Number);
+// ==========================================
+// 5. التركيب (Page 4) - خالي من الأخطاء
+// ==========================================
+function isValidOrder(cycles, permutationOrder) {
+  // التحقق من أن الرقم لا يتجاوز حجم الزمرة، وأنه ليس صفراً
+  return cycles.every(cycle => cycle.every(num => num <= permutationOrder && num >= 1));
 }
 
-function splitIntoSubarrays(inputString, character) {
-  if (typeof inputString !== "string") {
-    console.error(`Expected a string, but got ${typeof inputString}`);
-    return [];
+function calcCompoWithPow() {
+  let permutationOrder = parseFloat(document.getElementById("permutationOrder").value);
+  if (isNaN(permutationOrder)) {
+    alert("الرجاء إدخال رقم الزمرة (Order) أولاً");
+    return;
   }
 
-  // التحقق مما إذا كان character موجودًا في inputString
-  if (!inputString.includes(character)) {
-    console.error(`Character "${character}" not found in input.`);
-    return [inputString]; // إرجاع inputString كمصفوفة تحتوي على عنصر واحد
+  let p1 = document.getElementById("permutation1").value.trim();
+  let p2 = document.getElementById("permutation2").value.trim();
+  let p3 = document.getElementById("permutation3").value.trim();
+  let p4 = document.getElementById("permutation4").value.trim();
+  
+  let getPow = (id) => {
+      let val = document.getElementById(id).value.trim();
+      return val === "" ? 1 : parseFloat(val);
+  };
+  
+  let pow1 = getPow("power1");
+  let pow2 = getPow("power2");
+  let pow3 = getPow("power3");
+  let pow4 = getPow("power4");
+
+  let allCycles = [...parsePermutation(p1), ...parsePermutation(p2), ...parsePermutation(p3), ...parsePermutation(p4)];
+  
+  if (allCycles.length > 0 && !isValidOrder(allCycles, permutationOrder)) {
+    alert("أحد الأرقام المدخلة خاطئ (إما أكبر من S" + permutationOrder + " أو يساوي 0)");
+    document.getElementById("resOfPow").innerHTML = ""; // مسح النتيجة القديمة حتى لا يظنها المستخدم النتيجة الحالية
+    return;
   }
 
-  // تقسيم النص إلى أجزاء باستخدام الكاركتر المحدد
-  const parts = inputString.split(character);
+  let res1 = calculatePowerForCycles(p1, pow1, permutationOrder);
+  let res2 = calculatePowerForCycles(p2, pow2, permutationOrder);
+  let res3 = calculatePowerForCycles(p3, pow3, permutationOrder);
+  let res4 = calculatePowerForCycles(p4, pow4, permutationOrder);
 
-  // تحويل كل جزء إلى مصفوفة فرعية وحذف المصفوفات الفارغة
-  const resultArray = parts
-    .map((part) => part.split("").filter((ch) => ch.trim() !== ""))
-    .filter((subArray) => subArray.length > 0);
-
-  return resultArray;
-}
-
-function applySingleCycle(cycle, arr) {
-  const result = [...arr];
-  const n = cycle.length;
-  for (let i = 0; i < n; i++) {
-    result[cycle[i] - 1] = arr[cycle[(i + 1) % n] - 1];
+  function composeTwo(str1, str2, size) {
+    let arr = Array.from({ length: size }, (_, i) => i + 1);
+    let c1 = parsePermutation(str1);
+    let c2 = parsePermutation(str2);
+    arr = applyCyclesToArray(c2, arr);
+    arr = applyCyclesToArray(c1, arr);
+    return convertToCycles(arr);
   }
-  return result;
+
+  let firstBracket = composeTwo(res1, res2, permutationOrder);
+  let secondBracket = composeTwo(res3, res4, permutationOrder);
+  let finalResult = composeTwo(firstBracket, secondBracket, permutationOrder);
+
+  document.getElementById("resOfPow").innerHTML = `
+    <p> ${firstBracket} o ${secondBracket} </p> 
+    <p> = <strong style="color: #00ff88;">${finalResult}</strong></p>
+  `;
 }

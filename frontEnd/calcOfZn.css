@@ -1,230 +1,230 @@
+/* حاسبة الزمرة المعيارية للموبايل */
 #calcOfZnoverly {
   display: none;
+  width: 100%;
+  padding: 10px 0; /* تم إزالة الـ margin-left: 240px */
 }
-.insert {
- 
-  margin: 1em 0; 
+/* ========================================= */
+/* إصلاح حقول الأرقام والأسس في الحاسبة */
+/* ========================================= */
+
+/* 1. تنسيق الأرقام الأساسية (Base Numbers) */
+.calcOfZn input.numbersOfCalcZn {
+  width: 35px !important; /* تكبير العرض ليسمح بكتابة أرقام مزدوجة */
+  height: 40px;
+  font-size: 1.4em !important;
   text-align: center;
-  padding: 2%;
-  
-  border-radius: 8px; 
-  width: 95%;
-  border: 1px solid #28293d;
-  background: #28293d;
-}
-.calcOfZnoverly .insert input {
   background-color: transparent;
-  border: 0;
-}
-.calcOfZnoverly .insert input:focus {
-  background-color: transparent;
-  border: 0;
-  outline: 0;
-}
-#resOfThis {
-  font-size: 1em;
+  border: none;
+  border-bottom: 2px dashed #555; /* خط سفلي متقطع لتمييز مكان الرقم */
+  color: #ffffff !important;
+  margin: 0 4px;
+  padding: 0;
+  border-radius: 0;
+  -webkit-appearance: none; /* إزالة التنسيق الافتراضي لهواتف آيفون */
 }
 
+/* 2. تنسيق الأسس (القوى - Powers) */
+.calcOfZn input.powersOfCalcZn {
+  width: 30px !important;
+  height: 30px;
+  font-size: 1em !important;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05) !important; /* خلفية خفيفة جداً لتمييز مربع الأس */
+  border: 1px solid #444 !important; /* إطار خفيف */
+  border-radius: 4px;
+  color: #ffd700 !important; /* لون ذهبي للقوى الداخلية */
+  padding: 0;
+  margin-left: 2px;
+  transform: translateY(-12px); /* رفع المربع للأعلى ليبدو كالأس الرياضي */
+  -webkit-appearance: none;
+}
+
+/* 3. تنسيق الأسس الخارجية للأقواس (heipow) */
+.calcOfZn input#heipow1, .calcOfZn input#heipow2 {
+  color: #ff4d4d !important; /* لون أحمر لتمييز الأس الخارجي */
+  transform: translateY(-18px); /* رفعه أعلى قليلاً من الأسس العادية */
+  font-weight: bold;
+}
+
+/* تأثير عند النقر (التركيز) على أي حقل في الحاسبة */
+.calcOfZn input.numbersOfCalcZn:focus,
+.calcOfZn input.powersOfCalcZn:focus {
+  border-color: #009eff !important; /* يضيء باللون الأزرق عند الكتابة */
+  outline: none;
+  background-color: rgba(0, 158, 255, 0.1) !important;
+}
+#backOfCalc {
+  width: 100%;
+  padding: 15px;
+  background-color: #28293d;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+.calcOfZn h1 {
+  font-size: 1.3em;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* شاشة إدخال المعيار (Z) */
 #modulo {
-  margin-bottom: 15%;
-  width: 6%;
-  height: 15%;
+  width: 80px;
+  height: 50px;
   background-color: #1e1e2f;
   color: #e0e0e0;
-  font-size: 1em;
+  font-size: 1.5em;
   border: 2px solid #009eff;
-  border-radius: 5px;
+  border-radius: 8px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  font-family: "Courier New", Courier, monospace;
-  margin: 10px 0;
-  padding: 5px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 10px;
 }
 
-#modulo:focus {
-  background-color: #252536;
-  outline: none;
-  transform: scale(1.05);
+/* شاشة عرض المعادلة */
+/* 
+.insert {
+  margin: 15px 0; 
+  padding: 15px 10px;
+  border-radius: 8px; 
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid #444;
+  background: #1e1e2f;
+  overflow-x: auto; /* مهم جداً لتمرير المعادلات الطويلة */
+  /* white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; */
+/* }  */
+
+.prodect, .ad { font-size: 1.2em; color: #009eff; margin: 0 2px;}
+
+.calcOfZn input#num1, .calcOfZn input#num2, 
+.calcOfZn input#num3, .calcOfZn input#num4 {
+  color: white; width: 25px; height: 30px; font-size: 1.2em; 
+  text-align: center; background-color: transparent; border: 0; display: none;
 }
 
-#modulo::placeholder {
-  color: #009eff;
-  opacity: 0.7;
+.calcOfZn input#pow1, .calcOfZn input#pow2, 
+.calcOfZn input#pow3, .calcOfZn input#pow4 {
+  color: #ffd700; width: 20px; font-size: 0.9em; 
+  text-align: center; position: relative; top: -10px; background-color: transparent; border: 0; display: none;
 }
 
-
-
-.calcOfZn input#num1,
-.calcOfZn input#num2,
-.calcOfZn input#num3,
-.calcOfZn input#num4 {
-color: white;
-  width: 1.3em;
-  height: 1.5em;
-  font-size: 1em;
-  text-align: center;
-  border-radius: 4px;
-  background-color: inherit;
-  border: 0;
-  display: none;
-
+.calcOfZn input#heipow1, .calcOfZn input#heipow2 {
+  color: rgb(255, 50, 50); width: 20px; font-size: 0.9em; 
+  position: relative; top: -15px; background-color: transparent; border: 0; display: none; font-weight: bold;
 }
 
-.calcOfZn input#pow1,
-.calcOfZn input#pow2,
-.calcOfZn input#pow3,
-.calcOfZn input#pow4 {
-  color: white;
-  width: 1.1em;
-  height: 1em;
-  font-size: 0.8em;
-  text-align: center;
-  position: relative;
-  top: -0.6em;
-  left: -0.4em;
-  border-radius: 4px;
-  background-color: inherit;
-  border: 0;
-  display: none;
-}
-
-.calcOfZn input#heipow1,
-.calcOfZn input#heipow2 {
-  width: 1em;
-  height: 1em;
-  font-size: 0.8em;
-  text-align: center;
-  position: relative;
-  top: -1em; 
-  border-radius: 4px;
-  color: rgb(255, 0, 0);
-  background-color: inherit;
-  border: 0;
-  font-weight: bolder;
-  display: none;
-
-
-}
-
-/* Button styling */
-.calcOfZn button {
-  background-color: #009eff;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin: 0;
-}
-
-/* Button hover effects */
-.calcOfZn button:hover {
-  background-color: #0077cc;
-  transform: translateY(-2px);
-}
-
-.calcOfZn button:active {
-  background-color: #005fa3;
-  transform: translateY(0);
-}
-
-/* Specific button styles */
-.calcOfZn button#operation,
-.calcOfZn button#power,
-.calcOfZn button#minus,
-.calcOfZn button#backspace,
-.calcOfZn button#clear,
-.calcOfZn button#equals {
-  background-color: #009eff;
-}
-
-.calcOfZn button#backspace,
-.calcOfZn button#clear {
-  background-color: #ff4d4d;
-}
-
-.calcOfZn button#equals {
-  background-color: #28a745;
-}
-
-/* Grid layout for the keyboard */
+/* أزرار الآلة الحاسبة */
 .calcOfZn .keyboard {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
-  margin:  10%;
-}
-
-/* Result display */
-.calcOfZn #result {
+  gap: 10px; /* مسافة ممتازة بين الأزرار */
   margin-top: 20px;
-  color: #ffffff;
-  font-weight: bold;
-  background-color: #333;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  font-size: 1.5em;
-  text-align: center;
 }
 
-/* Specific styles for the power button */
-.calcOfZn button#power {
-  font-family: "Arial", sans-serif;
+.calcOfZn button {
+  background-color: #444;
+  border: none;
+  color: #fff;
   font-size: 22px;
-  display: inline-flex;
+  padding: 15px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.calcOfZn button:active {
+  transform: scale(0.95);
+  background-color: #555;
+}
+
+/* ألوان الأزرار الخاصة */
+.calcOfZn button#operation, .calcOfZn button#power, .calcOfZn button#minus { background-color: #009eff; }
+.calcOfZn button#backspace, .calcOfZn button#clear { background-color: #ff4d4d; }
+.calcOfZn button#equals { background-color: #28a745; grid-column: span 2; /* جعل زر اليساوي أعرض */ }
+
+#l1, #l2, #r1, #r2, .ad { display: none; }
+
+/* ========================================= */
+/* إبراز الناتج النهائي في الحاسبة المعيارية */
+/* ========================================= */
+
+#resOfThis, 
+.calcOfZn #result {
+ color: #00ff88 !important;
+    font-weight: 900 !important;
+}
+
+/* ========================================= */
+/* التنسيق المضغوط لشاشة عرض الحاسبة (Insert) */
+/* ========================================= */
+
+.insert {
+  margin: 10px 0; 
+  padding: 10px 2px; /* تقليل الحواف لكسب مساحة أفقية أكبر */
+  border-radius: 8px; 
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid #444;
+  background: #1e1e2f;
+  overflow-x: auto; /* السماح بالتمرير فقط إذا كانت الشاشة صغيرة جداً */
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
+  justify-content: center; /* توسيط المعادلة في منتصف الشاشة */
 }
 
-.calcOfZn button#power sup {
-  font-size: 0.7em;
-  position: relative;
-  top: -2px;
-  right: -2px;
-  width: 8px;
-  height: 8px;
+/* 1. تصغير الأقواس وعلامات الجمع */
+.prodect, .ad { 
+  font-size: 1.1em !important; 
+  color: #009eff; 
+  margin: 0 1px !important; /* تقليل المسافة بين الأقواس والأرقام */
 }
 
-/* =========================================================== */
-
-.calcOfZnoverly {
-  margin-left: 240px;
-  padding: 30px;
-  min-height: 100vh;
-  background-color: #28293d;
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
-}
-
-#backOfCalc {
-  width: 97%;
-  max-width: 800px;
-  padding: 2%;
-  background-color: #28293d;
-  border-radius: 5%;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+/* 2. تصغير حقول الأرقام الأساسية */
+.calcOfZn input.numbersOfCalcZn {
+  width: 24px !important; /* تقليل العرض ليتسع لـ 4 أرقام */
+  height: 30px !important;
+  font-size: 1.1em !important; /* تصغير الخط قليلاً */
   text-align: center;
-}
-.prodect,
-.ad {
-  font-size: 1em;
-  margin: 0 ;
-  color: #009eff;
-}
-
-#l1,
-#l2,
-#r1,
-#r2 {
-  display: none;
-  position: relative;
-}
-.ad {
-  display: none;
- 
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px dashed #555;
+  color: #ffffff !important;
+  margin: 0 2px !important;
+  padding: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
 }
 
+/* 3. تصغير حقول الأسس (القوى) */
+.calcOfZn input.powersOfCalcZn {
+  width: 20px !important;
+  height: 22px !important;
+  font-size: 0.85em !important;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid #444 !important;
+  border-radius: 4px;
+  color: #ffd700 !important;
+  padding: 0;
+  margin-left: 1px !important;
+  transform: translateY(-10px) !important; /* ضبط الارتفاع ليتناسب مع الحجم الجديد */
+  -webkit-appearance: none;
+}
+
+/* 4. تصغير الأسس الخارجية للأقواس (heipow) */
+.calcOfZn input#heipow1, .calcOfZn input#heipow2 {
+  color: #ff4d4d !important; 
+  width: 18px !important;
+  font-size: 0.85em !important; 
+  transform: translateY(-15px) !important;
+  background-color: transparent; 
+  border: 0; 
+  font-weight: bold;
+}

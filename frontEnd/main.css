@@ -1,93 +1,70 @@
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  margin-left: 14%;
-  padding: 0;
-  background-color: #1e1e2f;
-  color: #e0e0e0;
-  text-align: center;
-}
+/* ============================================== */
+/* التصميم الأساسي المخصص للموبايل (Mobile First) */
 /* ============================================== */
 
-
-
-.logo-container {
-  position: relative;
-}
-.front {
-  margin-top: 15% ;
-  font-family: 'Courier New', Courier, monospace;
-}
-.front img {
-  box-shadow: 0 0 30px black;
-}
-.logo {
-  font-family: 'Blackletter', 'Old English Text MT', serif;
-  font-size: 2em;
-  font-weight: bold;
-  color: #FFD700; /* اللون الأساسي */
-  animation: glow 10s infinite ease;
-  text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700;
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* إزالة الوميض الأزرق عند النقر في الموبايل */
 }
 
-@keyframes glow {
-  0%, 100% {
-      text-shadow: 
-          0 0 10px #FFD700,
-          0 0 20px #FF4500,
-          0 0 30px #8B0000,
-          0 0 40px #00FF00,
-          0 0 50px #9400D3,
-          0 0 60px #00FFFF;
-      color: #FFD700;
-  }
-  50% {
-      text-shadow: 
-          0 0 15px #00FFFF,
-          0 0 30px #00FF00,
-          0 0 45px #FF4500,
-          0 0 60px #9400D3,
-          0 0 75px #8B0000,
-          0 0 90px #FFD700;
-      color: #00FFFF;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e2f; /* لون داكن مريح للعين كخلفية للتطبيق */
+  color: #e0e0e0;
+  font-family: "Segoe UI", Tahoma, Geneva, sans-serif;
+  overflow-x: hidden;
+  text-align: center;
 }
 
-/* الخلفية المتحركة */
-@keyframes backgroundMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.logo-container::before {
-  content: '';
-  position: absolute;
-  top: -10%;
-  left: -10%;
-  right: -10%;
-  bottom: -10%;
-  background: linear-gradient(120deg, #444, #999, #FFD700, #00FFFF, #000c00, #8B0000);
-  background-size: 200% 200%;
-  animation: backgroundMove 20s ease infinite;
-  filter: blur(20px); /* تأثير التمويه لإضفاء نعومة */
-  z-index: -1;
-  border-radius: 50%; /* شكل دائري حول الشعار */
-}
-
-
-
-
-nav#sidebar {
-  transition: width 0.3s ease; 
-  background-color: #00000024;
-  padding: 0 0 0 1%;
+/* 1. الشريط العلوي (Top App Bar) */
+.mobile-header {
   position: fixed;
-  top: 80px;
+  top: 0;
   left: 0;
-  z-index: 1000;
-  width:10%;
-  height: 100%;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 60px;
+  background-color: #0f111a;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 3000;
+}
+
+.menu-btn {
+  font-size: 28px;
+  color: #009eff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 15px 5px 0;
+}
+
+.header-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ffd700;
+  letter-spacing: 1px;
+}
+
+/* 2. القائمة الجانبية المنزلقة (Hamburger Menu) */
+nav#sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* مخفية خارج الشاشة افتراضياً */
+  width: 260px;
+  height: 100vh;
+  background-color: #1a1c29;
+  z-index: 4000;
+  transition: left 0.3s ease-in-out;
+  padding-top: 70px; /* لترك مساحة للشريط العلوي */
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.8);
+  overflow-y: auto;
+}
+
+nav#sidebar.expanded {
+  left: 0; /* إظهار القائمة */
 }
 
 nav#sidebar ul {
@@ -97,168 +74,208 @@ nav#sidebar ul {
 }
 
 nav#sidebar ul li {
-  margin: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 nav#sidebar ul li a {
-  padding: 1em 0;
-  color: white;
-  text-decoration: none;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  display: block; 
-  font-size: 1em;
-  border-radius: 4px;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-
-nav#sidebar ul li a:hover {
-  transition: transform 0.5s ease ;
-  transform: scale(1.05);
-  width: 90%;
-  backdrop-filter: blur(0);
-  background-color: #0000004d;
-  color: #009eff;
-}
-nav#sidebar:hover {
-  width: 20%;
-  box-shadow: 2px 0 10px rgba(208, 255, 0, 0.574);
-}
-
-@media (max-width: 550px) {
-  .front {
-    width: 180%;
-    text-align: center;
-  }
-
-  #sidebar.expanded {
-    width: 30%;
-    box-shadow: 2px 0 10px rgba(0, 255, 17, 0.7);
-  }
-  #sidebar.expanded ~ #content {
-    margin-left: 30%;
-  }
-  nav#sidebar:hover {
-    width: 18%;
-    box-shadow: 2px 0 10px gold;
-  }
-  nav#sidebar ul li a:hover {
-    transform: scale(1.2);
-  }
-
-}
-
-main#main-content {
-  width: 90%;
-  text-align: center;
-  height: 100%;
-}
-
-h2 {
-  color: #009eff;
-  font-size: 1.8em;
-}
-
-form#group-form {
-  background-color: #333;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-form#group-form .form-group {
-  margin-bottom: 15px;
-}
-
-form#group-form .form-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-form#group-form .form-group input,
-form#group-form .form-group select,
-form#group-form .form-group textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: #444;
+  padding: 18px 20px;
   color: #e0e0e0;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
 }
 
-form#group-form button {
-  padding: 12px 24px;
+nav#sidebar ul li a:active {
   background-color: #009eff;
   color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 1.1em;
-  width: 100%;
 }
 
-form#group-form button:hover {
-  background-color: #007acc;
-}
-
-#result {
-  margin-top: 20px;
-  background-color: #444;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-#social-media {
+/* طبقة التظليل عند فتح القائمة */
+.menu-overlay {
   position: fixed;
-  left: 0%;
-  bottom: 5%;
-  z-index: 1001;
-  margin-top: 10px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3500;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(3px); /* تأثير ضبابي خفيف للخلفية */
 }
 
-#social-media a {
-  margin: 0 10px;
+.menu-overlay.active {
+  display: block;
+  opacity: 1;
 }
 
-.social-logo {
-  margin: 2%;
-    width: 1.5em;
-    height: 1.5em;
-    filter: drop-shadow();
-    transition: transform 0.3s;
+/* 3. منطقة المحتوى الرئيسية */
+main#main-content {
+  margin-top: 60px; /* تبدأ بعد الشريط العلوي مباشرة */
+  width: 100%;
+  height: calc(100vh - 60px);
+  position: relative;
+  overflow-y: auto;
+  padding: 15px;
 }
 
-.social-logo:hover {
-  transform: scale(1.2);
+main#main-content > section:not(.hidden) {
+  display: block;
+  width: 100%;
+  animation: fadeIn 0.4s ease;
+  background: rgba(20, 22, 30, 0.8);
+  border-radius: 12px;
+  padding: 20px 10px;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
-#showCalc {
-  height: 25%;
-  margin: 10%;
-  padding: 15px 30px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 4. تنسيقات عامة لتطبيقات الموبايل */
+h2 {
+  color: #009eff;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 15px;
+  background-color: #009eff;
   color: #fff;
   border: none;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  /* width: 100%; الأزرار تأخذ العرض بالكامل لسهولة اللمس */
+  margin-bottom: 10px;
+}
+
+button:active {
+  background-color: #007acc;
+  transform: scale(0.98);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px; /* يمنع متصفح الموبايل من عمل تقريب تلقائي */
+  margin-bottom: 15px;
+}
+
+/* حقوق النشر والتواصل */
+#social-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  margin-top: 20px;
+}
+
+.social-logo {
+  width: 35px;
+  height: 35px;
+}
+
+/* تنسيق الشريط العلوي ليحتوي العناصر الثلاثة (قائمة، عنوان، زر الصفحة الرئيسية) بشكل متساوٍ */
+.mobile-header {
+  display: flex;
+  justify-content: space-evenly; /* توزيع العناصر بالتساوي ضمن العرض */
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #1a1c29; /* لون خلفية الشريط (عدله حسب تصميمك) */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* إذا احتجنا لإضافة خصائص خاصة لكل عنصر */
+.mobile-header .header-title {
+  flex-grow: 1; /* يجعل العنوان يستحوذ على المساحة الفارغة في الوسط */
+  text-align: center;
+}
+
+/* تنسيق زر العودة الجديد في الأعلى */
+#floating-home-btn,
+.app-header {
+  background: inherit;
+  border: none;
+  font-size: 20px;
+
+  font-weight: bold;
   cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 5px;
+  transition:
+    transform 0.2s ease,
+    text-shadow 0.2s ease;
+  /* text-decoration: underline; يضيف خطاً تحت الزر */
 }
 
-#showCalc:hover {
-  transform: scale(1.05);
-  background-color: #0077cc;
+#header-home-btn:active {
+  transform: scale(0.9);
 }
 
-#showCalc:active {
-  transform: scale(0.95);
-  background-color: #005fa3;
+#header-home-btn:hover {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* تأكد من أن عنوان التطبيق يتوسط المسافة ولا يتأثر بالأزرار */
+.app-header h1,
+header h1 {
+  margin: 0;
+  font-size: 1.5em;
+  color: #e30000;
+  text-align: center;
+  flex-grow: 1; /* يعطي العنوان المساحة الأكبر في المنتصف */
+}
+
+/* ========================================= */
+/* خلفية الواجهة الرئيسية للتطبيق             */
+/* ========================================= */
+body {
+  margin: 0;
+  padding: 0;
+}
+#front {
+  /* ========================================= */
+  /* خلفية الواجهة الرئيسية (بدون تمرير نهائياً) */
+  /* ========================================= */
+
+  /* 1. إزالة أي هوامش افتراضية من المتصفح تسبب التمرير */
+
+  background-image: url("/photos/front.jpg");
+
+  /* 2. السحر هنا: نجعل ارتفاع الواجهة هو حجم الشاشة ناقص حجم الشريط العلوي (حوالي 65 بكسل) */
+  height: calc(100vh - 65px);
+  width: 100%;
+
+  /* 3. ضبط الصورة لتتكيف مع الشاشة */
+  background-size: contain; /* يمكنك تغييرها إلى contain إذا أردت رؤية أطراف الصورة بالكامل */
+  /* background-position: center;  */
+  background-repeat: no-repeat;
+
+  background-blend-mode: overlay;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

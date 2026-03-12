@@ -10,13 +10,53 @@ document.addEventListener('DOMContentLoaded', () => {
             // إضافة الكلاس النشط للعنصر المحدد
             item.classList.add('active');
 
-           
-            // عرض الوصف
-            description.textContent = item.getAttribute('data-description');
-            description.style.display = 'block';
+            // الحل هنا: نتحقق أولاً مما إذا كان صندوق الوصف موجوداً!
+            if (description) {
+                description.textContent = item.getAttribute('data-description');
+                description.style.display = 'block';
+            }
         });
     });
 });
+// التعامل مع التنقل بين الأقسام في JordenHolder
+// =========================================================
+// كود التنقل بين واجهات جوردن هولدر (مدمج ومحصن ضد الأخطاء)
+// =========================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    const menuItems = document.querySelectorAll('.JordenHolder-menu-item');
+    const sections = document.querySelectorAll('.JordenHolder-section');
+    const description = document.getElementById('description');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            
+            // 1. تلوين الزر الذي تم النقر عليه وإلغاء البقية
+            menuItems.forEach(el => el.classList.remove('active'));
+            item.classList.add('active');
+
+            // 2. تحديث صندوق الوصف (فقط في حال كان موجوداً في الـ HTML)
+            if (description) {
+                description.textContent = item.getAttribute('data-description');
+                description.style.display = 'block';
+            }
+
+            // 3. إخفاء جميع الواجهات الأربع
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 4. قراءة اسم الواجهة المطلوبة وإظهارها فقط
+            const targetId = item.getAttribute('data-target');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        });
+    });
+}); 
+// التعامل مع التنقل بين الأقسام في JordenHolder (كود مبسط ومحصن ضد الأخطاء)
 
 
 document.querySelectorAll('.JordenHolder-menu-item').forEach(item => {
@@ -241,24 +281,40 @@ function checkSolvabilitySolv() {
 
 
 // p-Group Script start
+function isPrime(n) {
+    if (n <= 1) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+
 function checkPGroup() {
-    const groupOrder = parseInt(document.getElementById('groupOrder').value.trim());
+    const groupOrder = parseInt(document.getElementById('groupOrderToPgroup').value.trim());
     const primeNumber = parseInt(document.getElementById('primeNumber').value.trim());
-    
+
+    const resultElement = document.getElementById('result-P');
+
     if (isNaN(groupOrder) || groupOrder <= 0 || isNaN(primeNumber) || primeNumber <= 1) {
-        document.getElementById('result-P').innerText = 'Please enter valid values for group order and prime number.';
+        resultElement.innerText = 'Please enter valid positive numbers.';
         return;
     }
 
-    // Check if the group order is a power of the prime number
-    const isPGroup = Math.log(groupOrder) / Math.log(primeNumber) % 1 === 0;
-    
+    if (!isPrime(primeNumber)) {
+        resultElement.innerText = `${primeNumber} is not a prime number.`;
+        return;
+    }
+
+    const power = Math.log(groupOrder) / Math.log(primeNumber);
+    const isPGroup = power % 1 === 0;
+
     if (isPGroup) {
-        document.getElementById('result-P').innerText = `The group of order ${groupOrder} is a ${primeNumber}-group.`;
+        resultElement.innerText = `The group of order ${groupOrder} is a ${primeNumber}-group (since ${groupOrderToPgroup} = ${primeNumber}^${power.toFixed(0)}).`;
     } else {
-        document.getElementById('result-P').innerText = `The group of order ${groupOrder} is not a ${primeNumber}-group.`;
+        resultElement.innerText = `The group of order ${groupOrder} is not a ${primeNumber}-group.`;
     }
 }
+
 // p-Group Script  end
 
 

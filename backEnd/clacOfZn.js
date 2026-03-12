@@ -8,16 +8,21 @@ const mod = document.getElementById("modulo").value;
 
 
 function calculate() {
-  function Power(a, b) {
-    return (a * b) % mod;
+ function Inverse(a) {
+  
+    return (mod - (a % mod)) % mod;
+  } 
+   function Power(a, b) {
+    resultPower = (a * b) % mod
+    if (b < 0){
+      resultPower = Inverse(resultPower)
+    }
+    return resultPower;
   }
 
-  function Inverse(a) {
-    return (n - (a % mod)) % mod;
-  }
+ 
   removeEmptyInputs()
-  let mod = parseInt(document.getElementById("modulo").value);
-  // تحويل القيم إلى أرقام صحيحة وضبط الافتراضي
+  
   let num1 = parseInt(document.getElementById("num1").value) || 0;
   let num2 = parseInt(document.getElementById("num2").value) || 0;
   let num3 = parseInt(document.getElementById("num3").value) || 0;

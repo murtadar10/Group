@@ -1,262 +1,190 @@
-/* ======== */
+/* ================================================= */
+/* واجهة زمرة التباديل (Permutations) مخصصة للموبايل */
+/* ================================================= */
 
-.Permutation button {
-    background: linear-gradient(145deg, #2e2e2e, #1c1c1c); /* تدرج لوني بسيط */
-    border: 1px solid #444; /* حدود داكنة */
-    color: #f0f0f0; /* لون نص فاتح */
-    cursor: pointer;
-    transition: background 0.3s, transform 0.3s, box-shadow 0.3s; /* تأثيرات انتقال سلسة */
-    display: inline-block; /* عرض الأزرار كتلة مدمجة */
-    text-align: center; /* محاذاة النص في وسط الزر */
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* ظل بسيط للزر */
-    border: none; /* إزالة الحدود الافتراضية للزر */
-  }
-  
-  .Permutation button:hover {
-    background: linear-gradient(145deg, #444, #333); /* تدرج لوني أفتح عند التمرير */
-    transform: scale(1.01); /* تكبير الزر قليلاً عند التمرير */
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* ظل أعمق عند التمرير */
-  }
-  
-  .Permutation button:active {
-    background: linear-gradient(145deg, #333, #222); /* تدرج لوني أغمق عند النقر */
-    transform: scale(1); /* إعادة الزر لحجمه الطبيعي عند النقر */
-    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.4); /* ظل داخلي عند النقر */
-  }
-  
-  /* ========== */
-  .Permutation .container {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .Permutation .sidebar {
-    transition: width 0.3s ease;
-    width: 6%;
-  
-    background-color: #1e1e2f;
-    color: #fff;
-    padding: 2%;
-    box-sizing: border-box;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    z-index: 1000;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .Permutation .sidebar:hover {
-    width: 35%;
-    box-shadow: -2px 0 20px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
-  }
-  
-  .Permutation .sidebar button {
-    text-decoration: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-    font-size: 1em;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    padding: 15px;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth color and scale transition */
-  }
-  
-  .Permutation .sidebar button:hover {
-    background-color: #555;
-    transform: scale(1.05); /* Slightly enlarge button on hover */
-  }
-  @media (min-width: 1000px) {
-  
-    .Permutation .sidebar {
-      width: 20%;
-    }
-    
-    .Permutation .sidebar:hover {
-      width: 20%;
-      box-shadow: -2px 0 20px gold; /* Stronger shadow on hover */
-    }
-  
-  }
-  
-  #main-contentPermo {
-    margin-right: 270px; /* Adjust margin to accommodate the sidebar */
-    padding: 20px;
-    width: calc(100% - 290px);
-    box-sizing: border-box;
-    transition: margin-right 0.3s ease; /* Smooth margin transition */
-  }
-  
-  .page {
-    background: linear-gradient(to right, #fff, #e0e0e0);
-    padding: 2%;
-  
-    display: none;
-    opacity: 0; /* Initially hidden */
-    transform: translateX(20px); /* Initially offset */
-    transition: opacity 0.5s ease, transform 0.5s ease; /* Smooth transitions */
-  }
-  
-  .page.active {
-    max-width: 600px;
-    width: 90%;
-    color: #1e1e2f;
-    font-weight: bold;
-    font-family: "Times New Roman", Times, serif;
-    border-radius: 10px;
-    display: inline-block;
-    display: block;
-    opacity: 1;
-    transform: translateX(0);
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Add smooth scroll behavior for better user experience */
-  html {
-    scroll-behavior: smooth;
-  }
-  .permutation-info {
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: left;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  .group-info {
-    margin: 20px 0;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: left;
-    max-width: 100%;
-    overflow-x: auto;
-    font-weight: bold;
-  }
-  .Permo {
-    color: #1e1e2f;
-    font-weight: bold;
-    font-family: "Times New Roman", Times, serif;
-    border-radius: 10px;
-    display: inline-block;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  #groupOrder {
-    font-size: larger;
-    font-weight: bold;
-    width: 10%;
-    border: 0;
-    border-radius: 4px;
-    background-color: inherit;
-    color: #1d1d2e;
-    cursor: pointer;
-  }
-  .Composition .power-input {
-    position: absolute;
-    font-size: 0.5em;
-    width: 1em;
-    transform: translate(-84%, -66%);
-    background-color: inherit;
-    border-radius: 50%;
-    border-width: 2px;
-    border-style: solid;
-    border-color: #1d1d2e;
-    border-top-color: rgba(255, 255, 255, 0);
-    border-bottom-color: rgba(255, 255, 255, 0);
-  }
+.Permutation {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
 
-  .Composition .power-input:focus {
-    border: 0;
-    outline: none;
-  }
-  .Composition .permutation-input:focus {
-    border: 0;
-    outline: none;
-  }
-  
-  .Composition .permutation-input {
-    font-size: 0.5em;
-    margin: 0px 1%;
-    width: 5.3em;
-    height: 2em;
-    background-color: inherit;
-    border-radius: 30%;
-    border-width: 3px;
-    border-style: solid;
-    border-color: #1d1d2e;
-    border-top-color: rgba(255, 255, 255, 0);
-    border-bottom-color: rgba(255, 255, 255, 0);
-  }
-  @media (min-width: 550px) {
+/* 1. شريط التبويبات العلوي (بديل القائمة الجانبية) */
+.Permutation .sidebar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  overflow-x: auto; /* السماح بالتمرير الأفقي */
+  white-space: nowrap;
+  background-color: #1a1c29;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  scrollbar-width: none; /* إخفاء شريط التمرير الافتراضي لشكل أجمل */
+}
 
-    .Composition .permutation-input {
-    font-size: 1em;
-      margin: 0px 1%;
-      width: 6.8em;}}
+.Permutation .sidebar::-webkit-scrollbar {
+  display: none;
+}
 
+.Permutation .sidebar button {
+  flex: 0 0 auto;
+  background: linear-gradient(145deg, #2e2e2e, #1c1c1c);
+  color: #fff;
+  border: 1px solid #444;
+  padding: 12px 20px;
+  margin-right: 10px;
+  border-radius: 25px; /* أزرار دائرية أنيقة */
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .Composition #permutationsContainer {
-    margin: 60px 0 20px;
-  }
-  .Composition .order-input {
-    margin: 20px;
-    width: 30px;
-  }
-  #permutationOrder {
-    width: 30px;
-  }
-  
-  .Composition #resOfPow {
-    margin: 10px;
-    font-size: x-large;
-  }
-  /* تنسيق الـ div */
-  .Composition {
-    /* background-color: #333; خلفية مظلمة للـ div */
-  
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* ظل خفيف حول الـ div */
-  }
-  
-  /* تنسيق الأزرار */
-  .Composition button {
-    margin: 20px 0;
-    background-color: #222; /* خلفية الأزرار */
-    color: #e0e0e0; /* لون النص */
-    border: 2px solid #555; /* حدود الأزرار */
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-family: "Garamond", serif; /* خط فيكتوري/قوطي */
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  }
-  
-  .Composition button:hover {
-    background-color: #444; /* تغيير لون الخلفية عند التمرير */
-    color: #fff; /* تغيير لون النص عند التمرير */
-    border-color: #ff6a00; /* تغيير لون الحدود عند التمرير */
-  }
-  
-  .Composition button:focus {
-    outline: none; /* إزالة التحديد الافتراضي عند التركيز */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.7); /* ظل خفيف عند التركيز */
-  }
-  
+.Permutation .sidebar button:active,
+.Permutation .sidebar button:focus {
+  background: linear-gradient(145deg, #009eff, #007acc);
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 158, 255, 0.5);
+}
+
+/* 2. منطقة المحتوى والصفحات */
+#permoMain-content {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  background-color: #222533; /* لون خلفية داكن متناسق مع التطبيق */
+  color: #e0e0e0;
+  padding: 20px 15px;
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.page.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page h1 {
+  font-size: 1.4em;
+  color: #009eff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 3. تنسيقات النصوص وحقول الإدخال العامة في التباديل */
+.Permo label, .page label {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #fff;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.Permo span {
+  color: #ffd700;
+  margin-right: 5px;
+}
+
+#groupOrder, #input4Pow, #input4Pow2, #permutation-input, #permutationOrder {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2em;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #333;
+  color: white;
+  border: 2px solid #009eff;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.group-info, .permutation-info, #res4Or\&Inv, #res4Pow {
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #1e1e2f;
+  border: 1px solid #444;
+  text-align: left;
+  overflow-x: auto; /* مهم جداً للمعادلات الطويلة */
+  line-height: 1.6;
+}
+
+/* 4. إصلاح صفحة تركيب التباديل (Page 4) */
+.Composition #permutationsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: auto; /* السماح بتمرير حقول التركيب أفقياً */
+  background-color: #1e1e2f;
+  padding: 15px 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  margin-bottom: 20px;
+  white-space: nowrap;
+}
+
+.Composition .permutation-input {
+  width: 90px !important; /* حجم مناسب لكتابة تبديل مثل (1 2 3) */
+  height: 40px;
+  font-size: 1.1em !important;
+  text-align: center;
+  background-color: #333;
+  color: #fff;
+  border: 2px solid #555;
+  border-radius: 20px; /* حواف دائرية لتبدو كالأقواس */
+  margin: 0 5px;
+  padding: 0 10px;
+}
+
+.Composition .permutation-input:focus {
+  border-color: #009eff;
+  outline: none;
+}
+
+/* إصلاح الأسس المرفوعة للتباديل */
+.Composition .power-input {
+  width: 30px !important;
+  height: 30px;
+  font-size: 1em !important;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffd700;
+  border: 1px solid #444;
+  border-radius: 6px;
+  transform: translateY(-15px); /* رفع الأس للأعلى بدون تخريب الأبعاد */
+  margin-left: -5px;
+}
+
+.Composition span {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ff4d4d; /* لون مميز لعلامة التركيب O */
+  margin: 0 5px;
+}
+
+/* تضخيم النتيجة النهائية للتركيب */
+.Composition #resOfPow {
+  font-size: 2em;
+  color: #00ff88;
+  font-weight: bold;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px solid #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  margin-top: 15px;
+  overflow-wrap: break-word;
+}
