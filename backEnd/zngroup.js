@@ -146,12 +146,23 @@ function gener(ele, mod) {
   return Array.from(returned).sort((a, b) => a - b);
 }
 
+
+
+
+
+
+// دالة لحساب الأوردرات لجميع العناصر وعرض التفاصيل
+
 // دالة لحساب الأوردرات لجميع العناصر وعرض التفاصيل
 let detailsVisible = false; // متغير لتتبع حالة التفاصيل
 
 function allOrders() {
   const modulusInput = document.getElementById("modulus");
   const modulus = parseInt(modulusInput.value);
+  
+  // حماية إضافية: إذا كان الحقل فارغاً لا تفعل شيئاً
+  if (isNaN(modulus) || modulus <= 1) return;
+
   let groupelements = [];
   for (let i = 0; i < modulus; i++) {
     groupelements.push(i);
@@ -160,29 +171,34 @@ function allOrders() {
   let Arryoforders = [];
   let Arryofsubgps = [];
 
-  // حساب الأوردرات
+  // حساب الأوردرات بالـ LaTeX
   for (let i = 0; i < groupelements.length; i++) {
     Arryoforders.push(
-      `Order of ${i} =  |${i}| = ${modulus}/gcd(${i},${modulus}) = ${modulus}/${gcd(i, modulus)} =  ${modulus / gcd(i, modulus)}`,
+      `Order of $${i}$ : $$|${i}| = \\frac{${modulus}}{\\gcd(${i}, ${modulus})} = \\frac{${modulus}}{${gcd(i, modulus)}} = ${modulus / gcd(i, modulus)}$$`
     );
   }
 
-  // حساب الزمر الجزئية
+  // حساب الزمر الجزئية (المولدات) بالـ LaTeX لتبدو احترافية
   for (let i = 0; i < modulus; i++) {
-    Arryofsubgps.push(`<${i}> = {${gener(i, modulus)}}`);
+    // استخدمنا join لترتيب الأرقام بفواصل بشكل أنيق
+    Arryofsubgps.push(`Subgroup: $$\\langle ${i} \\rangle = \\{ ${gener(i, modulus).join(', ')} \\}$$`);
   }
 
   let can = document.createElement("div");
   let can2 = document.createElement("div");
   can.classList.add("can");
   can2.classList.add("can2");
-  let ordrLaw = document.createTextNode("Order Of a = |a| = n/gcd(a,n) =>");
+
+  // إضافة قانون الأوردر كمعادلة أنيقة
+  let ordrLaw = document.createElement("p");
+  ordrLaw.innerHTML = "<strong>Order Law:</strong> $$|a| = \\frac{n}{\\gcd(a,n)}$$";
   can.appendChild(ordrLaw);
-  // إنشاء العناصر للأوامر
+
+  // إنشاء العناصر للأوامر (استخدام innerHTML هو السر!)
   Arryoforders.forEach((item) => {
     let p = document.createElement("p");
     p.classList.add("order");
-    p.textContent = item;
+    p.innerHTML = item; // تم التعديل هنا
     can.appendChild(p);
   });
 
@@ -190,7 +206,7 @@ function allOrders() {
   Arryofsubgps.forEach((item) => {
     let p2 = document.createElement("p");
     p2.classList.add("subgroups");
-    p2.textContent = item;
+    p2.innerHTML = item; // تم التعديل هنا
     can2.appendChild(p2);
   });
 
@@ -202,16 +218,22 @@ function allOrders() {
     allElementContainer.innerHTML = ""; // مسح المحتوى السابق
 
     allElementContainer.appendChild(can);
-    allElementContainer.appendChild(document.createElement("p")).textContent =
-      "Elements ==================";
+    
+    // فاصل أنيق بين الأوردرات والزمر
+    let divider = document.createElement("p");
+    divider.innerHTML = "<br><strong>Generated Subgroups ==================</strong><br>";
+    allElementContainer.appendChild(divider);
+    
     allElementContainer.appendChild(can2);
-
-    // تغيير الزر إلى "Hide details" وتعيين معالج النقر
   }
 
   detailsVisible = !detailsVisible; // تغيير حالة التفاصيل
-}
 
+  // السطر السحري: إجبار المتصفح على رسم المعادلات فوراً بعد إضافتها للشاشة
+  if (window.MathJax) {
+    MathJax.typesetPromise([allElementContainer]).catch((err) => console.log(err.message));
+  }
+}
 document.getElementById("allElements").addEventListener("click", (e) => {
   let elems = document.getElementById("AllElement");
   if (elems.style.display === "block") {

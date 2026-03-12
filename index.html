@@ -20,6 +20,10 @@
 
     
     <style></style>
+    <script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   </head>
 
   <body>
@@ -62,7 +66,7 @@
     </nav>
      
     <main id="main-content">
-      <div id="front" class="front" ><p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved.EMAN</p> </div>
+      <div id="front" class="front" > <img src="photos/front.jpg" /> <p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved. proof Dr.Mahera Rabee Qasem</p> </div>
       <section id="group-test" class="hidden">
         <h2>Group Test Interface</h2>
         <div class="isGroup" > 
@@ -76,7 +80,7 @@
               <option value="integers" selected>Z</option>
             </select>
       
-          <button onclick="checkGroupProperties()">Check</button>
+          <button onclick="checkGroupProperties()">Check احسب </button>
       
             <div id="resultsIsGroup"></div>
          </div>
@@ -91,8 +95,9 @@
               <h2>Zn Group</h2>
               <div class="input-group">
                 <label class="mo" for="modulus"
-                  >enter the valou of group (modulus):
-                </label><span style="font-size: 2.5em;">Z</span>
+                  >enter the valou of group (modulus):<br>
+                 ادخل قيمة المعيار (رقم الزمرة )
+                </label><span style="font-size: 3.5em;">Z</span>
                 <input
                   class="OG"
                   type="number"
@@ -101,7 +106,7 @@
                   required
                   title="n"
                 />
-                <button id="ShowResultOfZn">Show Results</button>
+                <button id="ShowResultOfZn">Show Results<br> اضهر النتائج</button>
               </div>
               <div id="resultsOfZn" class="results" style="display: none;" >
                 <h2>Results:</h2>
@@ -114,7 +119,7 @@
                 <p id="subgroups">proper subgroups =</p>
                 <p id="AllSubgroups">All Subgroups =</p>
                 <p id="generators">Generators =</p>
-                <button id="kellyTableZn" onclick="kellyTableZn()">Show kelly table</button>
+                <button id="kellyTableZn" onclick="kellyTableZn()">Show kelly table<br> اظهر جدول كيلي</button>
                 <table id="kleinTable"></table>
                       </div>
               
@@ -127,7 +132,7 @@
               <label class="mo" for="inputN">Enter the value of n:</label>
               <input class="OG" type="number" id="inputN" min="1" placeholder="Enter a positive integer n">
       
-              <button id="UnCalcBtn">Show Results</button>
+              <button id="UnCalcBtn">Show Results<br> النتائج/button>
       
               <div id="resultContainer" class="result" style="display:none;">
                   <h3>Results</h3>
@@ -149,8 +154,8 @@
       <h1>Modular Arithmetic Calculator</h1>
 
 <div class="container">
-<label for="modulo" style="font-size: 40px;" > Z </label>
-<input id="modulo" type="number" value="12" >
+<label for="modulo" style="font-size: 50px;" > Z </label>
+<input id="modOfCalc" type="number"  >
 <div id="showBox" class="insert">
 
 
@@ -195,7 +200,7 @@
     <button class="num-btn">5</button>
     <button class="num-btn">6</button>
     <button id="power">
-        x<sup class="superscript"></sup>
+        x<sup class="superscript">  </sup> <span style="font-weight: 100; font-size: small; " >(الأُس)</span> 
     </button>
     
     <button class="num-btn">7</button>
@@ -217,8 +222,8 @@
          <!-- نهاية الحاسبة  -->
           </div>
         </div>
-        <div><button id="showCalc"> calculater Of Zn </button>
-          <button id="UnModeBtn" >Un mode </button></div>
+        <div><button id="showCalc"> calculater Of Zn<br> اجراء عمليات الجمع المعياري </button>
+          <button id="UnModeBtn" >Un mode<br> (زمرة اليونتي مع الضرب) </button></div>
       </section>
       
           <!--   التباديل -->
@@ -235,8 +240,8 @@
             <div id="page1" class="page">
                 <div class="Permo">
         <h1>Symmetric Group Permutations</h1>
-        <label for="groupOrder">Enter the order of the symmetric group :</label><br>
-        <span style="font-size: 70px;">S</span><input type="number" id="groupOrder" placeholder="e.g., 3" min="2" value="3" >
+        <label for="groupOrder">ادخل رقم الزمرة  </label><br>
+        <span style="font-size: 70px;">S</span><input type="number" class="groupOrder" id="groupOrder" placeholder="e.g., 3" min="2" value="3" >
         <br>
         <button onclick="generatePermutations()">Generate Permutations</button>
         <div id="groupInfo" class="group-info"></div>
@@ -249,7 +254,7 @@
                     <label for="permutation-input">Enter a Permutation:</label>
                     <input type="text" id="permutation-input" placeholder="e.g., (1 2)(2 3 4)" />
             
-                    <button type="button" onclick="calculateOrderInverse()">Analyze Permutation</button>
+                    <button type="button" onclick="calculateOrderInverse()">تفاصيل التبديل</button>
             
                 <div id="res4OrInv">
                     <h3>Results:</h3>
@@ -260,13 +265,13 @@
               <div id="page3" class="page">
                 <div class="powerOfPermo">
                   <h1>Power calculation</h1>
-                  <label for="power">Enter the Permutation :</label>
+                  <label for="power">Enter the Permutation : <br> ادخل الدورة او التبديل </label>
                   <input type="text" id="input4Pow" placeholder="(1 2 3)(4 5)">
                   <br>
-                  <label for="power">Enter the power :</label><br>
+                  <label for="power">Enter the power : <br> ادخل القوى </label><br>
                   <input type="number" id="input4Pow2">
                   <br>
-                  <button onclick="calculatePowerPerm()">Calculate Power</button>
+                  <button onclick="calculatePowerPerm()">Calculate Power<br> احسب القوى</button>
                   <div id="res4Pow" ></div>
               </div>
               </div>
@@ -274,7 +279,7 @@
               <div id="page4" class="page">
                 <div class="Composition">
                   <h1>Permutation Composition Calculator</h1>
-                  <label for="permutationOrder">Enter the order of the symmetric group :</label><br>
+                  <label for="permutationOrder">Enter the numner of the  group :<br> ادخل رقم الزمرة </label><br>
         <span style="font-size: 70px;">S</span><input type="number" id="permutationOrder"  min="2"  >
         <br>
                   <div id="permutationsContainer">
@@ -294,7 +299,7 @@
                   </div>
               <div id="resOfPow" class="resultOfComposition"></div>
                   <button onclick="calcCompoWithPow()">
-                    Calculate Composition
+                    Calculate Composition <br> أظهر الناتج 
                   </button>
                 
                 </div>
@@ -307,7 +312,7 @@
         <div id="D4">
           
           <div class="symmetry-group-D4">
-            <h1>Symmetry Group D4 Composition</h1>
+            <h1>Symmetry Group D4 Composition<br> زمرة التناظر حول المربع</h1>
             <div id="D4ShowBox" class="input-container">
               <!-- ================================ -->
               <!-- D4 -->
@@ -331,7 +336,7 @@
               <input class="D4pow-secondary" id="D4heipow2" type="text" min="-10"   />
             </div>
             <div class="action-buttons">
-              <button onclick="compose()">Compose</button>
+              <button onclick="compose()">Compose <br> أحسب </button>
             </div>
             <div class="results">
               <p id="composition">Composition Result:</p>
@@ -340,7 +345,7 @@
               <!-- Existing buttons -->
               <button id="D4operation" class="delete">o</button>
               <button id="D4power" class="operator">
-                <span> x <span class="superscript"> </span></span>
+                <span> x <span class="superscript"> </span></span><span style="font-weight: 100; font-size: small; " >(الأُس)</span>
               </button>
               
 
@@ -394,27 +399,27 @@
           
           <div id="quotietnZn">
               <h2>Zn Group</h2>        
-              <label for="orderGroup">Enter the number of the group:</label><br>
-              <span style="font-size: 70px;">Z</span><input type="number" id="orderGroup" value="12" ><br>
+              <label for="orderGroup">Enter the number of the group:<br> ادخل رقم الزمرة </label><br>
+              <span style="font-size: 70px;">Z</span><input type="number" id="orderGroup"  ><br>
               
-              <label for="subgroup">Enter the number of the subgroup:</label>
-              <input type="number" id="subgroup" value="4" >
+              <label for="subgroup">Enter the number of the subgroup:<br> أدخل رقم الزمرة الجزئية</label>
+              <input type="number" id="subgroup"  >
               
-              <button id="submitButton">Calculate</button>
+              <button id="submitButton">Calculate <br>  أحسب</button>
           </div>
           
           <div id="quotientCyclic" class="hidden">
               <h2>Cyclic Group</h2>
-              <label for="orderCyclicGroup">Enter the order of the Cyclic group:</label>
+              <label for="orderCyclicGroup">Enter the order of the Cyclic group:<br> أدخل رتبة الزمرة الدوارة </label>
               <input type="number" id="orderCyclicGroup" value="12" >
               
-              <label for="subgroupCyclic">Enter the order of the subgroup:</label>
+              <label for="subgroupCyclic">Enter the order of the subgroup:<br> أدخل رتبة الزمرةالجزئية</label>
               <input type="number" id="subgroupCyclic" value="4" >
               
-              <button id="submitCyclicButton">Calculate Cyclic Group</button>
+              <button id="submitCyclicButton">Calculate Cyclic Group : <br> أحسب</button>
           </div>
   
-          <button id="toggleButton">Switch to Cuclic Group</button>
+          <button id="toggleButton">Switch to Cuclic Group<br> تبديل الوضع الى الزمرة الدوارة</button>
   
           <div id="resultsQ"></div>
           <div id="stepsQ"></div>
@@ -490,8 +495,8 @@
         <div class="JordenHolder">
             <nav class="JordenHolder-nav">
                 <ul class="JordenHolder-nav">
-                    <li class="JordenHolder-menu-item active" data-target="#JordenHolder-section1" data-description="Check Composition Series">Comp</li>
-                    <li class="JordenHolder-menu-item" data-target="#JordenHolder-section2" data-description="Check Solvability of a Group">Solv</li>
+                    <li class="JordenHolder-menu-item active" data-target="#JordenHolder-section1" data-description="Check Composition Series">Compالسلاسل التركيبية </li>
+                    <li class="JordenHolder-menu-item" data-target="#JordenHolder-section2" data-description="Check Solvability of a Group">Solvالزمر القابلة للحل </li>
                     <li class="JordenHolder-menu-item" data-target="#JordenHolder-section3" data-description="Check p-Group">P-gp</li>
                     <li class="JordenHolder-menu-item" data-target="#JordenHolder-section4" data-description="Sylow p-Subgroup Detailed Checker">Sylow</li>
                 </ul>
@@ -501,8 +506,8 @@
             
             <div id="JordenHolder-section1" class="JordenHolder-section active">
                 <div class="jorden-container">
-                    <h1>Check Composition Series</h1>
-                    <label for="originalGroup">Enter original group order:</label>
+                    <h1>Check Composition Series اختبارالسلاسل التركيبية </h1>
+                    <label for="originalGroup">Enter original group order:<br> ادخل رتبة الزمرة الاساسية </label>
                     <input class="JordenHolderinput" type="number" id="originalGroup" min="1"  />
             
                     <div id="Jorden-subgroups" class="jorden-input-group-container">
@@ -512,30 +517,31 @@
                         </div>
                     </div>
                     <button class="buttonJord" onclick="addSubgroupCompJord()">Add Subgroup</button>
-                    <button class="buttonJord" onclick="checkSeriesCompJord()">Check Series</button>
+                    <button class="buttonJord" onclick="checkSeriesCompJord()">Check Series <br> أختبر السلسلة</button>
                     <div class="jorden-result" id="resultComp"></div>
                     <div class="jorden-steps" id="stepsComp"></div>
                 </div>
             </div>
-            <div id="JordenHolder-section2" class="JordenHolder-section">
+<div id="JordenHolder-section2" class="JordenHolder-section">
                 <div class="jorden-container">
                     <h1>Check Solvability of a Group</h1>
-                    <label for="groupOrderSolv">Enter order of the group:</label>
-                    <input class="JordenHolderinput" type="number" id="groupOrderSolv" min="1" placeholder="Enter order" />
-            
-                    <div id="normalSubgroupsSolv" class="jorden-input-group-container">
-                        <div class="jorden-sups">
-                            <button class="jorden-remove-btn" onclick="removeSubgroupSolv(this)">x</button>
-                            <input class="JordenHolderinput" type="number" placeholder="Subgroup order" min="1" />
-                        </div>
-                    </div>
-                    <button class="buttonJord" onclick="addSubgroupSolv()">Add Subgroup</button>
-                    <button class="buttonJord" onclick="checkSolvabilitySolv()">Check Solvability</button>
+                    
+                    <label for="groupTypeSolv">Select Group Type:</label>
+                    <select id="groupTypeSolv" class="JordenHolderinput" style="width: 100%; height: auto; margin-bottom: 15px; cursor: pointer;">
+                        <option value="Zn">Standard Group (Zn)</option>
+                        <option value="Sn">Symmetric Group (Sn)</option>
+                        <option value="Dn">Dihedral Group (Dn) - Square is D4</option>
+                    </select>
+
+                    <label for="groupNSolv">Enter 'n' (e.g., 4 for Z4, S4, or D4):</label>
+                    <input class="JordenHolderinput" type="number" id="groupNSolv" min="1" placeholder="Enter n" />
+
+                    <button class="buttonJord" onclick="checkAdvancedSolvability()">Check Solvability</button>
                     <div class="jorden-resultSolv" id="resultSolv"></div>
                     <div class="jorden-stepsSolv" id="stepsSolv"></div>
                 </div>
             </div>
-            <div id="JordenHolder-section3" class="JordenHolder-section">
+                        <div id="JordenHolder-section3" class="JordenHolder-section">
                 <div class="jorden-container">
                     <h1>Check p-Group</h1>
                     <label for="groupOrder">Enter order of the group:</label>
@@ -565,24 +571,7 @@
       </section>
     
     </main>
-    <footer>  
-      <p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved.EMAN</p>
-      <div id="social-media">
-        <a href="https://www.instagram.com/murtada.r10?igsh=b29kZnd5MDEwZXk5&utm_source=qr" target="_blank">
-          <img
-            src="photos/momo.JPG"
-            alt=""
-            class="social-logo"
-          />
-        </a>
-        <a href="https://t.me/mraad10" target="_blank">
-          <img
-            src="photos/tele.png"
-            alt=""
-            class="social-logo"
-          />
-        </a>
-       </div></footer>
+    
    
     <script src="backEnd/permutition.js" ></script>
     <script src="backEnd/main.js"></script>

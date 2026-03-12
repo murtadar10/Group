@@ -223,3 +223,24 @@ ul.JordenHolder-nav::-webkit-scrollbar {
     text-align: center;
     box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
 }
+
+/* ========================================= */
+/* تأثير الخطأ (اللون الأحمر) لمربعات الإدخال */
+/* ========================================= */
+.jorden-error-input {
+    border: 2px solid #ff4d4d !important;
+    background-color: rgba(255, 77, 77, 0.1) !important;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5) !important;
+    color: #ff4d4d !important;
+    transition: all 0.3s ease;
+    animation: shake 0.4s; /* تأثير اهتزاز خفيف ليلفت الانتباه أكثر */
+}
+
+/* حركة الاهتزاز (Animation) عند حدوث الخطأ */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}

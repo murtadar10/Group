@@ -12,6 +12,7 @@
 }
 
 #Quotient > div {
+        overflow: scroll;
     background-color: #222533; /* خلفية متناسقة مع باقي التطبيق */
     padding: 20px 15px;
     border-radius: 12px;

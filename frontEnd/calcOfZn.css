@@ -145,7 +145,7 @@
 /* ألوان الأزرار الخاصة */
 .calcOfZn button#operation, .calcOfZn button#power, .calcOfZn button#minus { background-color: #009eff; }
 .calcOfZn button#backspace, .calcOfZn button#clear { background-color: #ff4d4d; }
-.calcOfZn button#equals { background-color: #28a745; grid-column: span 2; /* جعل زر اليساوي أعرض */ }
+.calcOfZn button#equals { background-color: #28a745;  /* جعل زر اليساوي أعرض */ }
 
 #l1, #l2, #r1, #r2, .ad { display: none; }
 

@@ -97,9 +97,8 @@
   margin-right: 5px;
 }
 
-#groupOrder, #input4Pow, #input4Pow2, #permutation-input, #permutationOrder {
-  width: 100%;
-  padding: 15px;
+.groupOrder, #input4Pow, #input4Pow2, #permutation-input, #permutationOrder {
+     padding: 15px;
   font-size: 1.2em;
   text-align: center;
   border-radius: 8px;
@@ -109,7 +108,14 @@
   margin-bottom: 15px;
   box-sizing: border-box;
 }
+.groupOrder, #permutationOrder
+{
+  padding: auto;
+  font-size: medium;
+  inline-size: auto;
+      width: 25%; 
 
+}
 .group-info, .permutation-info, #res4Or\&Inv, #res4Pow {
   margin: 15px 0;
   padding: 15px;

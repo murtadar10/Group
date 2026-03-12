@@ -3,11 +3,16 @@
 // heipow = قوى القوس
 // res = ناتج القوس
 // resnum =  ناتج العدد المرفوع الى اس
+// mod = مود الجمع 
 
-const mod = document.getElementById("modulo").value;
 
 
 function calculate() {
+  let mod = parseInt(document.getElementById("modOfCalc").value)|| NaN ;
+if (isNaN(mod)) {
+    alert("الرجاء إدخال المعيار (الرقم اسفل عملية الجمع) أولاً");
+    return; // هذه الكلمة تمنع تنفيذ باقي الكود بالأسفل
+  }
  function Inverse(a) {
   
     return (mod - (a % mod)) % mod;
@@ -17,6 +22,8 @@ function calculate() {
     if (b < 0){
       resultPower = Inverse(resultPower)
     }
+// =================================================================================================================================================
+    
     return resultPower;
   }
 
@@ -63,6 +70,7 @@ function calculate() {
   let resultElement = document.createElement("p");
   resultElement.id = "resOfThis";
   resultElement.textContent = `= ${result}`;
+  
   showBox.appendChild(resultElement);
 
 
