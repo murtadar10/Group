@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <button class="app-header" id="menu-btn">☰ اضغط هنا</button>
     <div class="header-title">Group Theory</div>
     <button id="floating-home-btn" onclick="goToHome()">الرئيسية</button>
+
+    
   `;
   document.body.insertBefore(header, document.body.firstChild);
 
