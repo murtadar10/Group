@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const header = document.createElement('div');
   header.className = 'mobile-header';
   header.innerHTML = `
-    <button class="app-header" id="menu-btn">☰ اضغط هنا</button>
+    <button class="app-header" id="menu-btn">☰ اضغط هنا \n لاختيار نوع الزمرة</button>
     <div class="header-title">Group Theory</div>
     <button id="floating-home-btn" onclick="goToHome()">الرئيسية</button>
 
@@ -116,4 +116,5 @@ document.getElementById("UnModeBtn").addEventListener("click", () => {
 function goToHome() {
     // هذه الدالة تعيدك للرئيسية وتصفر جميع الحاسبات لتبدأ من جديد
     window.location.reload(); 
+
 }
