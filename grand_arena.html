@@ -1,455 +1,857 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>ساحة التدريب الكبرى (The Grand Arena)</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0b0c10">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0b0c10" />
+    <link rel="apple-touch-icon" href="icon.png" />
     <script>
-        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+        },
+      };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
 
     <style>
-        * { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
-        body { margin: 0; padding: 0; background-color: #0b0c10; color: #c5c6c7; background-image: radial-gradient(circle at center, #1f2833 0%, #0b0c10 100%); min-height: 100vh; padding-bottom: 50px; }
-        
-        .header { text-align: center; padding: 50px 20px 20px; border-bottom: 3px solid #ffaa00; background: rgba(0,0,0,0.5); box-shadow: 0 4px 15px rgba(255, 170, 0, 0.2); }
-        .header h1 { color: #ffaa00; font-size: 2.5em; margin: 0; text-shadow: 0 0 20px rgba(255, 170, 0, 0.8); }
-        .header p { font-size: 1.1em; color: #e0e0e0; margin-top: 10px; }
-        .back-btn { position: absolute; top: 15px; right: 15px; color: #ffaa00; text-decoration: none; border: 1px solid #ffaa00; padding: 8px 15px; border-radius: 8px; background: rgba(0,0,0,0.6); font-weight: bold; }
-        
-        .arena-container { padding: 30px 20px; max-width: 900px; margin: auto; }
-        
-        /* شاشة النقاط التراكمية */
-        .master-score-board { background: linear-gradient(45deg, #1f2833, #332200); border: 2px solid #ffaa00; border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 30px; box-shadow: 0 0 20px rgba(255, 170, 0, 0.3); }
-        .master-score-board h2 { margin: 0; color: #fff; font-size: 1.5em; }
-        .master-score-value { font-size: 3.5em; font-weight: bold; color: #ffaa00; text-shadow: 0 0 10px #ffaa00; margin: 10px 0; display: block; }
-        
-        /* شبكة الألعاب */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
-        .game-card { background: rgba(31, 40, 51, 0.8); border: 2px solid #45a29e; border-radius: 15px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-        .game-card:active { transform: scale(0.95); background: #45a29e; }
-        .game-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); transform: skewX(-25deg); animation: shine 3s infinite; }
-        @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
-        
-        .game-icon { font-size: 3em; margin-bottom: 10px; display: block; }
-        .game-title { color: #66fcf1; font-weight: bold; font-size: 1.2em; }
-        
-        /* النوافذ المنبثقة (Modals) */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(8px); }
-        .modal-content { background: #0b0c10; border: 2px solid #ffaa00; width: 95%; max-width: 500px; max-height: 85vh; overflow-y: auto; border-radius: 15px; padding: 25px; position: relative; box-shadow: 0 0 40px rgba(255, 170, 0, 0.4); }
-        .close-btn { position: absolute; top: 15px; right: 15px; font-size: 2.5em; color: #ff4d4d; cursor: pointer; line-height: 0.5; }
-        .modal-title { color: #ffaa00; text-align: center; border-bottom: 1px dashed #333; padding-bottom: 15px; margin-top: 0; font-size: 1.5em; }
-        
-        /* عناصر داخل الألعاب */
-        .action-btn { background: linear-gradient(45deg, #1f2833, #45a29e); color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 1.1em; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 10px; }
-        .action-btn:active { transform: scale(0.95); }
-        
-        .cayley-table { margin: 0 auto; border-collapse: collapse; direction: ltr; }
-        .cayley-table th, .cayley-table td { border: 1px solid #45a29e; padding: 5px; text-align: center; width: 50px; height: 50px; font-size: 1.1em; }
-        .cayley-table th { background: #1f2833; color: #66fcf1; }
-        .cayley-input { width: 100%; height: 100%; text-align: center; background: transparent; border: none; color: #ffaa00; font-size: 1.2em; outline: none; font-weight: bold; }
-        
-        .maze-btn { background: #45a29e; color: #0b0c10; border: none; padding: 15px; font-size: 1.3em; font-weight: bold; border-radius: 8px; margin: 5px; width: 40%; cursor: pointer;}
-        .maze-btn:active { background: #66fcf1; }
-        .prop-btn { background: #1f2833; color: #fff; border: 1px solid #ffaa00; padding: 12px; margin: 5px 0; width: 100%; border-radius: 8px; font-size: 1.1em; cursor: pointer;}
-        .prop-btn:active { background: #ffaa00; color: #000; }
-        
-        .riddle-box { background: rgba(31, 40, 51, 0.8); padding: 15px; border-radius: 8px; border-right: 4px solid #ffaa00; margin-bottom: 15px; text-align: right; }
-        .riddle-input { width: 100%; padding: 12px; margin-top: 10px; background: #000; border: 1px solid #45a29e; color: #ffaa00; border-radius: 5px; outline: none; font-size: 1.1em; font-weight: bold;}
-        
-        .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; font-weight: bold; display: none; font-size: 1.1em; text-align: center; }
-        .success { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
-        .error { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
-    </style>
-</head>
-<body>
+      * {
+        box-sizing: border-box;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0b0c10;
+        color: #c5c6c7;
+        background-image: radial-gradient(
+          circle at center,
+          #1f2833 0%,
+          #0b0c10 100%
+        );
+        min-height: 100vh;
+        padding-bottom: 50px;
+      }
 
-    <a href="infinite_world.html" class="back-btn">⮞ القائمة السابقة </a>
+      .header {
+        text-align: center;
+        padding: 50px 20px 20px;
+        border-bottom: 3px solid #ffaa00;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(255, 170, 0, 0.2);
+      }
+      .header h1 {
+        color: #ffaa00;
+        font-size: 2.5em;
+        margin: 0;
+        text-shadow: 0 0 20px rgba(255, 170, 0, 0.8);
+      }
+      .header p {
+        font-size: 1.1em;
+        color: #e0e0e0;
+        margin-top: 10px;
+      }
+      .back-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #ffaa00;
+        text-decoration: none;
+        border: 1px solid #ffaa00;
+        padding: 8px 15px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.6);
+        font-weight: bold;
+      }
+
+      .arena-container {
+        padding: 30px 20px;
+        max-width: 900px;
+        margin: auto;
+      }
+
+      /* شاشة النقاط التراكمية */
+      .master-score-board {
+        background: linear-gradient(45deg, #1f2833, #332200);
+        border: 2px solid #ffaa00;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+      }
+      .master-score-board h2 {
+        margin: 0;
+        color: #fff;
+        font-size: 1.5em;
+      }
+      .master-score-value {
+        font-size: 3.5em;
+        font-weight: bold;
+        color: #ffaa00;
+        text-shadow: 0 0 10px #ffaa00;
+        margin: 10px 0;
+        display: block;
+      }
+
+      /* شبكة الألعاب */
+      .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+      }
+      .game-card {
+        background: rgba(31, 40, 51, 0.8);
+        border: 2px solid #45a29e;
+        border-radius: 15px;
+        padding: 25px 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+      }
+      .game-card:active {
+        transform: scale(0.95);
+        background: #45a29e;
+      }
+      .game-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transform: skewX(-25deg);
+        animation: shine 3s infinite;
+      }
+      @keyframes shine {
+        0% {
+          left: -100%;
+        }
+        20% {
+          left: 200%;
+        }
+        100% {
+          left: 200%;
+        }
+      }
+
+      .game-icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .game-title {
+        color: #66fcf1;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      /* النوافذ المنبثقة (Modals) */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+      }
+      .modal-content {
+        background: #0b0c10;
+        border: 2px solid #ffaa00;
+        width: 95%;
+        max-width: 500px;
+        max-height: 85vh;
+        overflow-y: auto;
+        border-radius: 15px;
+        padding: 25px;
+        position: relative;
+        box-shadow: 0 0 40px rgba(255, 170, 0, 0.4);
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 2.5em;
+        color: #ff4d4d;
+        cursor: pointer;
+        line-height: 0.5;
+      }
+      .modal-title {
+        color: #ffaa00;
+        text-align: center;
+        border-bottom: 1px dashed #333;
+        padding-bottom: 15px;
+        margin-top: 0;
+        font-size: 1.5em;
+      }
+
+      /* عناصر داخل الألعاب */
+      .action-btn {
+        background: linear-gradient(45deg, #1f2833, #45a29e);
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: 0.2s;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+
+      .cayley-table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        direction: ltr;
+      }
+      .cayley-table th,
+      .cayley-table td {
+        border: 1px solid #45a29e;
+        padding: 5px;
+        text-align: center;
+        width: 50px;
+        height: 50px;
+        font-size: 1.1em;
+      }
+      .cayley-table th {
+        background: #1f2833;
+        color: #66fcf1;
+      }
+      .cayley-input {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: #ffaa00;
+        font-size: 1.2em;
+        outline: none;
+        font-weight: bold;
+      }
+
+      .maze-btn {
+        background: #45a29e;
+        color: #0b0c10;
+        border: none;
+        padding: 15px;
+        font-size: 1.3em;
+        font-weight: bold;
+        border-radius: 8px;
+        margin: 5px;
+        width: 40%;
+        cursor: pointer;
+      }
+      .maze-btn:active {
+        background: #66fcf1;
+      }
+      .prop-btn {
+        background: #1f2833;
+        color: #fff;
+        border: 1px solid #ffaa00;
+        padding: 12px;
+        margin: 5px 0;
+        width: 100%;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+      }
+      .prop-btn:active {
+        background: #ffaa00;
+        color: #000;
+      }
+
+      .riddle-box {
+        background: rgba(31, 40, 51, 0.8);
+        padding: 15px;
+        border-radius: 8px;
+        border-right: 4px solid #ffaa00;
+        margin-bottom: 15px;
+        text-align: right;
+      }
+      .riddle-input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background: #000;
+        border: 1px solid #45a29e;
+        color: #ffaa00;
+        border-radius: 5px;
+        outline: none;
+        font-size: 1.1em;
+        font-weight: bold;
+      }
+
+      .feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: none;
+        font-size: 1.1em;
+        text-align: center;
+      }
+      .success {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        border: 1px solid #00ff88;
+      }
+      .error {
+        background: rgba(255, 77, 77, 0.2);
+        color: #ff4d4d;
+        border: 1px solid #ff4d4d;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="infinite_world.html" class="back-btn">← القائمة السابقة </a>
 
     <div class="header">
-        <h1>ساحة التدريب الكبرى</h1>
-        <p>المكان الذي يُصنع فيه أبطال الجبر المجرد</p>
+      <h1>ساحة التدريب الكبرى</h1>
+      <p>المكان الذي يُصنع فيه أبطال الجبر المجرد</p>
     </div>
 
     <div class="arena-container">
-        <div class="master-score-board">
-            <h2>مستوى الخبرة العام (XP)</h2>
-            <span class="master-score-value" id="globalScoreDisplay">0</span>
-            <p style="color: #ccc; margin: 0; font-size: 0.9em;">أثبت جدارتك في الألعاب لزيادة نقاطك. الخطأ قد يكلفك غالياً!</p>
-        </div>
+      <div class="master-score-board">
+        <h2>مستوى الخبرة العام (XP)</h2>
+        <span class="master-score-value" id="globalScoreDisplay">0</span>
+        <p style="color: #ccc; margin: 0; font-size: 0.9em">
+          أثبت جدارتك في الألعاب لزيادة نقاطك. الخطأ قد يكلفك غالياً!
+        </p>
+      </div>
 
-        <div class="games-grid">
-            <div class="game-card" onclick="openGame('cayley')">
-                <span class="game-icon">📊</span>
-                <div class="game-title">جدول كايلي</div>
-                <p style="color:#ccc; font-size:0.8em; margin-top:5px;">بناء المصفوفات</p>
-            </div>
-            <div class="game-card" onclick="openGame('identify')">
-                <span class="game-icon">🔍</span>
-                <div class="game-title">اكتشف الخاصية</div>
-                <p style="color:#ccc; font-size:0.8em; margin-top:5px;">قوة الملاحظة</p>
-            </div>
-            <div class="game-card" onclick="openGame('isGroup')">
-                <span class="game-icon">⚖️</span>
-                <div class="game-title">اختبار البنى</div>
-                <p style="color:#ccc; font-size:0.8em; margin-top:5px;">هل هي زمرة؟</p>
-            </div>
-            <div class="game-card" onclick="openGame('maze')">
-                <span class="game-icon">🧭</span>
-                <div class="game-title">المتاهة العددية</div>
-                <p style="color:#ccc; font-size:0.8em; margin-top:5px;">بقاء وحساب ذهني</p>
-            </div>
-            <div class="game-card" style="border-color: #ffaa00;" onclick="openGame('riddles')">
-                <span class="game-icon">🧠</span>
-                <div class="game-title" style="color:#ffaa00;">الماراثون اللانهائي</div>
-                <p style="color:#ccc; font-size:0.8em; margin-top:5px;">تحديات GCD و LCM</p>
-            </div>
+      <div class="games-grid">
+        <div class="game-card" onclick="openGame('cayley')">
+          <span class="game-icon">📊</span>
+          <div class="game-title">جدول كايلي</div>
+          <p style="color: #ccc; font-size: 0.8em; margin-top: 5px">
+            بناء المصفوفات
+          </p>
         </div>
+        <div class="game-card" onclick="openGame('identify')">
+          <span class="game-icon">🔍</span>
+          <div class="game-title">اكتشف الخاصية</div>
+          <p style="color: #ccc; font-size: 0.8em; margin-top: 5px">
+            قوة الملاحظة
+          </p>
+        </div>
+        <div class="game-card" onclick="openGame('isGroup')">
+          <span class="game-icon">⚖️</span>
+          <div class="game-title">اختبار البنى</div>
+          <p style="color: #ccc; font-size: 0.8em; margin-top: 5px">
+            هل هي زمرة؟
+          </p>
+        </div>
+        <div class="game-card" onclick="openGame('maze')">
+          <span class="game-icon">🧭</span>
+          <div class="game-title">المتاهة العددية</div>
+          <p style="color: #ccc; font-size: 0.8em; margin-top: 5px">
+            بقاء وحساب ذهني
+          </p>
+        </div>
+        <div
+          class="game-card"
+          style="border-color: #ffaa00"
+          onclick="openGame('riddles')"
+        >
+          <span class="game-icon">🧠</span>
+          <div class="game-title" style="color: #ffaa00">
+            الماراثون اللانهائي
+          </div>
+          <p style="color: #ccc; font-size: 0.8em; margin-top: 5px">
+            تحديات GCD و LCM
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="modal-overlay" id="gameModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 class="modal-title" id="modalTitle">عنوان اللعبة</h2>
-            <div class="game-area" id="modalBody">
-                </div>
-        </div>
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 class="modal-title" id="modalTitle">عنوان اللعبة</h2>
+        <div class="game-area" id="modalBody"></div>
+      </div>
     </div>
 
     <script>
-        // ==========================================
-        // 1. نظام النقاط المركزي (LocalStorage)
-        // ==========================================
-        let globalScore = parseInt(localStorage.getItem('math_realm_score')) || 0; 
-        
-        function updateScoreUI() {
-            document.getElementById('globalScoreDisplay').innerText = globalScore;
+      // ==========================================
+      // 1. نظام النقاط المركزي (LocalStorage)
+      // ==========================================
+      let globalScore = parseInt(localStorage.getItem("math_realm_score")) || 0;
+
+      function updateScoreUI() {
+        document.getElementById("globalScoreDisplay").innerText = globalScore;
+      }
+      updateScoreUI(); // تحديث عند فتح الصفحة
+
+      function incrementScore(points = 1) {
+        globalScore += points;
+        localStorage.setItem("math_realm_score", globalScore);
+        updateScoreUI();
+      }
+
+      function resetScore() {
+        globalScore = 0;
+        localStorage.setItem("math_realm_score", globalScore);
+        updateScoreUI();
+      }
+
+      // ==========================================
+      // دوال مساعدة
+      // ==========================================
+      function gcd(a, b) {
+        return b === 0 ? Math.abs(a) : gcd(b, a % b);
+      }
+      function lcm(a, b) {
+        return Math.abs(a * b) / gcd(a, b);
+      }
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // ==========================================
+      // إدارة النوافذ
+      // ==========================================
+      const modal = document.getElementById("gameModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+
+      function openGame(gameId) {
+        modal.style.display = "flex";
+        modalBody.innerHTML = "";
+
+        if (gameId === "cayley") loadDynamicCayley();
+        else if (gameId === "identify") loadDynamicIdentify();
+        else if (gameId === "isGroup") loadDynamicIsGroup();
+        else if (gameId === "maze") loadDynamicMaze();
+        else if (gameId === "riddles") loadDynamicRiddles();
+
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+      }
+
+      function getFeedbackDiv(id) {
+        return `<div id="${id}" class="feedback"></div>`;
+      }
+      function showRes(id, isCorrect, msg) {
+        let f = document.getElementById(id);
+        f.style.display = "block";
+        f.className = `feedback ${isCorrect ? "success" : "error"}`;
+        f.innerHTML = isCorrect ? `✅ ${msg}` : `❌ ${msg}`;
+      }
+
+      // ==========================================
+      // 2. جدول كايلي
+      // ==========================================
+      let cayleyStart = 0;
+      function loadDynamicCayley() {
+        cayleyStart = getRandomInt(-5, 5);
+        modalTitle.innerText = "بناء جدول كايلي";
+        let html = `<p style="color:#ccc; text-align:center;">املأ الجدول للمجموعة $\\{${cayleyStart}, ${cayleyStart + 1}, ${cayleyStart + 2}, ${cayleyStart + 3}\\}$</p><div style="overflow-x:auto;"><table class="cayley-table"><tr><th>+</th>`;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++)
+          html += `<th>${i}</th>`;
+        html += `</tr>`;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++) {
+          html += `<tr><th>${i}</th>`;
+          for (let j = cayleyStart; j <= cayleyStart + 3; j++)
+            html += `<td><input type="number" id="c_${i}_${j}" class="cayley-input"></td>`;
+          html += `</tr>`;
         }
-        updateScoreUI(); // تحديث عند فتح الصفحة
-
-        function incrementScore(points = 1) {
-            globalScore += points;
-            localStorage.setItem('math_realm_score', globalScore);
-            updateScoreUI();
-        }
-
-        function resetScore() {
-            globalScore = 0;
-            localStorage.setItem('math_realm_score', globalScore);
-            updateScoreUI();
-        }
-
-        // ==========================================
-        // دوال مساعدة 
-        // ==========================================
-        function gcd(a, b) { return b === 0 ? Math.abs(a) : gcd(b, a % b); }
-        function lcm(a, b) { return Math.abs(a * b) / gcd(a, b); }
-        function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
-        // ==========================================
-        // إدارة النوافذ
-        // ==========================================
-        const modal = document.getElementById('gameModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-
-        function openGame(gameId) {
-            modal.style.display = 'flex';
-            modalBody.innerHTML = '';
-            
-            if (gameId === 'cayley') loadDynamicCayley();
-            else if (gameId === 'identify') loadDynamicIdentify();
-            else if (gameId === 'isGroup') loadDynamicIsGroup();
-            else if (gameId === 'maze') loadDynamicMaze();
-            else if (gameId === 'riddles') loadDynamicRiddles();
-
-            if (window.MathJax) MathJax.typesetPromise([modalBody]);
-        }
-
-        function closeModal() { modal.style.display = 'none'; }
-        
-        function getFeedbackDiv(id) { return `<div id="${id}" class="feedback"></div>`; }
-        function showRes(id, isCorrect, msg) {
-            let f = document.getElementById(id);
-            f.style.display = 'block'; f.className = `feedback ${isCorrect ? 'success' : 'error'}`;
-            f.innerHTML = isCorrect ? `✅ ${msg}` : `❌ ${msg}`;
-        }
-
-        // ==========================================
-        // 2. جدول كايلي
-        // ==========================================
-        let cayleyStart = 0;
-        function loadDynamicCayley() {
-            cayleyStart = getRandomInt(-5, 5); 
-            modalTitle.innerText = "بناء جدول كايلي";
-            let html = `<p style="color:#ccc; text-align:center;">املأ الجدول للمجموعة $\\{${cayleyStart}, ${cayleyStart+1}, ${cayleyStart+2}, ${cayleyStart+3}\\}$</p><div style="overflow-x:auto;"><table class="cayley-table"><tr><th>+</th>`;
-            for(let i=cayleyStart; i<=cayleyStart+3; i++) html += `<th>${i}</th>`;
-            html += `</tr>`;
-            for(let i=cayleyStart; i<=cayleyStart+3; i++) {
-                html += `<tr><th>${i}</th>`;
-                for(let j=cayleyStart; j<=cayleyStart+3; j++) html += `<td><input type="number" id="c_${i}_${j}" class="cayley-input"></td>`;
-                html += `</tr>`;
-            }
-            html += `</table></div><br>
+        html += `</table></div><br>
             <button class="action-btn" onclick="checkCayley()">تحقق من الجدول</button>
             <button class="action-btn" style="background:#333;" onclick="loadDynamicCayley()">توليد جدول جديد 🔄</button>
-            ${getFeedbackDiv('cayleyFeed')}`;
-            modalBody.innerHTML = html;
-            if (window.MathJax) MathJax.typesetPromise([modalBody]);
+            ${getFeedbackDiv("cayleyFeed")}`;
+        modalBody.innerHTML = html;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+      function checkCayley() {
+        let correct = true;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++) {
+          for (let j = cayleyStart; j <= cayleyStart + 3; j++) {
+            let val = parseInt(document.getElementById(`c_${i}_${j}`).value);
+            if (val !== i + j) correct = false;
+          }
         }
-        function checkCayley() {
-            let correct = true;
-            for(let i=cayleyStart; i<=cayleyStart+3; i++){
-                for(let j=cayleyStart; j<=cayleyStart+3; j++){
-                    let val = parseInt(document.getElementById(`c_${i}_${j}`).value);
-                    if(val !== i+j) correct = false;
-                }
-            }
-            if(correct) {
-                incrementScore(2);
-                showRes('cayleyFeed', true, "عمل رائع! حصلت على نقطتين ⭐⭐");
-            } else showRes('cayleyFeed', false, "يوجد خطأ في الجمع. دقق في التقاطعات!");
-        }
+        if (correct) {
+          incrementScore(2);
+          showRes("cayleyFeed", true, "عمل رائع! حصلت على نقطتين ⭐⭐");
+        } else
+          showRes("cayleyFeed", false, "يوجد خطأ في الجمع. دقق في التقاطعات!");
+      }
 
-        // ==========================================
-        // 3. اكتشف الخاصية 
-        // ==========================================
-        let currentPropAns = '';
-        function loadDynamicIdentify() {
-            let a = getRandomInt(-15, 15); let b = getRandomInt(-15, 15); let c = getRandomInt(-15, 15);
-            let props = [
-                { id: 'comm', text: `$${a} + ${b} = ${b} + ${a}$` },
-                { id: 'assoc', text: `$(${a} + ${b}) + ${c} = ${a} + (${b} + ${c})$` },
-                { id: 'id', text: `$${a} + 0 = ${a}$` },
-                { id: 'inv', text: `$${a} + (${-a}) = 0$` }
-            ];
-            let choice = props[getRandomInt(0, 3)];
-            currentPropAns = choice.id;
+      // ==========================================
+      // 3. اكتشف الخاصية
+      // ==========================================
+      let currentPropAns = "";
+      function loadDynamicIdentify() {
+        let a = getRandomInt(-15, 15);
+        let b = getRandomInt(-15, 15);
+        let c = getRandomInt(-15, 15);
+        let props = [
+          { id: "comm", text: `$${a} + ${b} = ${b} + ${a}$` },
+          {
+            id: "assoc",
+            text: `$(${a} + ${b}) + ${c} = ${a} + (${b} + ${c})$`,
+          },
+          { id: "id", text: `$${a} + 0 = ${a}$` },
+          { id: "inv", text: `$${a} + (${-a}) = 0$` },
+        ];
+        let choice = props[getRandomInt(0, 3)];
+        currentPropAns = choice.id;
 
-            modalTitle.innerText = "اكتشف الخاصية الجبرية";
-            modalBody.innerHTML = `
+        modalTitle.innerText = "اكتشف الخاصية الجبرية";
+        modalBody.innerHTML = `
                 <div style="font-size:1.8em; direction:ltr; font-weight:bold; color:#ffaa00; text-align:center; margin:20px 0;">${choice.text}</div>
                 <p style="text-align:center;">أي خاصية تمثلها هذه العبارة؟</p>
                 <button class="prop-btn" onclick="checkDynamicIden('assoc')">التجميعية (Associative)</button>
                 <button class="prop-btn" onclick="checkDynamicIden('comm')">الإبدالية (Commutative)</button>
                 <button class="prop-btn" onclick="checkDynamicIden('inv')">النظير الجمعي (Inverse)</button>
                 <button class="prop-btn" onclick="checkDynamicIden('id')">العنصر المحايد (Identity)</button>
-                ${getFeedbackDiv('idenFeed')}
+                ${getFeedbackDiv("idenFeed")}
             `;
-            if (window.MathJax) MathJax.typesetPromise([modalBody]);
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+      function checkDynamicIden(ans) {
+        if (ans === currentPropAns) {
+          incrementScore(1);
+          showRes("idenFeed", true, "إجابة صحيحة! جاري توليد سؤال جديد...");
+          setTimeout(loadDynamicIdentify, 1000);
+        } else {
+          showRes("idenFeed", false, "خطأ فادح. تم تصفير نقاطك الكلية! 💀");
+          resetScore();
         }
-        function checkDynamicIden(ans) {
-            if(ans === currentPropAns) {
-                incrementScore(1);
-                showRes('idenFeed', true, "إجابة صحيحة! جاري توليد سؤال جديد...");
-                setTimeout(loadDynamicIdentify, 1000); 
-            } else {
-                showRes('idenFeed', false, "خطأ فادح. تم تصفير نقاطك الكلية! 💀");
-                resetScore();
-            }
-        }
+      }
 
-        // ==========================================
-        // 4. هل هي زمرة؟ (البنك الشامل)
-        // ==========================================
-        const algebraicStructuresDB = [
-            { exp: "$(\\mathbb{Z}, +)$", semi: true, group: true, abelian: true, reason: "تحقق الإغلاق، التجميع، المحايد، والنظير، وهي إبدالية." },
-            { exp: "$(\\mathbb{N}, +)$", semi: true, group: false, abelian: false, reason: "لا تحتوي الأعداد الطبيعية على نظير جمعي (أرقام سالبة)." },
-            { exp: "$(\\mathbb{Z}, -)$", semi: false, group: false, abelian: false, reason: "عملية الطرح ليست تجميعية." },
-            { exp: "$(\\mathbb{Q}, +)$", semi: true, group: true, abelian: true, reason: "الأعداد النسبية تشكل زمرة إبدالية تحت الجمع." },
-            { exp: "$(\\mathbb{R}^*, \\cdot)$", semi: true, group: true, abelian: true, reason: "الأعداد الحقيقية (بدون الصفر) تشكل زمرة إبدالية تحت الضرب." },
-            { exp: "$GL_2(\\mathbb{R})$", semi: true, group: true, abelian: false, reason: "المصفوفات القابلة للانعكاس تشكل زمرة، لكن ضربها ليس إبدالياً." },
-            { exp: "$(2\\mathbb{Z}, +)$", semi: true, group: true, abelian: true, reason: "الأعداد الزوجية مغلقة تحت الجمع وتمتلك نظائر." },
-            { exp: "$(2\\mathbb{Z}+1, +)$", semi: false, group: false, abelian: false, reason: "فردي + فردي = زوجي، لذا فهي ليست مغلقة تحت الجمع أصلاً!" },
-            { exp: "$(\\mathbb{Z}_5, +_5)$", semi: true, group: true, abelian: true, reason: "زمرة معيارية أولية، وهي زمرة إبدالية." }
-        ];
+      // ==========================================
+      // 4. هل هي زمرة؟ (البنك الشامل)
+      // ==========================================
+      const algebraicStructuresDB = [
+        {
+          exp: "$(\\mathbb{Z}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "تحقق الإغلاق، التجميع، المحايد، والنظير، وهي إبدالية.",
+        },
+        {
+          exp: "$(\\mathbb{N}, +)$",
+          semi: true,
+          group: false,
+          abelian: false,
+          reason: "لا تحتوي الأعداد الطبيعية على نظير جمعي (أرقام سالبة).",
+        },
+        {
+          exp: "$(\\mathbb{Z}, -)$",
+          semi: false,
+          group: false,
+          abelian: false,
+          reason: "عملية الطرح ليست تجميعية.",
+        },
+        {
+          exp: "$(\\mathbb{Q}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد النسبية تشكل زمرة إبدالية تحت الجمع.",
+        },
+        {
+          exp: "$(\\mathbb{R}^*, \\cdot)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد الحقيقية (بدون الصفر) تشكل زمرة إبدالية تحت الضرب.",
+        },
+        {
+          exp: "$GL_2(\\mathbb{R})$",
+          semi: true,
+          group: true,
+          abelian: false,
+          reason:
+            "المصفوفات القابلة للانعكاس تشكل زمرة، لكن ضربها ليس إبدالياً.",
+        },
+        {
+          exp: "$(2\\mathbb{Z}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد الزوجية مغلقة تحت الجمع وتمتلك نظائر.",
+        },
+        {
+          exp: "$(2\\mathbb{Z}+1, +)$",
+          semi: false,
+          group: false,
+          abelian: false,
+          reason: "فردي + فردي = زوجي، لذا فهي ليست مغلقة تحت الجمع أصلاً!",
+        },
+        {
+          exp: "$(\\mathbb{Z}_5, +_5)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "زمرة معيارية أولية، وهي زمرة إبدالية.",
+        },
+      ];
 
-        let shuffledStructures = [];
-        let currentStructInfo = null;
-        let currentQType = 0; 
+      let shuffledStructures = [];
+      let currentStructInfo = null;
+      let currentQType = 0;
 
-        function loadDynamicIsGroup() {
-            if (shuffledStructures.length === 0) shuffledStructures = [...algebraicStructuresDB].sort(() => Math.random() - 0.5);
-            
-            currentStructInfo = shuffledStructures.pop();
-            currentQType = getRandomInt(0, 2); 
-            
-            let questionText = "";
-            if(currentQType === 0) questionText = "هل تمثل <strong>شبه زمرة (Semigroup)</strong>؟";
-            else if(currentQType === 1) questionText = "هل تمثل <strong>زمرة (Group)</strong>؟";
-            else questionText = "هل تمثل <strong>زمرة إبدالية (Abelian Group)</strong>؟";
+      function loadDynamicIsGroup() {
+        if (shuffledStructures.length === 0)
+          shuffledStructures = [...algebraicStructuresDB].sort(
+            () => Math.random() - 0.5,
+          );
 
-            modalTitle.innerText = "اختبار البنى الجبرية";
-            modalBody.innerHTML = `
+        currentStructInfo = shuffledStructures.pop();
+        currentQType = getRandomInt(0, 2);
+
+        let questionText = "";
+        if (currentQType === 0)
+          questionText = "هل تمثل <strong>شبه زمرة (Semigroup)</strong>؟";
+        else if (currentQType === 1)
+          questionText = "هل تمثل <strong>زمرة (Group)</strong>؟";
+        else
+          questionText =
+            "هل تمثل <strong>زمرة إبدالية (Abelian Group)</strong>؟";
+
+        modalTitle.innerText = "اختبار البنى الجبرية";
+        modalBody.innerHTML = `
                 <div style="font-size:2em; margin:20px 0; color:#ffaa00; direction:ltr; text-align:center;">${currentStructInfo.exp}</div>
                 <p style="font-size:1.2em; text-align:center;">${questionText}</p>
                 <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
                     <button class="action-btn" style="background:#00b894; width:45%;" onclick="checkIsGroup(true)">نعم</button>
                     <button class="action-btn" style="background:#d63031; width:45%;" onclick="checkIsGroup(false)">لا</button>
                 </div>
-                ${getFeedbackDiv('isGroupFeed')}
+                ${getFeedbackDiv("isGroupFeed")}
             `;
-            if (window.MathJax) MathJax.typesetPromise([modalBody]);
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+
+      function checkIsGroup(userAns) {
+        let correctAns = false;
+        if (currentQType === 0) correctAns = currentStructInfo.semi;
+        else if (currentQType === 1) correctAns = currentStructInfo.group;
+        else correctAns = currentStructInfo.abelian;
+
+        if (userAns === correctAns) {
+          incrementScore(1);
+          showRes("isGroupFeed", true, `صحيح! ${currentStructInfo.reason}`);
+          setTimeout(loadDynamicIsGroup, 2500);
+        } else {
+          showRes(
+            "isGroupFeed",
+            false,
+            `خطأ. ${currentStructInfo.reason} (تم تصفير النقاط 💀)`,
+          );
+          resetScore();
+        }
+      }
+
+      // ==========================================
+      // 5. المتاهة العددية اللانهائية
+      // ==========================================
+      let mazeLevel = 1;
+      let mazeTarget = 0;
+      let mazeCurrent = 0;
+      let mazeMoves = 10;
+
+      function loadDynamicMaze() {
+        mazeLevel = 1;
+        generateMazeLevel();
+      }
+
+      function generateMazeLevel() {
+        mazeCurrent = 0;
+        mazeMoves = 10;
+        let validPuzzle = false;
+        let steps = [];
+
+        while (!validPuzzle) {
+          steps = [];
+          while (steps.length < 4) {
+            let r = getRandomInt(-12, 12);
+            if (r !== 0 && !steps.includes(r)) steps.push(r);
+          }
+          mazeTarget = 0;
+          let movesToSimulate = getRandomInt(4, 7);
+          for (let i = 0; i < movesToSimulate; i++)
+            mazeTarget += steps[getRandomInt(0, 3)];
+          if (mazeTarget === 0) continue;
+
+          let hasDivisor = false;
+          for (let i = 0; i < 4; i++)
+            if (mazeTarget % steps[i] === 0) hasDivisor = true;
+          if (!hasDivisor) validPuzzle = true;
         }
 
-        function checkIsGroup(userAns) {
-            let correctAns = false;
-            if(currentQType === 0) correctAns = currentStructInfo.semi;
-            else if(currentQType === 1) correctAns = currentStructInfo.group;
-            else correctAns = currentStructInfo.abelian;
-
-            if(userAns === correctAns) {
-                incrementScore(1);
-                showRes('isGroupFeed', true, `صحيح! ${currentStructInfo.reason}`);
-                setTimeout(loadDynamicIsGroup, 2500); 
-            } else {
-                showRes('isGroupFeed', false, `خطأ. ${currentStructInfo.reason} (تم تصفير النقاط 💀)`);
-                resetScore();
-            }
-        }
-
-        // ==========================================
-        // 5. المتاهة العددية اللانهائية
-        // ==========================================
-        let mazeLevel = 1;
-        let mazeTarget = 0;
-        let mazeCurrent = 0;
-        let mazeMoves = 10; 
-
-        function loadDynamicMaze() {
-            mazeLevel = 1;
-            generateMazeLevel();
-        }
-
-        function generateMazeLevel() {
-            mazeCurrent = 0;
-            mazeMoves = 10; 
-            let validPuzzle = false;
-            let steps = [];
-
-            while(!validPuzzle) {
-                steps = [];
-                while(steps.length < 4) {
-                    let r = getRandomInt(-12, 12);
-                    if(r !== 0 && !steps.includes(r)) steps.push(r);
-                }
-                mazeTarget = 0;
-                let movesToSimulate = getRandomInt(4, 7); 
-                for(let i=0; i<movesToSimulate; i++) mazeTarget += steps[getRandomInt(0, 3)];
-                if (mazeTarget === 0) continue; 
-
-                let hasDivisor = false;
-                for(let i=0; i<4; i++) if (mazeTarget % steps[i] === 0) hasDivisor = true;
-                if (!hasDivisor) validPuzzle = true; 
-            }
-
-            modalTitle.innerText = `المتاهة العددية - مستوى ${mazeLevel}`;
-            modalBody.innerHTML = `
+        modalTitle.innerText = `المتاهة العددية - مستوى ${mazeLevel}`;
+        modalBody.innerHTML = `
                 <div style="display:flex; justify-content:space-between; color:#ffaa00; font-weight:bold;">
                     <span>الحركات المتبقية: <span id="mazeMovesSpan" style="font-size:1.3em;">${mazeMoves}</span></span>
                 </div>
                 <p style="text-align:center;">الهدف: <strong style="font-size:1.8em; color:#fff;">${mazeTarget}</strong></p>
                 <div id="mazeCurrent" style="font-size:4.5em; color:#66fcf1; text-align:center; margin:15px 0; border: 2px dashed #45a29e; border-radius:15px; background:rgba(0,0,0,0.5);">${mazeCurrent}</div>
                 <div style="display:flex; flex-wrap:wrap; justify-content:center;">
-                    <button class="maze-btn" onclick="mazeStep(${steps[0]})">${steps[0] > 0 ? '+'+steps[0] : steps[0]}</button>
-                    <button class="maze-btn" onclick="mazeStep(${steps[1]})">${steps[1] > 0 ? '+'+steps[1] : steps[1]}</button>
-                    <button class="maze-btn" onclick="mazeStep(${steps[2]})">${steps[2] > 0 ? '+'+steps[2] : steps[2]}</button>
-                    <button class="maze-btn" onclick="mazeStep(${steps[3]})">${steps[3] > 0 ? '+'+steps[3] : steps[3]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[0]})">${steps[0] > 0 ? "+" + steps[0] : steps[0]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[1]})">${steps[1] > 0 ? "+" + steps[1] : steps[1]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[2]})">${steps[2] > 0 ? "+" + steps[2] : steps[2]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[3]})">${steps[3] > 0 ? "+" + steps[3] : steps[3]}</button>
                 </div>
-                ${getFeedbackDiv('mazeFeed')}
+                ${getFeedbackDiv("mazeFeed")}
             `;
+      }
+
+      function mazeStep(val) {
+        if (mazeMoves <= 0) return;
+        mazeCurrent += val;
+        mazeMoves--;
+        document.getElementById("mazeCurrent").innerText = mazeCurrent;
+        document.getElementById("mazeMovesSpan").innerText = mazeMoves;
+
+        if (mazeCurrent === mazeTarget) {
+          incrementScore(5);
+          showRes(
+            "mazeFeed",
+            true,
+            "وحش الرياضيات! جاري الانتقال للمستوى التالي... (+5 XP)",
+          );
+          mazeLevel++;
+          setTimeout(generateMazeLevel, 1500);
+        } else if (mazeMoves <= 0) {
+          showRes(
+            "mazeFeed",
+            false,
+            `نفدت حركاتك! انتهت اللعبة عند مستوى ${mazeLevel}.`,
+          );
+          modalBody.innerHTML += `<button class="action-btn" onclick="loadDynamicMaze()">إعادة اللعب من البداية 🔄</button>`;
         }
+      }
 
-        function mazeStep(val) {
-            if (mazeMoves <= 0) return;
-            mazeCurrent += val; mazeMoves--;
-            document.getElementById('mazeCurrent').innerText = mazeCurrent;
-            document.getElementById('mazeMovesSpan').innerText = mazeMoves;
+      // ==========================================
+      // 6. الماراثون اللانهائي (الألغاز)
+      // ==========================================
+      let currentRiddles = [];
+      function loadDynamicRiddles() {
+        modalTitle.innerText = "ماراثون الألغاز الجبرية";
+        currentRiddles = [];
+        let html = `<p style="color:#ccc; text-align:center;">حل الألغاز لرفع نقاط خبرتك!</p>`;
 
-            if (mazeCurrent === mazeTarget) {
-                incrementScore(5); 
-                showRes('mazeFeed', true, "وحش الرياضيات! جاري الانتقال للمستوى التالي... (+5 XP)");
-                mazeLevel++;
-                setTimeout(generateMazeLevel, 1500);
-            } else if (mazeMoves <= 0) {
-                showRes('mazeFeed', false, `نفدت حركاتك! انتهت اللعبة عند مستوى ${mazeLevel}.`);
-                modalBody.innerHTML += `<button class="action-btn" onclick="loadDynamicMaze()">إعادة اللعب من البداية 🔄</button>`;
-            }
-        }
-
-        // ==========================================
-        // 6. الماراثون اللانهائي (الألغاز)
-        // ==========================================
-        let currentRiddles = [];
-        function loadDynamicRiddles() {
-            modalTitle.innerText = "ماراثون الألغاز الجبرية";
-            currentRiddles = [];
-            let html = `<p style="color:#ccc; text-align:center;">حل الألغاز لرفع نقاط خبرتك!</p>`;
-            
-            for(let i=0; i<4; i++) {
-                let riddle = generateRandomRiddle(i);
-                currentRiddles.push({ ...riddle, solved: false }); 
-                html += `
+        for (let i = 0; i < 4; i++) {
+          let riddle = generateRandomRiddle(i);
+          currentRiddles.push({ ...riddle, solved: false });
+          html += `
                 <div class="riddle-box">
-                    <p style="margin-top:0;"><strong>لغز ${i+1}:</strong> ${riddle.q}</p>
+                    <p style="margin-top:0;"><strong>لغز ${i + 1}:</strong> ${riddle.q}</p>
                     <input type="number" id="dynRiddleAns_${i}" class="riddle-input" placeholder="الناتج...">
                     <button class="action-btn" id="btnRiddle_${i}" style="padding: 8px 15px; margin-top: 10px; font-size: 1em;" onclick="checkDynRiddle(${i})">تحقق</button>
                     ${getFeedbackDiv(`dynRiddleFeed_${i}`)}
                 </div>`;
-            }
-            html += `<button class="action-btn" style="background:#d63031;" onclick="loadDynamicRiddles()">توليد مجموعة جديدة 🔄</button>`;
-            modalBody.innerHTML = html;
-            if (window.MathJax) MathJax.typesetPromise([modalBody]);
         }
+        html += `<button class="action-btn" style="background:#d63031;" onclick="loadDynamicRiddles()">توليد مجموعة جديدة 🔄</button>`;
+        modalBody.innerHTML = html;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
 
-        function generateRandomRiddle(typeIndex) {
-            let a, b, ans, qText;
-            switch(typeIndex % 4) {
-                case 0: 
-                    a = getRandomInt(-50, 50); if(a===0) a=5; ans = -a;
-                    qText = `ما هو المعكوس الجمعي للعدد $${a}$ في الزمرة $(\\mathbb{Z}, +)$؟`; break;
-                case 1: 
-                    a = getRandomInt(-20, 20); b = getRandomInt(-20, 20); ans = b - a;
-                    qText = `أوجد قيمة $x$ التي تحقق: $${a} + x = ${b}$`; break;
-                case 2: 
-                    a = getRandomInt(2, 8); b = getRandomInt(3, 9); ans = lcm(a, b);
-                    qText = `إذا قاطعنا الزمرتين $${a}\\mathbb{Z}$ و $${b}\\mathbb{Z}$ سنحصل على $n\\mathbb{Z}$. ما قيمة $n$؟`; break;
-                case 3: 
-                    a = getRandomInt(6, 20); b = getRandomInt(6, 20); ans = gcd(a, b);
-                    qText = `جمع الزمرتين $${a}\\mathbb{Z} + ${b}\\mathbb{Z}$ يعطي الزمرة $n\\mathbb{Z}$. ما قيمة $n$؟`; break;
-            }
-            return { q: qText, ans: ans };
+      function generateRandomRiddle(typeIndex) {
+        let a, b, ans, qText;
+        switch (typeIndex % 4) {
+          case 0:
+            a = getRandomInt(-50, 50);
+            if (a === 0) a = 5;
+            ans = -a;
+            qText = `ما هو المعكوس الجمعي للعدد $${a}$ في الزمرة $(\\mathbb{Z}, +)$؟`;
+            break;
+          case 1:
+            a = getRandomInt(-20, 20);
+            b = getRandomInt(-20, 20);
+            ans = b - a;
+            qText = `أوجد قيمة $x$ التي تحقق: $${a} + x = ${b}$`;
+            break;
+          case 2:
+            a = getRandomInt(2, 8);
+            b = getRandomInt(3, 9);
+            ans = lcm(a, b);
+            qText = `إذا قاطعنا الزمرتين $${a}\\mathbb{Z}$ و $${b}\\mathbb{Z}$ سنحصل على $n\\mathbb{Z}$. ما قيمة $n$؟`;
+            break;
+          case 3:
+            a = getRandomInt(6, 20);
+            b = getRandomInt(6, 20);
+            ans = gcd(a, b);
+            qText = `جمع الزمرتين $${a}\\mathbb{Z} + ${b}\\mathbb{Z}$ يعطي الزمرة $n\\mathbb{Z}$. ما قيمة $n$؟`;
+            break;
         }
+        return { q: qText, ans: ans };
+      }
 
-        function checkDynRiddle(idx) {
-            if(currentRiddles[idx].solved) return; 
-            let userAns = parseInt(document.getElementById(`dynRiddleAns_${idx}`).value);
-            if (userAns === currentRiddles[idx].ans) {
-                incrementScore(1);
-                currentRiddles[idx].solved = true;
-                document.getElementById(`btnRiddle_${idx}`).style.display = 'none'; 
-                showRes(`dynRiddleFeed_${idx}`, true, "إجابة صحيحة! (+1 XP)");
-            } else {
-                showRes(`dynRiddleFeed_${idx}`, false, `خطأ، ركز أكثر.`);
-            }
+      function checkDynRiddle(idx) {
+        if (currentRiddles[idx].solved) return;
+        let userAns = parseInt(
+          document.getElementById(`dynRiddleAns_${idx}`).value,
+        );
+        if (userAns === currentRiddles[idx].ans) {
+          incrementScore(1);
+          currentRiddles[idx].solved = true;
+          document.getElementById(`btnRiddle_${idx}`).style.display = "none";
+          showRes(`dynRiddleFeed_${idx}`, true, "إجابة صحيحة! (+1 XP)");
+        } else {
+          showRes(`dynRiddleFeed_${idx}`, false, `خطأ، ركز أكثر.`);
         }
+      }
     </script>
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('فشل تفعيل التطبيق:', error);
-                    });
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("sw.js")
+            .then((registration) => {
+              console.log(
+                "تم تفعيل التطبيق (Service Worker) بنجاح:",
+                registration.scope,
+              );
+            })
+            .catch((error) => {
+              console.log("فشل تفعيل التطبيق:", error);
             });
-        }
+        });
+      }
     </script>
-</body>
+  </body>
 </html>
