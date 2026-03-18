@@ -8,16 +8,145 @@
     <meta name="theme-color" content="#0b0c10">
     <link rel="apple-touch-icon" href="icon.png">
     
-    <link rel="stylesheet" href="/frontEnd/infinite_style.css">
 
     <script>
         window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+<style>
+    /* ========================================= */
+/* Mobile-First Cosmic Design */
+/* ========================================= */
+
+* {
+    box-sizing: border-box;
+    /* منع التكبير المزدوج المزعج عند النقر السريع في الهاتف */
+    touch-action: manipulation; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0b0c10;
+    color: #c5c6c7;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: radial-gradient(circle at top, #1f2833 0%, #0b0c10 100%);
+    min-height: 100vh;
+    padding-bottom: 50px; /* مساحة لكي لا يلتصق آخر باب بأسفل الشاشة */
+}
+
+.universe-header {
+    text-align: center;
+    padding: 60px 20px 20px 20px;
+}
+
+.universe-header h1 {
+    color: #66fcf1;
+    font-size: 2.2em; /* حجم مناسب للموبايل */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 15px rgba(102, 252, 241, 0.6);
+    margin: 0 0 10px 0;
+}
+
+.universe-header p {
+    font-size: 1rem;
+    color: #45a29e;
+    margin: 0;
+}
+
+.back-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: #66fcf1;
+    text-decoration: none;
+    font-size: 1rem;
+    border: 1px solid #66fcf1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(11, 12, 16, 0.8);
+    z-index: 100;
+}
+
+.back-btn:active {
+    background: #66fcf1;
+    color: #0b0c10;
+}
+
+/* حاوية الأبواب - ترتيب عمودي للهاتف */
+.doors-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px;
+}
+
+/* تصميم الباب السحري للموبايل */
+.magic-door {
+    background: rgba(31, 40, 51, 0.9);
+    border: 2px solid #45a29e;
+    border-radius: 15px;
+    width: 100%; /* يأخذ العرض الكامل للشاشة */
+    max-width: 400px;
+    padding: 25px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* تأثير اللمس (بديل الـ hover للهاتف) */
+.magic-door:active:not(.locked) {
+    transform: scale(0.97);
+    box-shadow: 0 0 20px rgba(102, 252, 241, 0.9);
+    border-color: #66fcf1;
+}
+
+.door-title {
+    font-size: 1.8em;
+    color: #66fcf1;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.door-desc {
+    font-size: 1rem;
+    color: #e0e0e0;
+    line-height: 1.4;
+}
+
+/* تصميم الأبواب المقفلة */
+.locked {
+    border-color: #333;
+    background: rgba(20, 20, 20, 0.9);
+    opacity: 0.7;
+}
+
+.locked .door-title {
+    color: #777;
+}
+
+.locked-badge {
+    position: absolute;
+    top: 15px;
+    right: -35px;
+    background: #ff4d4d;
+    color: white;
+    padding: 5px 40px;
+    transform: rotate(45deg);
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+</style>
 <body>
 
-    <a href="index.html" class="back-btn">  Back</a>
+    <a href="index.html" class="back-btn"> → Back</a>
 
     <header class="universe-header">
         <h1>The Cosmic Map</h1>
@@ -32,7 +161,115 @@
     </div>
     <div id="doorsContainer" class="doors-container"></div>
 
-    <script src="/backEnd/infinite_logic.js"></script>
+    <script >
+        // ==========================================
+// Infinite Universe Logic & Data
+// ==========================================
+
+// قاعدة بيانات الزمر (مجرة كاملة)
+const groupsDatabase = [
+    {
+        id: "Z_plus",
+        title: "$\\mathbb{Z}$",
+        name: "Realm of Integers",
+        desc: "الأساسيات والمولدات، بداية الرحلة اللانهائية.",
+        locked: false // الباب الأول مفتوح
+    },
+    {
+        id: "R_plus",
+        title: "$\\mathbb{R}$",
+        name: "The Continuous Plane",
+        desc: "عالم الأعداد الحقيقية الكثيفة.",
+        locked: false
+    },
+    {
+        id: "R2",
+        title: "$\\mathbb{R}^2$",
+        name: "The Vector Plane",
+        desc: "المتجهات والجمع الهندسي.",
+        locked: false
+    },
+    {
+        id: "GLn",
+        title: "$GL_n(\\mathbb{R})$",
+        name: "The Matrix Dimension",
+        desc: "عالم المصفوفات غير الإبدالية.",
+        locked: false
+    },
+        {
+        id: "C_star",
+        title: "$\\mathbb{C}^*$",
+        name: "Complex Circle",
+        desc: "الأعداد المركبة وجذور الوحدة.",
+        locked: false
+    }
+];
+
+// دالة لرسم الأبواب السحرية في واجهة الهاتف
+function renderCosmicMap() {
+    const container = document.getElementById('doorsContainer');
+    container.innerHTML = ""; // تنظيف الحاوية
+
+    groupsDatabase.forEach(group => {
+        // إنشاء البطاقة
+        const door = document.createElement('div');
+        door.className = `magic-door ${group.locked ? 'locked' : ''}`;
+        
+        // عند لمس البطاقة
+        door.onclick = () => {
+            if (group.locked) {
+                alert("هذا العالم مقفل! أكمل العوالم السابقة أولاً لفك القفل.");
+            } else {
+                enterRealm(group.id);
+            }
+        };
+
+        // محتوى البطاقة
+        let badgeHtml = group.locked ? `<div class="locked-badge">LOCKED</div>` : '';
+        door.innerHTML = `
+            ${badgeHtml}
+            <div class="door-title">${group.title}</div>
+            <div class="door-desc">
+                <strong>${group.name}</strong><br><br>
+                ${group.desc}
+            </div>
+        `;
+
+        container.appendChild(door);
+    });
+
+    // تفعيل MathJax لرسم المعادلات في العناوين
+    if (window.MathJax) {
+        MathJax.typesetPromise([container]).catch((err) => console.log(err.message));
+    }
+}
+
+// دالة الدخول للعالم المحدد
+function enterRealm(realmId) {
+    if (realmId === "Z_plus") {
+        // سيتم تحويل المستخدم إلى صفحة عالم Z
+         window.location.href = "realm_Z.html";
+    }
+        else if (realmId === "R_plus") {
+         window.location.href = "realm_R.html";
+        
+    }
+        else if (realmId === "R2") {
+         window.location.href = "realm_R2.html";
+    }
+        else if (realmId === "GLn") {
+         window.location.href = "realm_GLn.html";
+    }
+        else if (realmId === "C_star") {
+         window.location.href = "realm_C_star.html";
+    }
+
+
+}
+
+// تشغيل دالة الرسم بمجرد تحميل الصفحة
+document.addEventListener("DOMContentLoaded", renderCosmicMap);
+    </script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
