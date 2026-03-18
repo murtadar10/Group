@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Function Composition with math.js</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.6.0/math.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simplify.js@1.0.1/dist/simplify.min.js"></script>
 </head>
@@ -70,6 +73,19 @@
             }
 
             document.getElementById('results').innerHTML = results.join('');
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
         }
     </script>
 </body>

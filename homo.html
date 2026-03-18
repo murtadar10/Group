@@ -2,6 +2,9 @@
 <html>
   <head>
     <title>Homomorphism and Isomorphism Checker</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
     <!-- تضمين مكتبة math.js من CDN لتقييم الدوال الرياضية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.4.0/math.js"></script>
   </head>
@@ -263,4 +266,17 @@
       }
     </script>
   </body>
+  <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
 </html>

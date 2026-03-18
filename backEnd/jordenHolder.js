@@ -460,3 +460,114 @@ function gcdSylow(a, b) {
 
 
 
+
+// ==========================================
+// Isomorphism Checker Script
+// ==========================================
+
+// دالة مساعدة لحساب المضروب (Factorial) لزمرة التباديل
+function factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) result *= i;
+    return result;
+}
+
+// دالة مساعدة لاستخراج خصائص الزمرة
+function getGroupProperties(type, n) {
+    let props = { nameTex: "", order: 0, isAbelian: false, isCyclic: false };
+
+    if (type === "V") { // زمرة كلاين V4
+        props.nameTex = "V_4";
+        props.order = 4;
+        props.isAbelian = true;
+        props.isCyclic = false;
+    } else if (type === "Z") { // الزمرة المعيارية Zn
+        props.nameTex = `Z_{${n}}`;
+        props.order = n;
+        props.isAbelian = true;
+        props.isCyclic = true;
+    } else if (type === "S") { // زمرة التباديل Sn
+        props.nameTex = `S_{${n}}`;
+        props.order = factorial(n);
+        props.isAbelian = (n <= 2);
+        props.isCyclic = (n <= 2);
+    } else if (type === "D") { // زمرة التناظر Dn
+        props.nameTex = `D_{${n}}`;
+        props.order = 2 * n;
+        props.isAbelian = (n <= 2); 
+        props.isCyclic = (n === 1); // D1 is isomorphic to Z2
+    }
+    return props;
+}
+
+function checkIsomorphism() {
+    const type1 = document.getElementById('isoType1').value;
+    let n1 = parseInt(document.getElementById('isoN1').value);
+    const type2 = document.getElementById('isoType2').value;
+    let n2 = parseInt(document.getElementById('isoN2').value);
+
+    // V4 لا تحتاج لقيمة n، لكن باقي الزمر تحتاج
+    if (type1 !== "V" && (isNaN(n1) || n1 < 1)) n1 = 1; 
+    if (type2 !== "V" && (isNaN(n2) || n2 < 1)) n2 = 1;
+
+    let g1 = getGroupProperties(type1, n1);
+    let g2 = getGroupProperties(type2, n2);
+
+    let resultBox = document.getElementById('resultIso');
+    let stepsBox = document.getElementById('stepsIso');
+    let steps = "";
+    let isIso = true;
+
+    steps += `<strong>Analyzing Group 1 ($${g1.nameTex}$):</strong><br>`;
+    steps += `Order: $|${g1.nameTex}| = ${g1.order}$<br>`;
+    steps += `Abelian: ${g1.isAbelian ? "Yes" : "No"}<br>`;
+    steps += `Cyclic: ${g1.isCyclic ? "Yes" : "No"}<br><br>`;
+
+    steps += `<strong>Analyzing Group 2 ($${g2.nameTex}$):</strong><br>`;
+    steps += `Order: $|${g2.nameTex}| = ${g2.order}$<br>`;
+    steps += `Abelian: ${g2.isAbelian ? "Yes" : "No"}<br>`;
+    steps += `Cyclic: ${g2.isCyclic ? "Yes" : "No"}<br><br>`;
+
+    steps += `<strong>Comparison:</strong><br>`;
+
+    // 1. اختبار الرتبة
+    if (g1.order !== g2.order) {
+        steps += `- <span style="color:#ff4d4d;">Failed:</span> The orders are different ($${g1.order} \\neq ${g2.order}$).<br>`;
+        isIso = false;
+    } else {
+        steps += `- <span style="color:#00ff88;">Passed:</span> Both groups have the same order ($${g1.order}$).<br>`;
+        
+        // 2. اختبار الإبدالية
+        if (g1.isAbelian !== g2.isAbelian) {
+            steps += `- <span style="color:#ff4d4d;">Failed:</span> One is Abelian and the other is not.<br>`;
+            isIso = false;
+        } else {
+            steps += `- <span style="color:#00ff88;">Passed:</span> Both have the same commutativity (Abelian status).<br>`;
+            
+            // 3. اختبار الدائرية (إذا كانتا إبداليتين ونفس الرتبة)
+            if (g1.isCyclic !== g2.isCyclic) {
+                steps += `- <span style="color:#ff4d4d;">Failed:</span> One is Cyclic and the other is not (e.g., they have different maximal element orders).<br>`;
+                isIso = false;
+            } else {
+                steps += `- <span style="color:#00ff88;">Passed:</span> Both have the same Cyclic structure.<br>`;
+            }
+        }
+    }
+
+    steps += `<br>`;
+    if (isIso) {
+        resultBox.style.color = "#00ff88";
+        resultBox.innerHTML = `Conclusion: $$${g1.nameTex} \\cong ${g2.nameTex}$$ (Isomorphic)`;
+    } else {
+        resultBox.style.color = "#ff4d4d";
+        resultBox.innerHTML = `Conclusion: $$${g1.nameTex} \\not\\cong ${g2.nameTex}$$ (Not Isomorphic)`;
+    }
+
+    stepsBox.innerHTML = steps;
+
+    // تفعيل MathJax
+    if (window.MathJax) {
+        MathJax.typesetPromise([resultBox, stepsBox]).catch((err) => console.log(err.message));
+    }
+}

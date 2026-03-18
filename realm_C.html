@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عالم الأعداد المركبة (C)</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* التنسيقات الأساسية للموبايل */
+        * { box-sizing: border-box; touch-action: pan-y pan-x; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+        body { margin: 0; padding: 0; background-color: #0b0c10; color: #c5c6c7; background-image: linear-gradient(to bottom, #1a0525, #0b0c10); min-height: 100vh; padding-bottom: 50px; line-height: 1.6; overflow-x: hidden; }
+        
+        .header { text-align: center; padding: 50px 15px 20px; border-bottom: 2px solid #ff007f; background: rgba(0,0,0,0.5); }
+        .header h1 { color: #ff007f; font-size: 1.8em; margin: 0; text-shadow: 0 0 15px rgba(255, 0, 127, 0.6); }
+        .header p { font-size: 1rem; color: #e0e0e0; margin-top: 10px; }
+        .back-btn { position: absolute; top: 15px; right: 15px; color: #ff007f; text-decoration: none; border: 1px solid #ff007f; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.9rem; z-index: 10;}
+        
+        .section-container { padding: 20px 15px; border-bottom: 1px dashed #4a0033; }
+        .section-title { color: #ff007f; font-size: 1.4em; border-right: 4px solid #d90429; padding-right: 10px; margin-bottom: 15px; text-shadow: 0 0 5px #d90429; }
+        
+        .card { background: rgba(26, 5, 37, 0.6); padding: 20px; border-radius: 12px; font-size: 1rem; border: 1px solid #4a0033; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card-title { color: #00f5d4; font-weight: bold; font-size: 1.2em; margin-bottom: 12px; border-bottom: 1px solid #4a0033; padding-bottom: 8px; }
+        
+        /* شريط التمرير الأفقي للبطاقات */
+        .cards-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; margin: 0 -15px; padding-left: 15px; padding-right: 15px; }
+        .cards-slider::-webkit-scrollbar { display: none; }
+        .cards-slider { -ms-overflow-style: none; scrollbar-width: none; }
+        .cards-slider .card { min-width: 85%; scroll-snap-align: center; flex-shrink: 0; margin-bottom: 0; }
+        
+        ul.checklist { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
+        ul.checklist li { margin-bottom: 10px; padding-right: 22px; position: relative; }
+        ul.checklist li::before { content: '✔'; position: absolute; right: 0; color: #00f5d4; font-weight: bold; }
+        ul.checklist li.fail::before { content: '❌'; color: #ff4d4d; }
+        
+        .result-badge { display: block; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; width: 100%; text-align: center; font-size: 0.95rem; }
+        .badge-success { background: rgba(0, 245, 212, 0.2); color: #00f5d4; border: 1px solid #00f5d4; }
+        .badge-fail { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        
+        /* الأزرار والجداول */
+        .interactive-btn { background: linear-gradient(45deg, #4a0033, #ff007f); color: #fff; border: 1px solid #ff007f; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; width: 100%; text-align: center; display: block; }
+        .interactive-btn:active { transform: scale(0.97); background: #330022; }
+        
+        .table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 8px; }
+        .interactive-table { width: 100%; border-collapse: collapse; text-align: center; background: rgba(11, 12, 16, 0.5); font-size: 0.9rem; min-width: 300px; }
+        .interactive-table th { background: #4a0033; color: #ff007f; padding: 10px 5px; border: 1px solid #7a0053; }
+        .interactive-table td { padding: 10px 5px; border: 1px solid #7a0053; }
+        
+        .hidden-info { display: none; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.4); border-radius: 8px; border-right: 4px solid #00f5d4; color: #fff; font-weight: bold; font-size: 0.95rem; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* مدخلات العدد المركب */
+        .complex-input-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 15px 0; direction: ltr; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px dashed #00f5d4;}
+        .c-input { width: 70px; padding: 10px; text-align: center; font-size: 1.2em; border-radius: 5px; border: 2px solid #ff007f; background: #0b0c10; color: #fff; outline: none; }
+        .c-text { font-size: 1.5em; color: #00f5d4; font-weight: bold; }
+        
+        .fractions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;}
+        .fraction-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #7a0053; display: flex; flex-direction: column; justify-content: center; min-height: 80px;}
+
+        .btn-yes, .btn-no { padding: 10px; border: none; border-radius: 5px; font-weight: bold; width: 45%; font-size: 1rem; cursor: pointer;}
+        .btn-yes { background: #00f5d4; color: #000; } .btn-no { background: #ff4d4d; color: #fff; }
+
+        .next-gate-btn { display: block; text-align: center; margin: 30px auto 10px; background: linear-gradient(45deg, #00f5d4, #0077b6); color: #000; text-decoration: none; padding: 15px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; width: 90%; box-shadow: 0 0 15px rgba(0, 245, 212, 0.4); transition: 0.2s; }
+        .next-gate-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <a href="infinite_world.html" class="back-btn">⮞ عودة</a>
+
+    <div class="header">
+        <h1>✨ 🌌 الزمرة المركبة $\mathbb{C}$</h1>
+        <p>مرحباً بك في البعد التخيلي! حيث لكل معادلة حل، والأرقام تسبح في مستوى آرجند.</p>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🧠 ما هي $\mathbb{C}$؟</div>
+        <div class="card">
+            <p style="margin-top:0;">العدد المركب $z$ يتكون من جزأين: جزء حقيقي وجزء تخيلي، ويُكتب بالصيغة:</p>
+            <div style="text-align: center; font-size: 1.5em; color: #00f5d4; margin: 15px 0; direction: ltr;">
+                $z = a + bi$
+            </div>
+            <ul style="color:#e0aaff; line-height: 1.8; font-size: 0.95rem;">
+                <li>$a$: هو الجزء الحقيقي (Real part).</li>
+                <li>$b$: هو الجزء التخيلي (Imaginary part).</li>
+                <li>$i$: هو الوحدة التخيلية حيث $i^2 = -1$.</li>
+            </ul>
+            <div style="text-align: center; margin-top: 15px;">
+                
+            </div>
+            <p style="font-size: 0.85rem; color: #ccc; text-align: center;">(مستوى آرجند: المحور الأفقي للحقيقي، والعمودي للتخيلي)</p>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">⚙️ هل $\mathbb{C}$ تشكل زمرة؟</div>
+        <p style="font-size:0.9rem; color:#ccc; text-align:center;">(اسحب البطاقات لليمين واليسار ⟷)</p>
+        
+        <div class="cards-slider">
+            <div class="card">
+                <div class="card-title">🔹 1: $\mathbb{C}$ تحت الجمع $(+)$</div>
+                <p style="font-size: 0.9rem;">نجمع الحقيقي مع الحقيقي، والتخيلي مع التخيلي.</p>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> محقق.</li>
+                    <li><strong>التجميعية:</strong> محققة.</li>
+                    <li><strong>المحايد:</strong> $0 + 0i$ (نقطة الأصل).</li>
+                    <li><strong>المعكوس الجمعي:</strong> لكل $a+bi$ يوجد $-a-bi$.</li>
+                </ul>
+                <div class="result-badge badge-success">🎉 $(\mathbb{C}, +)$ زمرة أبيلية</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 2: $\mathbb{C}$ تحت الضرب $(\times)$</div>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> محقق (لأن $i^2$ يتحول لـ $-1$).</li>
+                    <li><strong>المحايد:</strong> $1 + 0i$ (أو ببساطة 1).</li>
+                    <li class="fail"><strong>المعكوس الضربي:</strong> الصفر $0+0i$ لا يملك معكوساً، كالعادة يفسد الزمرة!</li>
+                </ul>
+                <div class="result-badge badge-fail">🚫 $(\mathbb{C}, \times)$ ليست زمرة</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 3: $\mathbb{C}^*$ (طرد الصفر)</div>
+                <p style="font-size: 0.9rem;">إذا حذفنا الصفر $\mathbb{C} \setminus \{0\}$، يصبح لكل عدد مركب نظير ضَربي، ويُحسب باستخدام <strong>المرافق (Conjugate)</strong>.</p>
+                <div style="direction: ltr; text-align: center; color: #ff007f; font-size: 1.1em; margin: 10px 0;">
+                    $z^{-1} = \frac{a - bi}{a^2 + b^2}$
+                </div>
+                <div class="result-badge badge-success">🎉 $(\mathbb{C}^*, \times)$ زمرة أبيلية</div>
+            </div>
+            
+            <div class="card" style="border-color:#00f5d4;">
+                <div class="card-title" style="color:#00f5d4;">⭐ زمرة الدائرة $S^1$</div>
+                <p style="font-size: 0.9rem;">إذا أخذنا فقط الأعداد المركبة التي طولها يساوي 1 (تقع على دائرة الوحدة)، فإنها تشكل زمرة جزئية مذهلة تحت الضرب، تُمثل جميع الدوارانات الممكنة!</p>
+                
+                <div class="result-badge badge-success" style="background: rgba(0,245,212,0.1); border:none;">هذه زمرة $U(1)$ الشهيرة في الفيزياء!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🎮 آلة النظائر المركبة</div>
+        <div class="card">
+            <p style="font-size: 0.9rem; margin-top:0;">أدخل العدد المركب $z = a + bi$ لتكتشف مرافقه ونظيره الجمعي والضّربي:</p>
+            
+            <div class="complex-input-row">
+                <span class="c-text">$z =$</span>
+                <input type="number" id="c_real" class="c-input" value="3" placeholder="a">
+                <span class="c-text">$+$</span>
+                <input type="number" id="c_imag" class="c-input" value="4" placeholder="b">
+                <span class="c-text">$i$</span>
+            </div>
+
+            <button class="interactive-btn" onclick="calculateComplex()">الخيمياء الجبرية (احسب)</button>
+            
+            <div class="fractions-grid">
+                <div class="fraction-box">
+                    <span style="color:#ccc; font-size:0.8rem;">المعكوس الجمعي ($-z$)</span>
+                    <div id="cAddInv" style="font-size: 1.2em; color: #ff007f; direction:ltr; margin-top:5px;">...</div>
+                </div>
+                <div class="fraction-box">
+                    <span style="color:#ccc; font-size:0.8rem;">المرافق Conjugate ($\bar{z}$)</span>
+                    <div id="cConj" style="font-size: 1.2em; color: #00f5d4; direction:ltr; margin-top:5px;">...</div>
+                </div>
+            </div>
+            <div class="fraction-box" style="margin-top:10px; border-color:#ff007f;">
+                <span style="color:#ff007f; font-size:0.85rem;">المعكوس الضربي ($z^{-1}$)</span>
+                <div id="cMulInv" style="font-size: 1.4em; color: #fff; direction:ltr; margin-top:5px;">...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🔍 مقارنة الختام: $\mathbb{R}$ ضد $\mathbb{C}$</div>
+        <div class="card">
+            <div class="table-wrapper">
+                <table class="interactive-table">
+                    <tr>
+                        <th>الخاصية</th>
+                        <th>الحقيقية $\mathbb{R}$</th>
+                        <th>المركبة $\mathbb{C}$</th>
+                    </tr>
+                    <tr>
+                        <td>الأبعاد هندسياً</td>
+                        <td>1D (خط)</td>
+                        <td>2D (مستوى)</td>
+                    </tr>
+                    <tr>
+                        <td>حل المعادلة $x^2 = -1$</td>
+                        <td><span style="color:#ff4d4d;">مستحيل</span></td>
+                        <td><span style="color:#00f5d4;">ممكن ($i, -i$)</span></td>
+                    </tr>
+                    <tr>
+                        <td>زمرة تحت الجمع</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container" style="border-bottom: none;">
+        <div class="section-title">🧪 تحدي جذور الوحدة</div>
+        <div class="card" style="border-color: #00f5d4;">
+            <p style="font-size: 1.1em; text-align: center; margin-top:0;">🎯 تأمل هذه المجموعة الصغيرة جداً المكونة من 4 أعداد مركبة فقط:<br> 
+            <span dir="ltr" style="display:inline-block; margin-top:10px; font-size:1.3em; color:#00f5d4;">$G = \{1, -1, i, -i\}$</span> <br><br>
+            هل تشكل هذه المجموعة زمرة <strong>تحت عملية الضرب</strong>؟</p>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn-yes" onclick="checkRootsChallenge(true)">نعم، تشكل زمرة</button>
+                <button class="btn-no" onclick="checkRootsChallenge(false)">لا تشكل زمرة</button>
+            </div>
+            <div id="rootsFeedback" class="hidden-info" style="border-color: #00f5d4; text-align: center;"></div>
+        </div>
+
+        <a href="realm_Sn.html" class="next-gate-btn">
+            ➡ الباب التالي <br>
+            <span style="font-size: 0.75em; font-weight: normal;">(زمرة التباديل $S_n$ - حيث ينكسر التماثل!)</span>
+        </a>
+    </div>
+
+    <script>
+        // آلة الأعداد المركبة الحاسبة
+        function calculateComplex() {
+            let a = parseFloat(document.getElementById('c_real').value) || 0;
+            let b = parseFloat(document.getElementById('c_imag').value) || 0;
+
+            let addBox = document.getElementById('cAddInv');
+            let conjBox = document.getElementById('cConj');
+            let mulBox = document.getElementById('cMulInv');
+
+            // المعكوس الجمعي (-a - bi)
+            let addSign = (-b >= 0) ? '+' : '-';
+            addBox.innerHTML = `$$ ${-a} ${addSign} ${Math.abs(b)}i $$`;
+
+            // المرافق (a - bi)
+            let conjSign = (-b >= 0) ? '+' : '-';
+            conjBox.innerHTML = `$$ ${a} ${conjSign} ${Math.abs(b)}i $$`;
+
+            // المعكوس الضربي
+            if (a === 0 && b === 0) {
+                mulBox.innerHTML = `<span style="color:#ff4d4d; font-size:0.7em;">⚠ الصفر ليس له معكوس ضربي!</span>`;
+            } else {
+                let denominator = (a*a) + (b*b);
+                let realPart = a / denominator;
+                let imagPart = -b / denominator;
+                
+                // استخدام LaTeX لكسور جميلة
+                let latexStr = `$$ \\frac{${a}}{${denominator}} `;
+                if (b > 0) {
+                    latexStr += `- \\frac{${b}}{${denominator}}i $$`;
+                } else if (b < 0) {
+                    latexStr += `+ \\frac{${Math.abs(b)}}{${denominator}}i $$`;
+                } else {
+                    latexStr += `$$`; // إذا كان التخيلي صفراً
+                }
+                mulBox.innerHTML = latexStr;
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([addBox, conjBox, mulBox]);
+            }
+        }
+
+        // تشغيل الحاسبة عند البداية
+        calculateComplex();
+
+        // تحدي جذور الوحدة
+        function checkRootsChallenge(isYes) {
+            let feed = document.getElementById('rootsFeedback');
+            feed.style.display = 'block';
+            
+            if (isYes === true) {
+                feed.innerHTML = "✔ <strong>إجابة مذهلة!</strong><br>نعم، إنها زمرة دائرية منتهية (وتسمى الجذور الرباعية للوحدة). الانغلاق محقق لأن ضرب أي عنصرين يعطي عنصراً في المجموعة (مثلاً $i \\times i = -1$). والمحايد هو $1$. ومعكوس $i$ هو $-i$.";
+                feed.style.borderColor = "#00f5d4"; feed.style.color = "#00f5d4";
+            } else {
+                feed.innerHTML = "❌ <strong>وقعْت في الفخ!</strong><br>جرب أن تضرب أي عنصرين في بعضهما. $i \\times -1 = -i$. و $i \\times i = -1$. الناتج دائماً موجود داخل المجموعة! إذن الإغلاق محقق وهي تشكل زمرة فعلية.";
+                feed.style.borderColor = "#ff4d4d"; feed.style.color = "#ff4d4d";
+            }
+            if (window.MathJax) MathJax.typesetPromise([feed]);
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

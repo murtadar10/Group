@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title> Group Theory Program</title>
-    <link rel="icon" href="photos/myDad.png" type="image/png">
-
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+7
     <link rel="stylesheet" href="frontEnd/main.css" />
     <link rel="stylesheet" href="frontEnd/zn.css" />
     <link rel="stylesheet" href="frontEnd/calcOfZn.css">
@@ -66,8 +68,44 @@
     </nav>
      
     <main id="main-content">
-      <div id="front" class="front" > <img src="photos/front.jpg" /> <p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved. proof Dr.Mahera Rabee Qasem</p> </div>
+      <div id="front" class="front" > <img src="photos/front.jpg" /> <p style="text-align: center;" >&copy; 2024  Group Theory Program. All rights reserved. proof Dr.Mahera Rabee Qasem & Murtada Raad Yusuf</p> </div>
       <section id="group-test" class="hidden">
+        <!-- الزمر الغير منتهية  -->
+
+<div class="jorden-container" style="text-align: center; padding: 50px 20px;">
+        <h1 style="font-size: 2.5em; color: #00ff88; text-shadow: 0 0 15px rgba(0,255,136,0.5);">The Infinite Universe</h1>
+        <p style="color: #e0e0e0; font-size: 1.2em; margin-bottom: 30px; line-height: 1.6;">
+            لقد أتقنت عالم الزمر المنتهية... الآن حان الوقت لكسر الحدود.<br>
+            استعد لدخول عالم لا نهائي، حيث الأرقام لا تتوقف، والقواعد تتغير!
+        </p>
+        
+        <a href="infinite_world.html" class="buttonJord" style="font-size: 1.5em; padding: 15px 40px; text-decoration: none; display: inline-block; background: linear-gradient(45deg, #4f8cff, #9d4edd); border: none; border-radius: 30px; box-shadow: 0 0 20px rgba(157, 78, 221, 0.6); transition: transform 0.3s;">
+            🌌 الدخول إلى عالم الزمر غير المنتهية
+        </a>
+    </div>
+
+
+         <!-- <div >
+        <h1>Infinite Groups Reference</h1>
+        <p style="text-align:center; color:#ccc; margin-bottom: 20px;">
+            Explore the structure, properties, and subgroups of well-known infinite groups.
+        </p>
+        
+        <label style="color: #4f8cff; font-weight: bold;">Select an Infinite Group:</label>
+        <select id="infiniteGroupSelect" class="JordenHolderinput" style="width: 100%; margin-bottom: 15px; cursor: pointer;" onchange="showInfiniteGroupDetails()">
+            <option value="none">-- Select a Group --</option>
+            <option value="Z_plus">(ℤ, +) Integers</option>
+            <option value="R_plus">(ℝ, +) Real Numbers</option>
+            <option value="R_star">(ℝ*, ·) Non-zero Reals</option>
+            <option value="GLn">GLₙ(ℝ) General Linear</option>
+            <option value="R2">(ℝ², +) 2D Vector Space</option>
+        </select>
+
+        <div id="infiniteResultBox" style="margin-top: 20px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; display: none;">
+            </div>
+    </div> -->
+
+<!-- ====================================================================== -->
         <h2>Group Test Interface</h2>
         <div class="isGroup" > 
           <h1>اختبار الزمرة للمجموعات غير المنتهية</h1>
@@ -120,8 +158,8 @@
                 <p id="AllSubgroups">All Subgroups =</p>
                 <p id="generators">Generators =</p>
                 <button id="kellyTableZn" onclick="kellyTableZn()">Show kelly table<br> اظهر جدول كيلي</button>
-                <table id="kleinTable"></table>
-                      </div>
+                <div class="CaylyTableDiv"  ><table id="kleinTable"></table></div>
+              </div>
               
             </div>
 
@@ -132,7 +170,7 @@
               <label class="mo" for="inputN">Enter the value of n:</label>
               <input class="OG" type="number" id="inputN" min="1" placeholder="Enter a positive integer n">
       
-              <button id="UnCalcBtn">Show Results<br> النتائج/button>
+              <button id="UnCalcBtn">Show Results<br> النتائج </button>
       
               <div id="resultContainer" class="result" style="display:none;">
                   <h3>Results</h3>
@@ -433,57 +471,47 @@
       </section>
 <!-- نهاية الزمرة الدوارة وبداية التشاكل  -->
       <section id="isomorphism" class="hidden">
-        <div class="comingsoon-loading">
-  <p class="static-text">Please, wait for</p>
-  <h1 data-text="ME">ME</h1>
-</div>
-<style>
-.comingsoon-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #0000;
-  gap: 20px;
-}
+       
+<div  style="padding: 20px;">
+        <div class="jorden-container">
+            <h1>Isomorphism Checker</h1>
+            <p style="text-align:center; color:#ccc; margin-bottom: 20px;">
+                Check if two groups have the exact same structure $G_1 \cong G_2$
+            </p>
+            
+            <div style="display: flex; justify-content: space-between; gap: 10px;">
+                <div style="flex: 1;">
+                    <label style="color: #4f8cff; font-weight: bold;">Group 1:</label>
+                    <select id="isoType1" class="JordenHolderinput" style="width: 100%; margin-bottom: 10px; cursor: pointer;">
+                        <option value="Z">Zn (Standard)</option>
+                        <option value="S">Sn (Symmetric)</option>
+                        <option value="D">Dn (Dihedral)</option>
+                        <option value="V">V4 (Klein Four)</option>
+                    </select>
+                    <input class="JordenHolderinput" type="number" id="isoN1" min="1" placeholder="n =" style="width: 100%;" />
+                </div>
 
-/* النص العلوي ثابت */
-.static-text {
-  font-size: 2em;
-  color: #4f8cff;       /* نفس لون النص المتحرك */
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin: 0;
-}
+                <div style="display: flex; align-items: center; justify-content: center; font-size: 30px; color: #ffcc00; font-weight: bold;">
+                    $\cong ?$
+                </div>
 
-/* النص المتحرك ME */
-.comingsoon-loading h1 {
-  margin: 0;
-  position: relative;
-  font-size: 8vw;
-  color: transparent;
-  -webkit-text-stroke: 2px #4f8cff;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
+                <div style="flex: 1;">
+                    <label style="color: #4f8cff; font-weight: bold;">Group 2:</label>
+                    <select id="isoType2" class="JordenHolderinput" style="width: 100%; margin-bottom: 10px; cursor: pointer;">
+                        <option value="Z">Zn (Standard)</option>
+                        <option value="S">Sn (Symmetric)</option>
+                        <option value="D">Dn (Dihedral)</option>
+                        <option value="V">V4 (Klein Four)</option>
+                    </select>
+                    <input class="JordenHolderinput" type="number" id="isoN2" min="1" placeholder="n =" style="width: 100%;" />
+                </div>
+            </div>
 
-/* تأثير تعبئة النص المتحرك */
-.comingsoon-loading h1::before {
-  content: attr(data-text);
-  position: absolute;
-  top: 0; left: 0;
-  width: 0;
-  color: #4f8cff;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: fillText 3s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-}
-
-@keyframes fillText {
-  0%, 20%, 100% { width: 0; }
-  50%, 80% { width: 100%; }
-}
-</style>
+            <button class="buttonJord" onclick="checkIsomorphism()" style="margin-top: 20px; width: 100%;">Check Isomorphism</button>
+            <div class="jorden-resultSolv" id="resultIso" style="margin-top: 15px; font-size: 1.2em; text-align: center;"></div>
+            <div class="jorden-stepsSolv" id="stepsIso" style="margin-top: 15px; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;"></div>
+        </div>
+    </div>
 
       </section>
 
@@ -582,5 +610,18 @@
     <script src="backEnd/Quotient.js" ></script>
     <script src="backEnd/jordenHolder.js"></script>
     <script src="backEnd/isGroup.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
   </body>
 </html>

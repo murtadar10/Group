@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>عالم الأعداد الصحيحة (Z, +)</title>
+<link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+    <script>      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+        },
+      };
+    </script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #0b0c10;
+        color: #c5c6c7;
+        background-image: linear-gradient(to bottom, #112222, #0b0c10);
+        min-height: 100vh;
+        padding-bottom: 50px;
+        line-height: 1.8;
+      }
+
+      .header {
+        text-align: center;
+        padding: 60px 20px 30px;
+        border-bottom: 2px solid #45a29e;
+        background: rgba(0, 0, 0, 0.3);
+      }
+      .header h1 {
+        color: #66fcf1;
+        font-size: 2.8em;
+        margin: 0;
+        text-shadow: 0 0 15px rgba(102, 252, 241, 0.6);
+      }
+      .header p {
+        font-size: 1.2em;
+        color: #e0e0e0;
+        margin-top: 10px;
+      }
+      .back-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #66fcf1;
+        text-decoration: none;
+        border: 1px solid #66fcf1;
+        padding: 8px 15px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+      }
+
+      .section-container {
+        padding: 30px 20px;
+        max-width: 800px;
+        margin: auto;
+        border-bottom: 1px dashed #1f2833;
+      }
+      .section-title {
+        color: #66fcf1;
+        font-size: 1.8em;
+        border-right: 4px solid #45a29e;
+        padding-right: 15px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 5px #45a29e;
+      }
+        .next-gate-btn { display: block; text-align: center; margin: 30px auto 10px; background: linear-gradient(45deg, #ffaa00, #ff5e62); color: #fff; text-decoration: none; padding: 15px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; width: 90%; box-shadow: 0 0 15px rgba(255, 170, 0, 0.4); transition: 0.2s; }
+        .next-gate-btn:active { transform: scale(0.95); }
+
+      .academic-content {
+        background: rgba(31, 40, 51, 0.6);
+        padding: 25px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        border: 1px solid #1f2833;
+      }
+      .academic-content h3 {
+        color: #45a29e;
+        margin-top: 25px;
+        border-bottom: 1px solid #45a29e;
+        padding-bottom: 5px;
+      }
+      .academic-content h3:first-child {
+        margin-top: 0;
+      }
+      .highlight-box {
+        background: rgba(69, 162, 158, 0.1);
+        border-right: 4px solid #66fcf1;
+        padding: 10px 15px;
+        margin: 15px 0;
+        border-radius: 5px;
+      }
+
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 0.9em;
+      }
+      .comparison-table th {
+        background: #1f2833;
+        color: #66fcf1;
+        padding: 10px;
+        border: 1px solid #45a29e;
+      }
+      .comparison-table td {
+        padding: 10px;
+        border: 1px solid #45a29e;
+        background: rgba(11, 12, 16, 0.5);
+      }
+
+      .number-line-container {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 30px 10px;
+        background: rgba(11, 12, 16, 0.8);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        border: 2px solid #1f2833;
+        direction: ltr;
+      }
+      .number-node {
+        display: inline-block;
+        min-width: 45px;
+        height: 45px;
+        line-height: 41px;
+        text-align: center;
+        background: #1f2833;
+        border: 2px solid #45a29e;
+        border-radius: 50%;
+        margin: 0 5px;
+        font-weight: bold;
+        transition: all 0.4s;
+        color: #c5c6c7;
+        font-size: 1.1em;
+      }
+      .infinity-node {
+        background: transparent;
+        border: none;
+        font-size: 2em;
+        color: #66fcf1;
+        letter-spacing: 2px;
+      }
+      .highlight-dynamic {
+        background-color: #ffaa00 !important;
+        color: #0b0c10 !important;
+        border-color: #ffdd00 !important;
+        transform: scale(1.2);
+        box-shadow: 0 0 15px #ffaa00;
+      }
+
+      .explorer-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .input-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .n-input {
+        width: 80px;
+        padding: 10px;
+        font-size: 1.2em;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #45a29e;
+        background: #0b0c10;
+        color: #66fcf1;
+        outline: none;
+      }
+      .action-btn {
+        background: linear-gradient(45deg, #1f2833, #45a29e);
+        color: #fff;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+
+      .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .game-card {
+        background: #1f2833;
+        border: 2px solid #9d4edd;
+        border-radius: 15px;
+        padding: 20px 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+      .game-card:active {
+        transform: scale(0.95);
+        background: #9d4edd;
+      }
+      .game-icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .game-title {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+      }
+      .modal-content {
+        background: #0b0c10;
+        border: 2px solid #66fcf1;
+        width: 95%;
+        max-width: 500px;
+        max-height: 85vh;
+        overflow-y: auto;
+        border-radius: 15px;
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 0 30px rgba(102, 252, 241, 0.4);
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 2em;
+        color: #ff4d4d;
+        cursor: pointer;
+        line-height: 0.5;
+      }
+      .modal-title {
+        color: #66fcf1;
+        text-align: center;
+        border-bottom: 1px solid #1f2833;
+        padding-bottom: 10px;
+        margin-top: 0;
+      }
+
+      /* شاشة النقاط المحفوظة في LocalStorage */
+      .score-display {
+        text-align: center;
+        color: #ffaa00;
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        background: rgba(255, 170, 0, 0.1);
+        padding: 5px;
+        border-radius: 8px;
+        border: 1px dashed #ffaa00;
+        display: none;
+      }
+
+      .game-area {
+        margin-top: 20px;
+        text-align: center;
+      }
+      .cayley-table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        direction: ltr;
+      }
+      .cayley-table th,
+      .cayley-table td {
+        border: 1px solid #45a29e;
+        padding: 5px;
+        text-align: center;
+        width: 45px;
+        height: 45px;
+      }
+      .cayley-table th {
+        background: #1f2833;
+        color: #66fcf1;
+      }
+      .cayley-input {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 1.1em;
+        outline: none;
+      }
+
+      .maze-btn {
+        background: #45a29e;
+        color: #0b0c10;
+        border: none;
+        padding: 15px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 8px;
+        margin: 5px;
+        width: 40%;
+        cursor: pointer;
+      }
+      .maze-btn:active {
+        background: #66fcf1;
+      }
+      .prop-btn {
+        background: #1f2833;
+        color: #fff;
+        border: 1px solid #9d4edd;
+        padding: 12px;
+        margin: 5px 0;
+        width: 100%;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+      }
+      .prop-btn:active {
+        background: #9d4edd;
+      }
+
+      .riddle-box {
+        background: rgba(31, 40, 51, 0.5);
+        padding: 15px;
+        border-radius: 8px;
+        border-right: 3px solid #ffaa00;
+        margin-bottom: 15px;
+        text-align: right;
+      }
+      .riddle-input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background: #000;
+        border: 1px solid #45a29e;
+        color: #fff;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .feedback {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        font-weight: bold;
+        display: none;
+      }
+      .success {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+        border: 1px solid #00ff88;
+      }
+      .error {
+        background: rgba(255, 77, 77, 0.2);
+        color: #ff4d4d;
+        border: 1px solid #ff4d4d;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="infinite_world.html" class="back-btn">⮞ الخريطة</a>
+
+    <div class="header">
+      <h1>$(\mathbb{Z}, +)$</h1>
+      <p>عالم الأعداد الصحيحة - حجر الأساس لنظرية الزمر</p>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">اولاً البنية الجبرية للزمرة</div>
+        <div class="academic-content">
+            
+            <h3>1. لماذا $\mathbb{Z}$ زمرة؟ (شروط الزمرة)</h3>
+            <p>لتكون مجموعة الأعداد الصحيحة $\mathbb{Z} = \{..., -2, -1, 0, 1, 2, ...\}$ زمرة تحت عملية الجمع، يجب أن تحقق البديهيات الأربع التالية:</p>
+            <ul>
+                <li><strong>الانغلاق (Closure):</strong> لكل $a, b \in \mathbb{Z}$، فإن حاصل جمعهما يظل عدداً صحيحاً ($a + b \in \mathbb{Z}$). لا يمكن أن يعطينا الجمع عدداً كسرياً.</li>
+                <li><strong>التجميع (Associativity):</strong> ترتيب الأقواس لا يهم. لكل $a, b, c \in \mathbb{Z}$، فإن $(a + b) + c = a + (b + c)$.</li>
+                <li><strong>العنصر المحايد (Identity Element):</strong> يوجد عنصر فريد وهو الصفر $0$، بحيث لا يؤثر على عملية الجمع: $a + 0 = 0 + a = a$.</li>
+                <li><strong>النظير (Inverse):</strong> لكل عنصر $a \in \mathbb{Z}$، يوجد عنصر آخر وهو $-a$ (يسمى النظير الجمعي) بحيث يلغي أثره ليعطي المحايد: $a + (-a) = 0$.</li>
+            </ul>
+            <p><em>ملاحظة:</em> بما أن $a + b = b + a$، فإنها تسمى <strong>زمرة إبدالية (Abelian Group)</strong>.</p>
+            <div class="highlight-box">
+                <strong>قاعدة المعكوس في $\mathbb{Z}$:</strong><br>
+                معكوس أي عدد $a$ بالنسبة للجمع هو بكل بساطة سالبه $-a$.<br>
+                <em>مثال:</em> معكوس $17$ هو $-17$ لأن $17 + (-17) = 0$.
+            </div>  
+            <h3>2. المولدات (Generators) والزمر الجزئية(Subgroups)</h3>
+            <p>الزمرة الدائرية هي الزمرة التي يمكن بناء جميع عناصرها باستخدام عنصر واحد فقط عبر تكرار العملية (الجمع في حالتنا).</p>
+                        <h3>المولدات </h3>
+            <p>يمكننا توليد الزمرة بأكملها باستخدام الرقم $1$ (عن طريق جمعه مع نفسه أو طرحه مراراً وتكراراً). لذلك نسميها <strong>زمرة دائرية (Cyclic Group)</strong>.</p>
+            <p>أي زمرة جزئية بداخلها تأخذ شكل مضاعفات رقم معين $n$ ونرمز لها بـ $n\mathbb{Z}$. إليك أشهر الأمثلة:</p>
+            <ul>
+                <li><strong>الزمرة التافهة:</strong> $\langle 0 \rangle = \{0\}$. (الزمرة الجزئية الوحيدة المنتهية هنا!).</li>
+                <li><strong>زمرة الأعداد الزوجية $2\mathbb{Z}$:</strong> $\langle 2 \rangle = \{ ..., -4, -2, 0, 2, 4, ... \}$.</li>
+                <li><strong>زمرة مضاعفات الثلاثة $3\mathbb{Z}$:</strong> $\langle 3 \rangle = \{ ..., -6, -3, 0, 3, 6, ... \}$.</li>
+            </ul>
+
+            <div class="highlight-box">
+                تمتلك الزمرة $(\mathbb{Z}, +)$ <strong>مولدين اثنين فقط</strong>، هما:<br>
+                <strong>العدد 1:</strong> لأن $1+1=2$، $1+1+1=3$... ونعكسه للحصول على السوالب.<br>
+                <strong>العدد -1:</strong> بنفس الطريقة.<br>
+                ونعبر عن ذلك رياضياً: $$ \mathbb{Z} = \langle 1 \rangle = \langle -1 \rangle $$
+            </div>
+
+            <h3>3. الزمر الجزئية (Subgroups $n\mathbb{Z}$)</h3>
+            <p>كل زمرة جزئية من $\mathbb{Z}$ تأخذ شكلاً واحداً فقط: مضاعفات عدد صحيح $n$. ونرمز لها بالرمز $n\mathbb{Z}$ أو $\langle n \rangle$.</p>
+            <ul>
+                <li><strong>الزمرة التافهة $0\mathbb{Z}$:</strong> تحتوي على $\{0\}$ فقط. (وهي الزمرة الجزئية الوحيدة المنتهية).</li>
+                <li><strong>الأعداد الزوجية $2\mathbb{Z}$:</strong> $\langle 2 \rangle = \{ ..., -4, -2, 0, 2, 4, ... \}$.</li>
+                <li><strong>مضاعفات الثلاثة $3\mathbb{Z}$:</strong> $\langle 3 \rangle = \{ ..., -6, -3, 0, 3, 6, ... \}$.</li>
+            </ul>
+
+            <h3>4. هندسة الزمر الجزئية (العمليات والاحتواء)</h3>
+            <p>هنا يبدأ الجبر المجرد الحقيقي! كيف تتفاعل هذه الزمر الجزئية مع بعضها البعض؟</p>
+            
+            <p><strong>أ. شرط الاحتواء (Inclusion):</strong> متى تكون زمرة جزئية محتواة بالكامل داخل زمرة أخرى؟</p>
+            <p>القاعدة الذهبية: $$ m\mathbb{Z} \subseteq n\mathbb{Z} \iff n \text{ divides } m $$
+            <em>مثال:</em> $6\mathbb{Z} \subseteq 2\mathbb{Z}$ لأن مضاعفات الـ 6 (مثل 6، 12، 18) هي تلقائياً مضاعفات للـ 2. لكن العكس غير صحيح!</p>
+
+            <p><strong>ب. تقاطع الزمر الجزئية (Intersection):</strong> تقاطع أي زمرتين جزئيتين يعطينا زمرة جزئية جديدة تتولد بواسطة <strong>المضاعف المشترك الأصغر (LCM)</strong> للعددين.</p>
+            <p>$$ a\mathbb{Z} \cap b\mathbb{Z} = \text{lcm}(a, b)\mathbb{Z} $$
+            <em>مثال:</em> الأعداد التي تنتمي لـ $4\mathbb{Z}$ <strong>و</strong> $6\mathbb{Z}$ في نفس الوقت هي مضاعفات الـ 12. إذن: $4\mathbb{Z} \cap 6\mathbb{Z} = 12\mathbb{Z}$.</p>
+
+            <p><strong>جـ. جمع الزمر الجزئية (Addition of Subgroups):</strong> إذا جمعنا كل عنصر من $a\mathbb{Z}$ مع كل عنصر من $b\mathbb{Z}$، سنحصل على زمرة جزئية تتولد بواسطة <strong>القاسم المشترك الأكبر (GCD)</strong>.</p>
+            <p>$$ a\mathbb{Z} + b\mathbb{Z} = \text{gcd}(a, b)\mathbb{Z} $$
+            <em>مثال:</em> $4\mathbb{Z} + 6\mathbb{Z} = 2\mathbb{Z}$. (تُعرف هذه بخاصية بيزوت Bezout's Identity).</p>
+
+            <h3>5. الدليل (Index of a Subgroup)</h3>
+            <p>دليل الزمرة الجزئية $n\mathbb{Z}$ داخل $\mathbb{Z}$، والذي نرمز له بالرمز $[\mathbb{Z} : n\mathbb{Z}]$، يمثل عدد "المصاحبات" (Cosets) المختلفة التي تصنعها هذه الزمرة.</p>
+            <p>بشكل مبسط، الدليل هو ببساطة العدد $n$.<br>
+            <em>مثال:</em> $[\mathbb{Z} : 3\mathbb{Z}] = 3$. والمصاحبات الثلاثة هي: (مضاعفات 3)، (مضاعفات 3 مضافاً إليها 1)، (مضاعفات 3 مضافاً إليها 2).</p>
+        <h3> المقارنة : اللانهائي $\mathbb{Z}$ ضد المنتهي $Z_n$</h3>
+            <p>لقد درست زمرة التطابق (المعيارية) $Z_n$ في الفصول السابقة، فكيف تختلف عن زمرتنا اليوم $\mathbb{Z}$؟</p>
+            <div style="overflow-x: auto;">
+                <table class="comparison-table">
+                    <tr>
+                        <th>وجه المقارنة</th>
+                        <th>الزمرة اللانهائية $(\mathbb{Z}, +)$</th>
+                        <th>الزمرة المنتهية $(Z_n, +_n)$</th>
+                    </tr>
+                    <tr>
+                        <td><strong>رتبة الزمرة (الحجم)</strong></td>
+                        <td>لانهائية ($\infty$)</td>
+                        <td>منتهية ($n$ عنصر)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>المولدات (Generators)</strong></td>
+                        <td>يوجد مولدان فقط: $1$ و $-1$</td>
+                        <td>أي رقم $k$ يكون $\gcd(k, n) = 1$</td>
+                    </tr>
+                    <tr>
+                        <td><strong>معكوس العدد $a$</strong></td>
+                        <td>$-a$ (نفس الرقم بإشارة سالبة)</td>
+                        <td>$n - a$ (حسب مود الزمرة)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>الزمر الجزئية</strong></td>
+                        <td>عدد لا نهائي ($n\mathbb{Z}$)</td>
+                        <td>محدودة (قواسم العدد $n$ فقط)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+      <div class="section-title">ثانياً مستكشف الزمر الجزئية</div>
+      <p style="color: #ccc">
+        أدخل أي رقم $n$ لترى الزمرة الجزئية $n\mathbb{Z}$ على خط الأعداد.
+      </p>
+      <div class="number-line-container" id="numberLine"></div>
+      <div class="explorer-controls">
+        <div class="input-group">
+          <label style="font-size: 1.2em; color: #66fcf1">$n =$ </label>
+          <input
+            type="number"
+            id="subgroupInput"
+            class="n-input"
+            value="3"
+            min="1"
+            max="10"
+          />
+        </div>
+        <button class="action-btn" onclick="highlightDynamicSubgroup()">
+          توليد الزمرة
+        </button>
+      </div><a href="realm_R.html" class="next-gate-btn">
+            ➡ الباب التالي <br>
+            <span style="font-size: 0.75em; font-weight: normal; " >الاعداد الحقيقية  $\mathbb{R}$</span>
+        </a>
+    </div>
+    
+    <script>
+      // ==========================================
+      // 1. نظام النقاط المتقدم (LocalStorage)
+      // ==========================================
+      // قراءة النقاط من الذاكرة أو وضعها 0
+      let gameScore = parseInt(localStorage.getItem("z_realm_score")) || 0;
+
+      function updateScoreDisplay() {
+        document.getElementById("currentScoreSpan").innerText = gameScore;
+      }
+
+      function incrementScore(points = 1) {
+        gameScore += points;
+        localStorage.setItem("z_realm_score", gameScore);
+        updateScoreDisplay();
+      }
+
+      function resetScore() {
+        gameScore = 0;
+        localStorage.setItem("z_realm_score", gameScore);
+        updateScoreDisplay();
+      }
+
+      // ==========================================
+      // دوال رياضية مساعدة
+      // ==========================================
+      function gcd(a, b) {
+        return b === 0 ? Math.abs(a) : gcd(b, a % b);
+      }
+      function lcm(a, b) {
+        return Math.abs(a * b) / gcd(a, b);
+      }
+      function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // ==========================================
+      // 2. المستكشف التفاعلي
+      // ==========================================
+      const numberLine = document.getElementById("numberLine");
+      function buildNumberLine() {
+        numberLine.innerHTML = "";
+        numberLine.appendChild(createNode("...", "infinity-node"));
+        for (let i = -20; i <= 20; i++)
+          numberLine.appendChild(createNode(i, "number-node", `node-${i}`));
+        numberLine.appendChild(createNode("...", "infinity-node"));
+        setTimeout(() => {
+          numberLine.scrollLeft =
+            (numberLine.scrollWidth - numberLine.clientWidth) / 2;
+        }, 100);
+      }
+      function createNode(text, className, id = "") {
+        let div = document.createElement("div");
+        div.className = className;
+        div.innerText = text;
+        if (id) div.id = id;
+        return div;
+      }
+      function highlightDynamicSubgroup() {
+        let n = parseInt(document.getElementById("subgroupInput").value);
+        if (isNaN(n) || n === 0) return;
+        n = Math.abs(n);
+        document
+          .querySelectorAll(".number-node")
+          .forEach((node) => node.classList.remove("highlight-dynamic"));
+        for (let i = -20; i <= 20; i++)
+          if (i % n === 0)
+            document
+              .getElementById(`node-${i}`)
+              ?.classList.add("highlight-dynamic");
+      }
+      buildNumberLine();
+      highlightDynamicSubgroup();
+
+      // ==========================================
+      // 3. نظام النوافذ والألعاب
+      // ==========================================
+      const modal = document.getElementById("gameModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+      const scoreDisplay = document.getElementById("scoreDisplay");
+
+      function openGame(gameId) {
+        modal.style.display = "flex";
+        modalBody.innerHTML = "";
+        updateScoreDisplay(); // إظهار النقاط المحفوظة
+
+        if (gameId !== "maze") scoreDisplay.style.display = "block";
+        else scoreDisplay.style.display = "none";
+
+        if (gameId === "cayley") loadDynamicCayley();
+        else if (gameId === "identify") loadDynamicIdentify();
+        else if (gameId === "isGroup") loadDynamicIsGroup();
+        else if (gameId === "maze") loadDynamicMaze();
+        else if (gameId === "riddles") loadDynamicRiddles();
+
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+      function closeModal() {
+        modal.style.display = "none";
+      }
+      function getFeedbackDiv(id) {
+        return `<div id="${id}" class="feedback"></div>`;
+      }
+      function showRes(id, isCorrect, msg) {
+        let f = document.getElementById(id);
+        f.style.display = "block";
+        f.className = `feedback ${isCorrect ? "success" : "error"}`;
+        f.innerHTML = isCorrect ? `✅ ${msg}` : `❌ ${msg}`;
+      }
+
+      // ==========================================
+      // 4. لعبة جدول كايلي
+      // ==========================================
+      let cayleyStart = 0;
+      function loadDynamicCayley() {
+        cayleyStart = getRandomInt(-5, 2);
+        modalTitle.innerText = "بناء جدول كايلي";
+        let html = `<p>املأ الجدول للمجموعة $\\{${cayleyStart}, ${cayleyStart + 1}, ${cayleyStart + 2}, ${cayleyStart + 3}\\}$</p><div style="overflow-x:auto;"><table class="cayley-table"><tr><th>+</th>`;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++)
+          html += `<th>${i}</th>`;
+        html += `</tr>`;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++) {
+          html += `<tr><th>${i}</th>`;
+          for (let j = cayleyStart; j <= cayleyStart + 3; j++)
+            html += `<td><input type="number" id="c_${i}_${j}" class="cayley-input"></td>`;
+          html += `</tr>`;
+        }
+        html += `</table></div><br>
+            <button class="action-btn" onclick="checkCayley()">تحقق من الجدول</button>
+            <button class="action-btn" style="background:#333; margin-top:10px;" onclick="loadDynamicCayley()">توليد جدول جديد 🔄</button>
+            ${getFeedbackDiv("cayleyFeed")}`;
+        modalBody.innerHTML = html;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+      function checkCayley() {
+        let correct = true;
+        for (let i = cayleyStart; i <= cayleyStart + 3; i++) {
+          for (let j = cayleyStart; j <= cayleyStart + 3; j++) {
+            let val = parseInt(document.getElementById(`c_${i}_${j}`).value);
+            if (val !== i + j) correct = false;
+          }
+        }
+        if (correct) {
+          incrementScore(2); // الجدول يعطي نقطتين
+          showRes("cayleyFeed", true, "عمل رائع! حصلت على نقطتين ⭐⭐");
+        } else showRes("cayleyFeed", false, "يوجد خطأ في الجمع. ركز أكثر.");
+      }
+
+      // ==========================================
+      // 5. اكتشف الخاصية
+      // ==========================================
+      let currentPropAns = "";
+      function loadDynamicIdentify() {
+        let a = getRandomInt(-15, 15);
+        let b = getRandomInt(-15, 15);
+        let c = getRandomInt(-15, 15);
+        let props = [
+          { id: "comm", text: `$${a} + ${b} = ${b} + ${a}$` },
+          {
+            id: "assoc",
+            text: `$(${a} + ${b}) + ${c} = ${a} + (${b} + ${c})$`,
+          },
+          { id: "id", text: `$${a} + 0 = ${a}$` },
+          { id: "inv", text: `$${a} + (${-a}) = 0$` },
+        ];
+        let choice = props[getRandomInt(0, 3)];
+        currentPropAns = choice.id;
+
+        modalTitle.innerText = "اكتشف الخاصية";
+        modalBody.innerHTML = `
+                <p style="font-size:1.6em; direction:ltr; font-weight:bold; color:#ffaa00;">${choice.text}</p>
+                <p>أي خاصية تمثلها هذه العبارة؟</p>
+                <button class="prop-btn" onclick="checkDynamicIden('assoc')">التجميعية</button>
+                <button class="prop-btn" onclick="checkDynamicIden('comm')">الإبدالية</button>
+                <button class="prop-btn" onclick="checkDynamicIden('inv')">النظير الجمعي</button>
+                <button class="prop-btn" onclick="checkDynamicIden('id')">العنصر المحايد</button>
+                ${getFeedbackDiv("idenFeed")}
+            `;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+      function checkDynamicIden(ans) {
+        if (ans === currentPropAns) {
+          incrementScore(1);
+          showRes("idenFeed", true, "إجابة صحيحة! +1 نقطة");
+          setTimeout(loadDynamicIdentify, 1000);
+        } else {
+          showRes("idenFeed", false, "خطأ. تم تصفير نقاطك! 💀");
+          resetScore();
+        }
+      }
+
+      // ==========================================
+      // 6. لعبة هل هي زمرة؟ (بدون تكرار وبنك ضخم)
+      // ==========================================
+      const algebraicStructuresDB = [
+        {
+          exp: "$(\\mathbb{Z}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الجمع على الصحيحة يحقق كل الشروط وهي إبدالية.",
+        },
+        {
+          exp: "$(\\mathbb{N}, +)$",
+          semi: true,
+          group: false,
+          abelian: false,
+          reason:
+            "الأعداد الطبيعية لا تحتوي على نظير جمعي (لا يوجد أرقام سالبة).",
+        },
+        {
+          exp: "$(\\mathbb{Z}, -)$",
+          semi: false,
+          group: false,
+          abelian: false,
+          reason: "عملية الطرح ليست تجميعية.",
+        },
+        {
+          exp: "$(\\mathbb{Q}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد النسبية مغلقة تحت الجمع، ولها نظير ومحايد وإبدالية.",
+        },
+        {
+          exp: "$(\\mathbb{R}^*, \\cdot)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد الحقيقية (عدا الصفر) تشكل زمرة إبدالية تحت الضرب.",
+        },
+        {
+          exp: "$GL_2(\\mathbb{R})$",
+          semi: true,
+          group: true,
+          abelian: false,
+          reason:
+            "مصفوفات قابلة للانعكاس تشكل زمرة، لكن ضرب المصفوفات ليس إبدالياً!",
+        },
+        {
+          exp: "$(2\\mathbb{Z}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason:
+            "الأعداد الزوجية مغلقة تحت الجمع ولها نظير، فهي زمرة إبدالية.",
+        },
+        {
+          exp: "$(2\\mathbb{Z}+1, +)$",
+          semi: false,
+          group: false,
+          abelian: false,
+          reason: "الأعداد الفردية ليست مغلقة تحت الجمع! (فردي + فردي = زوجي).",
+        },
+        {
+          exp: "$(\\mathbb{Z}, \\cdot)$",
+          semi: true,
+          group: false,
+          abelian: false,
+          reason:
+            "توجد تجميعية ومحايد (1)، لكن معظم العناصر ليس لها نظير ضربي صحيح (مثال: نظير 2 هو 0.5 وليس صحيحاً).",
+        },
+        {
+          exp: "$(\\mathbb{C}, +)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "الأعداد المركبة تحت الجمع تشكل زمرة إبدالية.",
+        },
+        {
+          exp: "$(\\{1, -1, i, -i\\}, \\cdot)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "مجموعة جذور الوحدة مغلقة تحت الضرب ولها نظير ضربي.",
+        },
+        {
+          exp: "$(\\mathbb{Z}_5, +_5)$",
+          semi: true,
+          group: true,
+          abelian: true,
+          reason: "زمرة التطابق المعيارية قياس 5 هي زمرة إبدالية منتهية.",
+        },
+        {
+          exp: "$(\\mathbb{Z}_4, \\cdot_4)$",
+          semi: true,
+          group: false,
+          abelian: false,
+          reason: "تحت الضرب، الرقم 2 ليس له نظير (2 × أي رقم لا يعطي 1).",
+        },
+        {
+          exp: "$S_3$",
+          semi: true,
+          group: true,
+          abelian: false,
+          reason:
+            "زمرة التباديل (Symmetric Group) هي زمرة ولكن تركيب الدوال غير إبدالي.",
+        },
+        {
+          exp: "$D_4$",
+          semi: true,
+          group: true,
+          abelian: false,
+          reason: "زمرة تناظرات المربع (Dihedral) زمرة غير إبدالية.",
+        },
+      ];
+
+      let shuffledStructures = [];
+      let currentStructInfo = null;
+      let currentQType = 0;
+
+      function loadDynamicIsGroup() {
+        // إذا نفدت الأسئلة أو كانت المرة الأولى، نعيد خلط البنك بالكامل
+        if (shuffledStructures.length === 0) {
+          shuffledStructures = [...algebraicStructuresDB].sort(
+            () => Math.random() - 0.5,
+          );
+        }
+
+        // سحب بنية عشوائية دون تكرار
+        currentStructInfo = shuffledStructures.pop();
+        currentQType = getRandomInt(0, 2);
+
+        let questionText = "";
+        if (currentQType === 0)
+          questionText =
+            "هل تمثل <strong>شبه زمرة (Semigroup)</strong>؟<br><span style='font-size:0.7em;color:#ccc;'>(أي هل العملية مغلقة وتجميعية فقط؟)</span>";
+        else if (currentQType === 1)
+          questionText =
+            "هل تمثل <strong>زمرة (Group)</strong>؟<br><span style='font-size:0.7em;color:#ccc;'>(تحقق الإغلاق، التجميع، المحايد، والنظير)</span>";
+        else
+          questionText =
+            "هل تمثل <strong>زمرة إبدالية (Abelian Group)</strong>؟";
+
+        modalTitle.innerText = "اختبار البنى الجبرية";
+        modalBody.innerHTML = `
+                <div style="font-size:1.8em; margin:20px 0; color:#ffaa00; direction:ltr;">${currentStructInfo.exp}</div>
+                <p style="font-size:1.1em;">${questionText}</p>
+                <div style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
+                    <button class="action-btn" style="background:#00b894; width:45%;" onclick="checkIsGroup(true)">نعم</button>
+                    <button class="action-btn" style="background:#d63031; width:45%;" onclick="checkIsGroup(false)">لا</button>
+                </div>
+                ${getFeedbackDiv("isGroupFeed")}
+            `;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+
+      function checkIsGroup(userAns) {
+        let correctAns = false;
+        if (currentQType === 0) correctAns = currentStructInfo.semi;
+        else if (currentQType === 1) correctAns = currentStructInfo.group;
+        else correctAns = currentStructInfo.abelian;
+
+        if (userAns === correctAns) {
+          incrementScore(1);
+          showRes("isGroupFeed", true, `صحيح! ${currentStructInfo.reason}`);
+          setTimeout(loadDynamicIsGroup, 2500);
+        } else {
+          showRes(
+            "isGroupFeed",
+            false,
+            `خطأ. ${currentStructInfo.reason} (تم تصفير النقاط 💀)`,
+          );
+          resetScore();
+        }
+      }
+
+      // ==========================================
+      // 7. المتاهة العددية اللانهائية (شروط القواسم وعدم التكرار)
+      // ==========================================
+      let mazeLevel = 1;
+      let mazeTarget = 0;
+      let mazeCurrent = 0;
+      let mazeMoves = 10; // ثابت دائماً 10 حركات لكل مستوى
+
+      function loadDynamicMaze() {
+        mazeLevel = 1;
+        generateMazeLevel();
+      }
+
+      function generateMazeLevel() {
+        mazeCurrent = 0;
+        mazeMoves = 10; // إعادة تعيين الحركات لـ 10
+
+        let validPuzzle = false;
+        let steps = [];
+
+        while (!validPuzzle) {
+          steps = [];
+          // توليد 4 أزرار عشوائية غير متكررة وبدون صفر
+          while (steps.length < 4) {
+            let r = getRandomInt(-12, 12);
+            if (r !== 0 && !steps.includes(r)) steps.push(r);
+          }
+
+          // اختيار هدف عشوائي يمكن الوصول إليه نظرياً بجمع الأزرار (أقل من 10 حركات)
+          mazeTarget = 0;
+          let movesToSimulate = getRandomInt(4, 7); // استخدام 4 إلى 7 أزرار لتكوين الهدف
+          for (let i = 0; i < movesToSimulate; i++) {
+            mazeTarget += steps[getRandomInt(0, 3)];
+          }
+
+          if (mazeTarget === 0) continue; // الهدف لا يجب أن يكون 0
+
+          // التأكد من أن أي زر ليس قاسماً للهدف (لمنع ضغط زر واحد للوصول للهدف)
+          let hasDivisor = false;
+          for (let i = 0; i < 4; i++) {
+            if (mazeTarget % steps[i] === 0) hasDivisor = true;
+          }
+
+          if (!hasDivisor) validPuzzle = true; // وجدنا اللغز المثالي!
+        }
+
+        modalTitle.innerText = `المتاهة العددية - المستوى ${mazeLevel}`;
+        modalBody.innerHTML = `
+                <div style="display:flex; justify-content:space-between; color:#ffaa00; font-weight:bold;">
+                    <span>الحركات المتبقية: <span id="mazeMovesSpan">${mazeMoves}</span></span>
+                </div>
+                <p>الهدف الذي يجب الوصول إليه بدقة: <strong style="font-size:1.5em; color:#fff;">${mazeTarget}</strong></p>
+                <h1 id="mazeCurrent" style="font-size:4em; color:#66fcf1; margin:10px 0; border: 2px dashed #45a29e; border-radius:15px;">${mazeCurrent}</h1>
+                <p>اضغط على الأزرار لجمع أو طرح الرصيد:</p>
+                <div>
+                    <button class="maze-btn" onclick="mazeStep(${steps[0]})">${steps[0] > 0 ? "+" + steps[0] : steps[0]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[1]})">${steps[1] > 0 ? "+" + steps[1] : steps[1]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[2]})">${steps[2] > 0 ? "+" + steps[2] : steps[2]}</button>
+                    <button class="maze-btn" onclick="mazeStep(${steps[3]})">${steps[3] > 0 ? "+" + steps[3] : steps[3]}</button>
+                </div>
+                ${getFeedbackDiv("mazeFeed")}
+            `;
+      }
+
+      function mazeStep(val) {
+        if (mazeMoves <= 0) return;
+        mazeCurrent += val;
+        mazeMoves--;
+        document.getElementById("mazeCurrent").innerText = mazeCurrent;
+        document.getElementById("mazeMovesSpan").innerText = mazeMoves;
+
+        if (mazeCurrent === mazeTarget) {
+          incrementScore(5); // الفوز بالمتاهة يعطي 5 نقاط
+          showRes(
+            "mazeFeed",
+            true,
+            "وحش الرياضيات! جاري الانتقال للمستوى التالي... (+5 نقاط)",
+          );
+          mazeLevel++;
+          setTimeout(generateMazeLevel, 1500);
+        } else if (mazeMoves <= 0) {
+          showRes("mazeFeed", false, `نفدت حركاتك! وصلت للمستوى ${mazeLevel}.`);
+          modalBody.innerHTML += `<br><button class="action-btn" style="margin-top:10px; width:100%;" onclick="loadDynamicMaze()">إعادة اللعب من المستوى الأول 🔄</button>`;
+        }
+      }
+
+      // ==========================================
+      // 8. مولد الألغاز اللانهائي
+      // ==========================================
+      let currentRiddles = [];
+      function loadDynamicRiddles() {
+        modalTitle.innerText = "مولد الألغاز العشوائي";
+        currentRiddles = [];
+        let html = `<p style="color:#ccc;">حل الألغاز لزيادة نقاطك!</p>`;
+
+        for (let i = 0; i < 4; i++) {
+          let riddle = generateRandomRiddle(i);
+          currentRiddles.push({ ...riddle, solved: false });
+          html += `
+                <div class="riddle-box">
+                    <p><strong>لغز ${i + 1}:</strong> ${riddle.q}</p>
+                    <input type="number" id="dynRiddleAns_${i}" class="riddle-input" placeholder="أدخل الرقم...">
+                    <button class="action-btn" id="btnRiddle_${i}" style="padding: 5px 15px; margin-top: 10px; font-size: 0.9em;" onclick="checkDynRiddle(${i})">تحقق</button>
+                    ${getFeedbackDiv(`dynRiddleFeed_${i}`)}
+                </div>`;
+        }
+        html += `<button class="action-btn" style="width:100%; background:#d63031;" onclick="loadDynamicRiddles()">توليد ألغاز جديدة 🔄</button>`;
+        modalBody.innerHTML = html;
+        if (window.MathJax) MathJax.typesetPromise([modalBody]);
+      }
+
+      function generateRandomRiddle(typeIndex) {
+        let a, b, ans, qText;
+        switch (typeIndex % 4) {
+          case 0:
+            a = getRandomInt(-50, 50);
+            if (a === 0) a = 5;
+            ans = -a;
+            qText = `ما هو المعكوس الجمعي للعدد $${a}$ في الزمرة $(\\mathbb{Z}, +)$؟`;
+            break;
+          case 1:
+            a = getRandomInt(-20, 20);
+            b = getRandomInt(-20, 20);
+            ans = b - a;
+            qText = `أوجد العدد $x$ في المعادلة: $${a} + x = ${b}$`;
+            break;
+          case 2:
+            a = getRandomInt(2, 8);
+            b = getRandomInt(3, 9);
+            ans = lcm(a, b);
+            qText = `تقاطع الزمرتين $${a}\\mathbb{Z}$ و $${b}\\mathbb{Z}$ يولد زمرة $n\\mathbb{Z}$. ما هي قيمة $n$؟`;
+            break;
+          case 3:
+            a = getRandomInt(6, 20);
+            b = getRandomInt(6, 20);
+            ans = gcd(a, b);
+            qText = `الزمرة المتولدة من الرقمين $${a}$ و $${b}$ معاً تعطي زمرة $n\\mathbb{Z}$. ما هي قيمة $n$؟`;
+            break;
+        }
+        return { q: qText, ans: ans };
+      }
+
+      function checkDynRiddle(idx) {
+        if (currentRiddles[idx].solved) return;
+        let userAns = parseInt(
+          document.getElementById(`dynRiddleAns_${idx}`).value,
+        );
+        if (userAns === currentRiddles[idx].ans) {
+          incrementScore(1);
+          currentRiddles[idx].solved = true;
+          document.getElementById(`btnRiddle_${idx}`).style.display = "none";
+          showRes(`dynRiddleFeed_${idx}`, true, "إجابة صحيحة! (+1 نقطة)");
+        } else {
+          showRes(`dynRiddleFeed_${idx}`, false, `خطأ، حاول حسابها مرة أخرى.`);
+        }
+      }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+

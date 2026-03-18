@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عالم المصفوفات (GLn)</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * { box-sizing: border-box; touch-action: pan-y pan-x; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+        body { margin: 0; padding: 0; background-color: #0b0c10; color: #c5c6c7; background-image: linear-gradient(to bottom, #001a00, #0b0c10); min-height: 100vh; padding-bottom: 50px; line-height: 1.6; overflow-x: hidden; }
+        
+        .header { text-align: center; padding: 50px 15px 20px; border-bottom: 2px solid #00ff41; background: rgba(0,0,0,0.6); }
+        .header h1 { color: #00ff41; font-size: 1.8em; margin: 0; text-shadow: 0 0 15px rgba(0, 255, 65, 0.6); }
+        .header p { font-size: 1rem; color: #e0e0e0; margin-top: 10px; }
+        .back-btn { position: absolute; top: 15px; right: 15px; color: #00ff41; text-decoration: none; border: 1px solid #00ff41; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.9rem; z-index: 10;}
+        
+        .section-container { padding: 20px 15px; border-bottom: 1px dashed #004d00; }
+        .section-title { color: #00ff41; font-size: 1.4em; border-right: 4px solid #008f11; padding-right: 10px; margin-bottom: 15px; text-shadow: 0 0 5px #008f11; }
+        
+        .card { background: rgba(0, 26, 0, 0.8); padding: 20px; border-radius: 12px; font-size: 1rem; border: 1px solid #004d00; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .card-title { color: #00ff41; font-weight: bold; font-size: 1.2em; margin-bottom: 12px; border-bottom: 1px solid #004d00; padding-bottom: 8px; }
+        
+        .cards-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; margin: 0 -15px; padding-left: 15px; padding-right: 15px; }
+        .cards-slider::-webkit-scrollbar { display: none; }
+        .cards-slider { -ms-overflow-style: none; scrollbar-width: none; }
+        .cards-slider .card { min-width: 85%; scroll-snap-align: center; flex-shrink: 0; margin-bottom: 0; }
+        
+        ul.checklist { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
+        ul.checklist li { margin-bottom: 10px; padding-right: 22px; position: relative; }
+        ul.checklist li::before { content: '✔'; position: absolute; right: 0; color: #00ff41; font-weight: bold; }
+        ul.checklist li.fail::before { content: '❌'; color: #ff4d4d; }
+        
+        .result-badge { display: block; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; width: 100%; text-align: center; font-size: 0.95rem; }
+        .badge-success { background: rgba(0, 255, 65, 0.2); color: #00ff41; border: 1px solid #00ff41; }
+        .badge-warning { background: rgba(255, 170, 0, 0.2); color: #ffaa00; border: 1px solid #ffaa00; }
+        
+        .interactive-btn { background: linear-gradient(45deg, #004d00, #008f11); color: #fff; border: 1px solid #00ff41; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; width: 100%; text-align: center; display: block; }
+        .interactive-btn:active { transform: scale(0.97); background: #003300; }
+        
+        .hidden-info { display: none; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.6); border-radius: 8px; border-right: 4px solid #00ff41; color: #fff; font-weight: bold; font-size: 0.95rem; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* مدخلات المصفوفة 2x2 */
+        .matrix-container { display: inline-block; position: relative; padding: 10px 20px; }
+        .matrix-container::before, .matrix-container::after { content: ''; position: absolute; top: 0; bottom: 0; width: 15px; border: 3px solid #00ff41; }
+        .matrix-container::before { left: 0; border-right: none; }
+        .matrix-container::after { right: 0; border-left: none; }
+        
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; direction: ltr;}
+        .m-input { width: 60px; height: 50px; text-align: center; font-size: 1.2em; background: #0b0c10; color: #fff; border: 1px solid #008f11; outline: none; border-radius: 5px; font-weight: bold;}
+        .m-input:focus { border-color: #00ff41; box-shadow: 0 0 10px rgba(0,255,65,0.5);}
+
+        .result-box { background: rgba(0,0,0,0.6); padding: 15px; border-radius: 8px; text-align: center; border: 1px dashed #00ff41; margin-top: 15px; }
+        
+        /* أزرار صح وخطأ */
+        .btn-yes, .btn-no { padding: 10px; border: none; border-radius: 5px; font-weight: bold; width: 45%; font-size: 1rem; cursor: pointer;}
+        .btn-yes { background: #00ff41; color: #000; } .btn-no { background: #ff4d4d; color: #fff; }
+
+        .next-gate-btn { display: block; text-align: center; margin: 30px auto 10px; background: linear-gradient(45deg, #008f11, #00ff41); color: #000; text-decoration: none; padding: 15px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; width: 90%; box-shadow: 0 0 15px rgba(0, 255, 65, 0.4); transition: 0.2s; }
+        .next-gate-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <a href="infinite_world.html" class="back-btn">⮞ عودة</a>
+
+    <div class="header">
+        <h1>🟩 الزمرة الخطية $GL_n(\mathbb{R})$</h1>
+        <p>مرحباً بك في عالم المصفوفات. هنا التبديل ممنوع، والمحدد هو جواز سفرك الوحيد!</p>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🧠 ما هي $GL_n(\mathbb{R})$؟</div>
+        <div class="card">
+            <p style="margin-top:0;">ترمز $GL_n(\mathbb{R})$ إلى <strong>الزمرة الخطية العامة (General Linear Group)</strong>. إنها مجموعة تتكون من جميع المصفوفات المربعة بحجم $n \times n$ التي تمتلك أرقاماً حقيقية.</p>
+            <p>ولكن، لكي تشكل هذه المصفوفات زمرة، نستخدم عملية <strong>الضرب</strong> (وليس الجمع). ولهذا السبب، وضعنا شرطاً صارماً للدخول:</p>
+            <div style="text-align: center; font-size: 1.3em; color: #00ff41; margin: 15px 0; direction: ltr; background: rgba(0,255,65,0.1); padding: 10px; border-radius: 8px;">
+                $\det(A) \neq 0$
+            </div>
+            <p style="font-size: 0.9rem; color: #ccc; text-align: center;">يجب ألا يساوي محدد المصفوفة صفراً.</p>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">⚙️ شروط الزمرة (تحت الضرب)</div>
+        <p style="font-size:0.9rem; color:#ccc; text-align:center;">(اسحب البطاقات لليمين واليسار ⟷)</p>
+        
+        <div class="cards-slider">
+            <div class="card">
+                <div class="card-title">🔹 1: الإغلاق والتجميع</div>
+                <p style="font-size: 0.95rem;">إذا ضربت مصفوفتين كل منهما لا يساوي محددها صفراً، فالناتج سيكون مصفوفة محددها لا يساوي صفراً أيضاً! (لأن $\det(AB) = \det(A)\det(B)$).</p>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> محقق.</li>
+                    <li><strong>التجميعية:</strong> محققة، فمن المعروف أن $(AB)C = A(BC)$.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 2: مصفوفة الوحدة (المحايد)</div>
+                <p style="font-size: 0.95rem;">العنصر المحايد هنا هو <strong>مصفوفة الوحدة $I_n$</strong>. وهي مصفوفة قطرها الرئيسي 1 والباقي أصفار.</p>
+                
+                <div style="direction: ltr; text-align: center; color: #00ff41; font-size: 1.2em; margin: 10px 0;">
+                    $A \times I_n = I_n \times A = A$
+                </div>
+                <p style="font-size: 0.85rem; color:#ccc;">ملاحظة: محدد مصفوفة الوحدة دائماً يساوي $1$.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 3: المصفوفة العكسية (النظير)</div>
+                <p style="font-size: 0.95rem;">لكل مصفوفة $A$ تنتمي للزمرة، يوجد مصفوفة عكسية $A^{-1}$ بحيث:</p>
+                <div style="direction: ltr; text-align: center; color: #00ff41; font-size: 1.2em; margin: 10px 0;">
+                    $A \times A^{-1} = I_n$
+                </div>
+                <p style="font-size: 0.85rem; color:#ccc;">هنا تظهر أهمية الشرط! حساب المصفوفة العكسية يتطلب القسمة على المحدد. لو كان المحدد صفراً، لكانت القسمة مستحيلة (تدمير النظير).</p>
+            </div>
+            
+            <div class="card" style="border-color: #ffaa00;">
+                <div class="card-title" style="color: #ffaa00;">⚠️ صدمة: التبديل ممنوع!</div>
+                <p style="font-size: 0.95rem;">في هذا العالم، ترتيب ضرب المصفوفات يغير النتيجة تماماً. ضرب المصفوفات ليس عملية إبدالية.</p>
+                <div style="direction: ltr; text-align: center; color: #ffaa00; font-size: 1.2em; margin: 10px 0;">
+                    $A \times B \neq B \times A$
+                </div>
+                <div class="result-badge badge-warning" style="color: #ffaa00; border-color:#ffaa00;">إذن، $GL_n(\mathbb{R})$ زمرة غير أبيلية (Non-Abelian)!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🛡️ جهاز فحص الجوازات (المحدد)</div>
+        <div class="card">
+            <p style="font-size: 0.9rem; margin-top:0;">أدخل أرقام المصفوفة $(2 \times 2)$ لنفحص محددها (القطر الرئيسي ناقص القطر الثانوي) ونقرر هل تدخل الزمرة أم لا:</p>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <div class="matrix-container">
+                    <div class="matrix-grid">
+                        <input type="number" id="m_a" class="m-input" value="2">
+                        <input type="number" id="m_b" class="m-input" value="1">
+                        <input type="number" id="m_c" class="m-input" value="4">
+                        <input type="number" id="m_d" class="m-input" value="3">
+                    </div>
+                </div>
+            </div>
+
+            <button class="interactive-btn" onclick="checkMatrix()">افحص المصفوفة</button>
+            
+            <div class="result-box" id="matrixResult" style="display: none;">
+                <span style="color:#ccc; font-size: 0.9em;">قيمة المحدد $\det(A)$:</span>
+                <div id="detValue" style="font-size: 2em; direction:ltr; margin: 5px 0;">...</div>
+                <div id="matrixVerdict" style="font-size: 1.1em; font-weight:bold; margin-top: 10px;">...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">⭐ الزمرة الخطية الخاصة $SL_n$</div>
+        <div class="card">
+            <p style="margin-top:0;">توجد زمرة جزئية شهيرة جداً تعيش داخل $GL_n$ وتُسمى <strong>الزمرة الخطية الخاصة (Special Linear Group)</strong> ونرمز لها بـ $SL_n(\mathbb{R})$.</p>
+            <p>لكي تدخل المصفوفة إلى $SL_n$، لا يكفي ألا يكون محددها صفراً، بل يجب أن يكون محددها <strong>يساوي 1 بالضّبط</strong>!</p>
+            <div style="direction: ltr; text-align: center; color: #00ff41; font-size: 1.2em; margin: 10px 0;">
+                $\det(A) = 1$
+            </div>
+            <p style="font-size: 0.85rem; color:#ccc;">$SL_n(\mathbb{R})$ هي زمرة جزئية ناظمية (Normal Subgroup) من $GL_n(\mathbb{R})$.</p>
+        </div>
+    </div>
+
+    <div class="section-container" style="border-bottom: none;">
+        <div class="section-title">🧪 تحدي مصفوفة التبديل</div>
+        <div class="card" style="border-color: #00ff41;">
+            <p style="font-size: 1.1em; text-align: center; margin-top:0;">🎯 تأمل المصفوفة التالية التي تعكس الإحداثيات: <br> 
+            <span dir="ltr" style="display:inline-block; margin-top:10px; font-size:1.2em; color:#00ff41;">$\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$</span> <br><br>
+            هل تنتمي هذه المصفوفة إلى الزمرة الأساسية $GL_2(\mathbb{R})$؟</p>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn-yes" onclick="checkMatrixChallenge(true)">نعم، تنتمي</button>
+                <button class="btn-no" onclick="checkMatrixChallenge(false)">لا تنتمي</button>
+            </div>
+            <div id="challengeFeedback" class="hidden-info" style="border-color: #00ff41; text-align: center;"></div>
+        </div>
+
+        <a href="realm_C.html" class="next-gate-btn">
+            ➡ الباب التالي <br>
+            <span style="font-size: 0.75em; font-weight: normal;">(عالم الأعداد المركبة $\mathbb{C}$)</span>
+        </a>
+    </div>
+
+    <script>
+        // جهاز فحص المصفوفات
+        function checkMatrix() {
+            let a = parseFloat(document.getElementById('m_a').value) || 0;
+            let b = parseFloat(document.getElementById('m_b').value) || 0;
+            let c = parseFloat(document.getElementById('m_c').value) || 0;
+            let d = parseFloat(document.getElementById('m_d').value) || 0;
+
+            // حساب المحدد: ad - bc
+            let det = (a * d) - (b * c);
+            
+            let resBox = document.getElementById('matrixResult');
+            let detValBox = document.getElementById('detValue');
+            let verdictBox = document.getElementById('matrixVerdict');
+
+            resBox.style.display = 'block';
+            detValBox.innerText = det;
+
+            if (det === 0) {
+                detValBox.style.color = "#ff4d4d";
+                verdictBox.style.color = "#ff4d4d";
+                verdictBox.innerHTML = "🚫 الدخول مرفوض! المحدد يساوي صفراً، هذه المصفوفة ليس لها نظير.";
+                resBox.style.borderColor = "#ff4d4d";
+            } else if (det === 1) {
+                detValBox.style.color = "#00ff41";
+                verdictBox.style.color = "#00ff41";
+                verdictBox.innerHTML = "🌟 دخول VIP! هذه المصفوفة تنتمي إلى $GL_n$ وتدخل أيضاً قسم الـ VIP المسمى $SL_n$ (لأن المحدد 1).";
+                resBox.style.borderColor = "#00ff41";
+            } else {
+                detValBox.style.color = "#00a8ff";
+                verdictBox.style.color = "#00a8ff";
+                verdictBox.innerHTML = "✅ دخول مسموح! هذه المصفوفة تنتمي للزمرة $GL_n$ بنجاح.";
+                resBox.style.borderColor = "#00a8ff";
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([verdictBox]);
+            }
+        }
+
+        // تحدي المصفوفة
+        function checkMatrixChallenge(isYes) {
+            let feed = document.getElementById('challengeFeedback');
+            feed.style.display = 'block';
+            
+            // محدد المصفوفة [0 1; 1 0] هو (0*0) - (1*1) = -1
+            if (isYes === true) {
+                feed.innerHTML = "✔ <strong>إجابة صحيحة!</strong><br>لحساب المحدد نضرب القطر الرئيسي (0 × 0) ونطرح منه القطر الثانوي (1 × 1). الناتج هو -1. وبما أن -1 لا يساوي صفراً، فهي تنتمي لـ $GL_2$ بالذات!";
+                feed.style.borderColor = "#00ff41"; feed.style.color = "#00ff41";
+            } else {
+                feed.innerHTML = "❌ <strong>تسرعت في الحكم!</strong><br>احسب محددها: $(0 \\times 0) - (1 \\times 1) = -1$. المحدد لا يساوي صفر! إذن هي تمتلك مصفوفة عكسية وتنتمي للزمرة.";
+                feed.style.borderColor = "#ff4d4d"; feed.style.color = "#ff4d4d";
+            }
+            if (window.MathJax) MathJax.typesetPromise([feed]);
+        }
+    </script>
+</body>
+<script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
+</html>

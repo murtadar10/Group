@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Infinite Universe</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <link rel="stylesheet" href="/frontEnd/infinite_style.css">
+
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">  Back</a>
+
+    <header class="universe-header">
+        <h1>The Cosmic Map</h1>
+        <p>اختر بوابتك لاستكشاف العوالم اللانهائية</p>
+    </header>
+<div style="text-align: center; margin: 10px auto 40px; padding: 0 20px; max-width: 500px;">
+        <a href="grand_arena.html" style="display: block; background: linear-gradient(45deg, #332200, #ffaa00); color: #fff; text-decoration: none; padding: 20px; border-radius: 15px; font-size: 1.5em; font-weight: bold; border: 2px solid #ffcc00; box-shadow: 0 0 20px rgba(255, 170, 0, 0.6); transition: transform 0.2s;">
+            ⚔️ الدخول إلى ساحة الالعاب  ⚔️
+            <br>
+            <span style="font-size: 0.6em; color: #ffe680; font-weight: normal; margin-top: 5px; display: block;">اختبر مهاراتك، حطم الأرقام القياسية، وارفع مستواك!</span>
+        </a>
+    </div>
+    <div id="doorsContainer" class="doors-container"></div>
+
+    <script src="/backEnd/infinite_logic.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

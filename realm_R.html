@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عالم الأعداد الحقيقية (R)</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b0c10">
+    <link rel="apple-touch-icon" href="icon.png">
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* التنسيقات الأساسية للموبايل */
+        * { box-sizing: border-box; touch-action: pan-y pan-x; -webkit-tap-highlight-color: transparent; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+        body { margin: 0; padding: 0; background-color: #0b0c10; color: #c5c6c7; background-image: linear-gradient(to bottom, #1a0b2e, #0b0c10); min-height: 100vh; padding-bottom: 50px; line-height: 1.6; overflow-x: hidden; }
+        
+        .header { text-align: center; padding: 50px 15px 20px; border-bottom: 2px solid #9d4edd; background: rgba(0,0,0,0.4); }
+        .header h1 { color: #e0aaff; font-size: 1.8em; margin: 0; text-shadow: 0 0 15px rgba(157, 78, 221, 0.6); }
+        .header p { font-size: 1rem; color: #e0e0e0; margin-top: 10px; }
+        .back-btn { position: absolute; top: 15px; right: 15px; color: #e0aaff; text-decoration: none; border: 1px solid #e0aaff; padding: 6px 12px; border-radius: 8px; background: rgba(0,0,0,0.5); font-weight: bold; font-size: 0.9rem; z-index: 10;}
+        
+        .section-container { padding: 20px 15px; border-bottom: 1px dashed #3c1e5e; }
+        .section-title { color: #e0aaff; font-size: 1.4em; border-right: 4px solid #9d4edd; padding-right: 10px; margin-bottom: 15px; text-shadow: 0 0 5px #9d4edd; }
+        
+        .card { background: rgba(36, 17, 61, 0.6); padding: 20px; border-radius: 12px; font-size: 1rem; border: 1px solid #5a189a; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card-title { color: #c77dff; font-weight: bold; font-size: 1.2em; margin-bottom: 12px; border-bottom: 1px solid #5a189a; padding-bottom: 8px; }
+        
+        /* شريط التمرير الأفقي للبطاقات (Swipeable Cards) مخصص للهاتف */
+        .cards-slider { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; margin: 0 -15px; padding-left: 15px; padding-right: 15px; }
+        /* إخفاء شريط التمرير الافتراضي لشكل أنظف */
+        .cards-slider::-webkit-scrollbar { display: none; }
+        .cards-slider { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .cards-slider .card { min-width: 85%; scroll-snap-align: center; flex-shrink: 0; margin-bottom: 0; }
+        
+        /* القوائم والشيك ليست */
+        ul.checklist { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
+        ul.checklist li { margin-bottom: 10px; padding-right: 22px; position: relative; }
+        ul.checklist li::before { content: '✔'; position: absolute; right: 0; color: #00ff88; font-weight: bold; }
+        ul.checklist li.fail::before { content: '❌'; color: #ff4d4d; }
+        
+        .result-badge { display: block; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; width: 100%; text-align: center; font-size: 0.95rem; }
+        .badge-success { background: rgba(0, 255, 136, 0.2); color: #00ff88; border: 1px solid #00ff88; }
+        .badge-fail { background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; }
+        
+        /* الأزرار التفاعلية للموبايل */
+        .interactive-btn { background: linear-gradient(45deg, #3c1e5e, #7b2cbf); color: #fff; border: 1px solid #9d4edd; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.2s; width: 100%; text-align: center; display: block; }
+        .interactive-btn:active { transform: scale(0.97); background: #5a189a; }
+        
+        .hidden-info { display: none; margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.4); border-radius: 8px; border-right: 4px solid #00ff88; color: #fff; font-weight: bold; font-size: 0.95rem; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* الجداول مخصصة للموبايل */
+        .table-wrapper { overflow-x: auto; margin-top: 15px; border-radius: 8px; }
+        .interactive-table { width: 100%; border-collapse: collapse; text-align: center; background: rgba(11, 12, 16, 0.5); font-size: 0.9rem; min-width: 300px; }
+        .interactive-table th { background: #3c1e5e; color: #e0aaff; padding: 10px 5px; border: 1px solid #5a189a; }
+        .interactive-table td { padding: 10px 5px; border: 1px solid #5a189a; }
+        .btn-yes, .btn-no { padding: 8px; border: none; border-radius: 5px; font-weight: bold; width: 45%; max-width: 60px; margin: 2px; font-size: 0.9rem;}
+        .btn-yes { background: #00b894; color: #000; } .btn-no { background: #d63031; color: #fff; }
+
+        /* شبكة النظائر جنباً إلى جنب */
+        .input-group { display: flex; gap: 10px; margin: 15px 0; align-items: stretch;}
+        .custom-input { flex: 1; padding: 10px; font-size: 1.1em; border-radius: 8px; border: 2px solid #9d4edd; background: #0b0c10; color: #fff; outline: none; direction: ltr; text-align: center; min-width: 0;} /* min-width 0 prevents flex overflow */
+        
+        .fractions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .fraction-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px; text-align: center; border: 1px dashed #7b2cbf; display: flex; flex-direction: column; justify-content: center; }
+
+        .next-gate-btn { display: block; text-align: center; margin: 30px auto 10px; background: linear-gradient(45deg, #00b894, #00cec9); color: #000; text-decoration: none; padding: 15px; border-radius: 30px; font-size: 1.2rem; font-weight: bold; width: 90%; box-shadow: 0 0 15px rgba(0, 184, 148, 0.4); transition: 0.2s; }
+        .next-gate-btn:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <a href="infinite_world.html" class="back-btn">⮞ عودة</a>
+
+    <div class="header">
+        <h1>🌍 🔵 زمرة الأعداد الحقيقية $\mathbb{R}$</h1>
+        <p>في هذا الباب نستكشف كيف يمكن لمجموعة الأعداد الحقيقية $\mathbb{R}$ أن تُشكّل زمرة تحت عمليات مختلفة، ونفهم متى تكون زمرة ومتى لا تكون.</p>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🧠 القسم الأول: ما هي $\mathbb{R}$؟</div>
+        <div class="card">
+            <p style="margin-top:0;">$\mathbb{R}$ هي مجموعة <strong>جميع الأعداد</strong>:</p>
+            <ul style="color:#e0aaff; line-height: 1.8; margin-bottom: 15px;">
+                <li>الصحيحة $(... -2, 0, 1 ...)$</li>
+                <li>الكسرية (مثل $\frac{1}{2}$)</li>
+                <li>غير النسبية (مثل $\sqrt{2}$ و $\pi$)</li>
+            </ul>
+
+            <button class="interactive-btn" onclick="document.getElementById('info1').style.display='block'; this.style.display='none';">
+                هل $\mathbb{R}$ منتهية أم غير منتهية؟ (اضغط)
+            </button>
+            <div id="info1" class="hidden-info">
+                ✔ الجواب: غير منتهية (بل غير قابلة للعد). الكثافة فيها مطلقة!
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">⚙️ القسم الثاني: هل $\mathbb{R}$ تشكل زمرة؟</div>
+        <p style="font-size:0.9rem; color:#ccc; text-align:center;">(اسحب البطاقات لليمين واليسار ⟷)</p>
+        
+        <div class="cards-slider">
+            <div class="card">
+                <div class="card-title">🔹 1: $\mathbb{R}$ تحت الجمع $(+)$</div>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> مجموع حقيقيين هو حقيقي.</li>
+                    <li><strong>التجميعية:</strong> $(a+b)+c = a+(b+c)$.</li>
+                    <li><strong>المحايد:</strong> $0$ لأن $a+0 = a$.</li>
+                    <li><strong>المعكوس:</strong> لكل $a$ يوجد $-a$.</li>
+                </ul>
+                <div class="result-badge badge-success">🎉 نعم، $(\mathbb{R}, +)$ زمرة أبيلية</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 2: $\mathbb{R}$ تحت الضرب $(\times)$</div>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> محققة.</li>
+                    <li><strong>التجميعية:</strong> محققة.</li>
+                    <li><strong>المحايد:</strong> $1$ لأن $a \times 1 = a$.</li>
+                    <li class="fail"><strong>المعكوس:</strong> الصفر لا يملك معكوساً!</li>
+                </ul>
+                <div class="result-badge badge-fail">🚫 $(\mathbb{R}, \times)$ ليست زمرة</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔹 3: $\mathbb{R} \setminus \{0\}$ تحت الضرب</div>
+                <ul class="checklist">
+                    <li><strong>الإغلاق:</strong> محققة.</li>
+                    <li><strong>التجميعية:</strong> محققة.</li>
+                    <li><strong>المحايد:</strong> $1$.</li>
+                    <li><strong>المعكوس:</strong> لكل $a \neq 0$ يوجد $\frac{1}{a}$.</li>
+                </ul>
+                <div class="result-badge badge-success">🎉 نعم، $(\mathbb{R} \setminus \{0\}, \times)$ زمرة</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🎮 القسم الثالث: تجربة تفاعلية</div>
+        
+        <div class="card">
+            <div class="card-title" style="font-size:1.1em;">🔸 تحقق من الزمرة</div>
+            <p style="font-size:0.9rem; margin-top:0;">هل تشكل زمرة؟ اختر إجابتك:</p>
+            <div class="table-wrapper">
+                <table class="interactive-table">
+                    <tr>
+                        <th>العملية</th>
+                        <th>قرارك</th>
+                        <th>النتيجة</th>
+                    </tr>
+                    <tr>
+                        <td dir="ltr">$(\mathbb{R}, +)$</td>
+                        <td>
+                            <button class="btn-yes" onclick="checkTableAns(1, true)">نعم</button>
+                            <button class="btn-no" onclick="checkTableAns(1, false)">لا</button>
+                        </td>
+                        <td id="t-res-1">-</td>
+                    </tr>
+                    <tr>
+                        <td dir="ltr">$(\mathbb{R}, \times)$</td>
+                        <td>
+                            <button class="btn-yes" onclick="checkTableAns(2, true)">نعم</button>
+                            <button class="btn-no" onclick="checkTableAns(2, false)">لا</button>
+                        </td>
+                        <td id="t-res-2">-</td>
+                    </tr>
+                    <tr>
+                        <td dir="ltr" style="font-size:0.8rem;">$(\mathbb{R} \setminus \{0\}, \times)$</td>
+                        <td>
+                            <button class="btn-yes" onclick="checkTableAns(3, true)">نعم</button>
+                            <button class="btn-no" onclick="checkTableAns(3, false)">لا</button>
+                        </td>
+                        <td id="t-res-3">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" style="font-size:1.1em;">🔸 تجربة النظائر (كسور)</div>
+            <p style="font-size:0.9rem; margin-top:0;">أدخل عددًا حقيقيًا $a$:</p>
+            <div class="input-group">
+                <input type="number" id="invInput" class="custom-input" placeholder="الرقم a...">
+                <button class="interactive-btn" style="width:auto; padding: 10px;" onclick="calculateFractions()">احسب</button>
+            </div>
+            
+            <div class="fractions-grid">
+                <div class="fraction-box">
+                    <span style="color:#e0aaff; font-size:0.85rem;">الجمعي ($-a$)</span>
+                    <div id="addResult" style="font-size: 1.3em; margin-top:5px;">...</div>
+                </div>
+                <div class="fraction-box" style="border-color:#00ff88;">
+                    <span style="color:#00ff88; font-size:0.85rem;">الضربي ($\frac{1}{a}$)</span>
+                    <div id="mulResult" style="font-size: 1.3em; margin-top:5px;">...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🔍 القسم الرابع: مقارنة مع $\mathbb{Z}$</div>
+        <div class="card">
+            <div class="table-wrapper">
+                <table class="interactive-table">
+                    <tr>
+                        <th>الخاصية</th>
+                        <th>$\mathbb{Z}$ (جمع)</th>
+                        <th>$\mathbb{R}$ (جمع)</th>
+                        <th>$\mathbb{R}^*$ (ضرب)</th>
+                    </tr>
+                    <tr>
+                        <td>زمرة</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>أبيلية</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>تحوي كسور</td>
+                        <td>❌</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <button class="interactive-btn" style="margin-top:15px; background: #d63031; border-color: #ff7675;" onclick="document.getElementById('info2').style.display='block'; this.style.display='none';">
+                ما الفرق الجوهري؟ (اضغط هنا)
+            </button>
+            <div id="info2" class="hidden-info" style="border-color: #ff7675;">
+                $\mathbb{R}$ أكثر "غنى" من $\mathbb{Z}$ لأنها تحتوي على أعداد كسرية وغير نسبية تملأ كل الفراغات!
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🧩 القسم الخامس: ملاحظات</div>
+        <button class="interactive-btn" style="background: #1f2833; color:#66fcf1; border-color:#66fcf1;" onclick="toggleAdvanced(this)">
+            💡 عرض ملاحظات متقدمة
+        </button>
+        <div id="advancedNotes" class="hidden-info" style="border-color: #66fcf1; background: rgba(31, 40, 51, 0.8);">
+            <ul style="line-height: 1.8; margin:0; padding-right:20px; font-size:0.9rem;">
+                <li>$\mathbb{R}$ تحت الجمع زمرة لا منتهية وغير قابلة للعد.</li>
+                <li>$\mathbb{R} \setminus \{0\}$ تحت الضرب زمرة مستمرة.</li>
+                <li>$\mathbb{R}$ ليست زمرة تحت الطرح أو القسمة.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-title">🧪 القسم السادس: تحدي</div>
+        <div class="card" style="border-color: #ffaa00; padding: 15px;">
+            <p style="font-size: 1.1em; text-align: center; margin-top:0;">🎯 هل المجموعة $\mathbb{R}^+$ (الموجبة) تحت عملية الضرب تُشكل زمرة؟</p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                <button class="btn-yes" style="padding: 10px; width:40%;" onclick="checkChallenge(true)">نعم</button>
+                <button class="btn-no" style="padding: 10px; width:40%;" onclick="checkChallenge(false)">لا</button>
+            </div>
+            <div id="challengeFeedback" class="hidden-info" style="border-color: #ffaa00; text-align: center;"></div>
+        </div>
+    </div>
+
+    <div class="section-container" style="border-bottom: none;">
+        <div class="section-title" style="border: none; text-align: center;">🎓 خاتمة الباب</div>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-size:0.95rem;">
+            <p style="color: #e0e0e0; margin-top:0;">الآن أصبحت تعرف:</p>
+            <ul style="color:#00ff88; padding-right:20px; margin:0;">
+                <li>متى تكون $\mathbb{R}$ زمرة.</li>
+                <li>الفرق بين العمليات.</li>
+                <li>لماذا نحتاج حذف الصفر أحيانًا.</li>
+            </ul>
+        </div>
+        
+        <a href="realm_R2.html" class="next-gate-btn">
+            ➡ الباب التالي <br>
+            <span style="font-size: 0.75em; font-weight: normal;">(المتجهات $\mathbb{R}^2$)</span>
+        </a>
+    </div>
+
+    <script>
+        // 1. لعبة تحقق من الزمرة
+        function checkTableAns(row, isYes) {
+            let resBox = document.getElementById(`t-res-${row}`);
+            let correct = false;
+            let msg = "";
+
+            if (row === 1) { correct = isYes === true; msg = correct ? "صح!" : "خطأ!"; }
+            if (row === 2) { correct = isYes === false; msg = correct ? "صح!" : "خطأ!"; }
+            if (row === 3) { correct = isYes === true; msg = correct ? "صح!" : "خطأ!"; }
+
+            resBox.innerHTML = correct ? `<span style="color:#00ff88;">✔ ${msg}</span>` : `<span style="color:#ff4d4d;">❌ ${msg}</span>`;
+        }
+
+        // 2. تجربة المعكوس (مخصصة للموبايل)
+        function calculateFractions() {
+            let val = document.getElementById('invInput').value;
+            if (val === '') return;
+            let x = parseFloat(val);
+
+            let addBox = document.getElementById('addResult');
+            let mulBox = document.getElementById('mulResult');
+
+            addBox.innerHTML = `$$ ${-x} $$`;
+
+            if (x === 0) {
+                mulBox.innerHTML = `<span style="color:#ff4d4d; font-size:0.7em;">⚠ لا يوجد</span>`;
+            } else {
+                let latexStr = x < 0 ? `$$ -\\frac{1}{${Math.abs(x)}} $$` : `$$ \\frac{1}{${x}} $$`;
+                mulBox.innerHTML = latexStr;
+            }
+
+            if (window.MathJax) { MathJax.typesetPromise([addBox, mulBox]); }
+        }
+
+        // 3. ملاحظات متقدمة
+        function toggleAdvanced(btn) {
+            let div = document.getElementById('advancedNotes');
+            if (div.style.display === 'block') { div.style.display = 'none'; } 
+            else { div.style.display = 'block'; btn.style.display = 'none'; }
+        }
+
+        // 4. تحدي
+        function checkChallenge(isYes) {
+            let feed = document.getElementById('challengeFeedback');
+            feed.style.display = 'block';
+            if (isYes) {
+                feed.innerHTML = "✔ <strong>إجابة صحيحة مذهلة!</strong><br>نعم، $\\mathbb{R}^+$ تحقق جميع الشروط.";
+                feed.style.borderColor = "#00ff88"; feed.style.color = "#00ff88";
+            } else {
+                feed.innerHTML = "❌ <strong>فكر مرة أخرى!</strong><br>هي تحقق كل الشروط، والصفر ليس موجوداً ليفسد الأمر!";
+                feed.style.borderColor = "#ff4d4d"; feed.style.color = "#ff4d4d";
+            }
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل التطبيق (Service Worker) بنجاح:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('فشل تفعيل التطبيق:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
