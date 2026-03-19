@@ -1,6 +1,6 @@
 {
-  "name": "عوالم الجبر المجرد",
-  "short_name": "عوالم الجبر",
+  "name": "group-theory",
+  "short_name": "group-theory",
   "description": "منصة تعليمية تفاعلية لاستكشاف الزمر والبنى الجبرية اللانهائية والمنتهية",
   "start_url": "/Group/index.html",
   "display": "standalone",
