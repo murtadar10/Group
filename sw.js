@@ -1,4 +1,4 @@
-const CACHE_NAME = 'algebra-realms-v1';
+const CACHE_NAME = 'algebra-realms-v2';
 
 // قائمة بجميع ملفات مشروعك المأخوذة من مخططك الدقيق
 const urlsToCache = [
