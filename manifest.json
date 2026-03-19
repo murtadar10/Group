@@ -2,7 +2,7 @@
   "name": "عوالم الجبر المجرد",
   "short_name": "عوالم الجبر",
   "description": "منصة تعليمية تفاعلية لاستكشاف الزمر والبنى الجبرية اللانهائية والمنتهية",
-  "start_url": "/index.html",
+  "start_url": "/Group/index.html",
   "display": "standalone",
   "background_color": "#0b0c10",
   "theme_color": "#66fcf1",
