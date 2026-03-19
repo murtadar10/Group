@@ -119,38 +119,3 @@ function goToHome() {
 
 }
 
-
-    let deferredPrompt;
-    const installBtn = document.getElementById('installAppBtn');
-
-    // 1. المتصفح يخبرنا أن التطبيق جاهز للتثبيت
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // نمنع المتصفح من إظهار رسالته المزعجة أو المخفية
-        e.preventDefault();
-        // نحفظ الحدث في متغير لنستخدمه لاحقاً
-        deferredPrompt = e;
-        // نُظهر الزر الخاص بنا للطالب
-        installBtn.style.display = 'block';
-    });
-
-    // 2. ماذا يحدث عندما يضغط الطالب على زرنا؟
-    installBtn.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            // نُظهر نافذة التثبيت الرسمية والواضحة للهاتف
-            deferredPrompt.prompt();
-            // ننتظر قرار الطالب (هل وافق على التثبيت أم رفض؟)
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('الطالب وافق على التثبيت!');
-            }
-            // بعد أن يختار، نقوم بإخفاء الزر وتصفير المتغير
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-        }
-    });
-
-    // 3. إذا تم تثبيت التطبيق بنجاح، نخفي الزر للأبد
-    window.addEventListener('appinstalled', () => {
-        installBtn.style.display = 'none';
-        console.log('تم تثبيت التطبيق بنجاح');
-    });

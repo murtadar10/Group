@@ -626,6 +626,55 @@
     <button id="installAppBtn" style="display: none ; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; background: linear-gradient(45deg, #00b894, #0c4140); color: #000; border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; font-size: 1.2em; box-shadow: 0 5px 20px rgba(0, 184, 148, 0.5); cursor: pointer; border: 2px solid #fff;">
     📥 تثبيت التطبيق على الهاتف
 </button>
+<div id="iosInstallHint" style="display: none; background: rgba(0, 0, 0, 0.7); border: 2px dashed #ffaa00; padding: 15px; border-radius: 10px; color: #e0e0e0; text-align: center; margin: 20px auto; max-width: 90%; font-size: 1.1em; line-height: 1.6;">
+    🍎 <strong>مستخدم آيفون؟</strong> لتثبيت التطبيق:<br>
+    يجب فتح الرابط في متصفح <b>Safari</b> 🧭<br>
+    ثم الضغط على زر المشاركة ⍐ واختيار<br>
+    <span style="color: #ffaa00; font-weight: bold;">"إضافة إلى الصفحة الرئيسية ⊞"</span>
+</div>
+<script>
+  // كود ذكي لاكتشاف إذا كان الجهاز آيفون أو آيباد
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+// إذا كان الهاتف آيفون، نظهر له صندوق الإرشادات فقط
+if (isIOS) {
+    document.getElementById('iosInstallHint').style.display = 'block';
+}
+    let deferredPrompt;
+    const installBtn = document.getElementById('installAppBtn');
+
+    // 1. المتصفح يخبرنا أن التطبيق جاهز للتثبيت
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // نمنع المتصفح من إظهار رسالته المزعجة أو المخفية
+        e.preventDefault();
+        // نحفظ الحدث في متغير لنستخدمه لاحقاً
+        deferredPrompt = e;
+        // نُظهر الزر الخاص بنا للطالب
+        installBtn.style.display = 'block';
+    });
+
+    // 2. ماذا يحدث عندما يضغط الطالب على زرنا؟
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // نُظهر نافذة التثبيت الرسمية والواضحة للهاتف
+            deferredPrompt.prompt();
+            // ننتظر قرار الطالب (هل وافق على التثبيت أم رفض؟)
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                console.log('الطالب وافق على التثبيت!');
+            }
+            // بعد أن يختار، نقوم بإخفاء الزر وتصفير المتغير
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+        }
+    });
+
+    // 3. إذا تم تثبيت التطبيق بنجاح، نخفي الزر للأبد
+    window.addEventListener('appinstalled', () => {
+        installBtn.style.display = 'none';
+        console.log('تم تثبيت التطبيق بنجاح');
+    });
+</script>
   </body>
 </html>
 
