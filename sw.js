@@ -1,4 +1,4 @@
-const CACHE_NAME = 'algebra-realms-v2';
+const CACHE_NAME = 'algebra-realms-v3';
 
 // قائمة بجميع ملفات مشروعك المأخوذة من مخططك الدقيق
 const urlsToCache = [
@@ -12,7 +12,7 @@ const urlsToCache = [
   '/Group/realm_C.html',
   '/Group/realm_GLn.html',
   '/Group/grand_arena.html',
-  '/Group/homo.html',
+  '/Group/IsGroup.html',
   '/Group/infinite_world.html',
   '/Group/manifest.json',
 

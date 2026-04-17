@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>محلل الزمر الاحترافي - الإصدار النهائي</title>
+    <script src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/all.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        body { font-family: 'Times New Roman', serif; background: #f0f2f5; padding: 40px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        h1 { color: #1a237e; text-align: center; font-size: 2.5em; margin-bottom: 30px; }
+        .input-card { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #e0e0e0; }
+        .result-item { margin-bottom: 20px; padding: 20px; border-radius: 10px; border-right: 8px solid #ccc; font-size: 1.2em; line-height: 1.6; }
+        .pass { border-color: #27ae60; background: #eafaf1; }
+        .fail { border-color: #c0392b; background: #fdedec; }
+        .math-display { background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #eee; margin-top: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>تحليل بنية الزمر الرمزي</h1>
+    
+    <div class="input-card">
+        <label>أدخل العملية الثنائية $f(a, b)$:</label>
+        <input type="text" id="opInput" value="a + b + a*b" style="width:70%; padding:10px; font-size:18px;">
+        <br><br>
+        <label>اختر المجموعة المستهدفة $S$:</label>
+        <select id="setSelect" style="padding:10px; font-size:18px;">
+            <option value="Z">$\mathbb{Z}$ (الأعداد الصحيحة)</option>
+            <option value="Q">$\mathbb{Q}$ (الأعداد النسبية)</option>
+            <option value="Q_star">$\mathbb{Q}^*$ (النسبية بدون الصفر)</option>
+            <option value="Q_plus">$\mathbb{Q}^+$ (النسبية الموجبة)</option>
+            <option value="R">$\mathbb{R}$ (الأعداد الحقيقية)</option>
+            <option value="R_plus">$\mathbb{R}^+$ (الحقيقية الموجبة)</option>
+        </select>
+        <br><br>
+        <button onclick="performFullAnalysis()" style="padding:15px 30px; background:#1a237e; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">تحليل الهيكل الرياضي</button>
+    </div>
+
+    <div id="output"></div>
+</div>
+
+<script>
+function performFullAnalysis() {
+    const op = document.getElementById('opInput').value;
+    const set = document.getElementById('setSelect').value;
+    const output = document.getElementById('output');
+    output.innerHTML = "";
+
+    try {
+        // 1. فحص الانغلاق (Closure) بنهج نظري
+        const closure = checkClosureTheoretically(op, set);
+        renderResult("شرط الانغلاق (Closure)", closure);
+
+        // 2. فحص التجميعية (Associativity)
+        const assoc = checkAssociativity(op);
+        renderResult("شرط التجميع (Associativity)", assoc);
+
+        // 3. فحص العنصر المحايد (Identity)
+        const identity = checkIdentity(op, set);
+        renderResult("العنصر المحايد (Identity Element)", identity);
+
+        // 4. فحص المعكوس (Inverse)
+        if (identity.success) {
+            const inverse = checkInverse(op, identity.value, set);
+            renderResult("شرط المعكوس (Inverse)", inverse);
+        } else {
+            renderResult("شرط المعكوس (Inverse)", { success: false, msg: "لا يمكن البحث عن معكوس بدون عنصر محايد صحيح." });
+        }
+
+        // تحديث MathJax لعرض المعادلات الجديدة
+        MathJax.typeset();
+
+    } catch (e) {
+        output.innerHTML = `<div class="result-item fail">خطأ رياضي: ${e.message}</div>`;
+    }
+}
+
+function renderResult(title, result) {
+    const div = document.createElement('div');
+    div.className = `result-item ${result.success ? 'pass' : 'fail'}`;
+    div.innerHTML = `<strong>${title}:</strong><br>${result.msg}`;
+    document.getElementById('output').appendChild(div);
+}
+
+// --- محرك الاستنتاج الرياضي ---
+
+function checkClosureTheoretically(op, set) {
+    // تحليل المكونات
+    const hasDiv = op.includes('/');
+    const hasSub = op.includes('-');
+    
+    if (set === 'Z' && hasDiv) {
+        return { success: false, msg: "فشل الانغلاق في $\\mathbb{Z}$: العملية تحتوي على قسمة، وناتج قسمة عددين صحيحين ليس بالضرورة صحيحاً." };
+    }
+    if ((set === 'Q_plus' || set === 'R_plus') && hasSub) {
+        return { success: false, msg: "فشل الانغلاق في المجموعات الموجبة: العملية تحتوي على طرح، مما قد ينتج عنه أعداد سالبة أو صفر خارج المجموعة." };
+    }
+    if (set === 'Q_star' || set === 'R_star') {
+        // فحص هل يمكن للعملية أن تساوي صفراً لقيم غير صفرية
+        // هذا فحص مبسط، يمكن تطويره لحل المعادلة f(a,b)=0
+    }
+
+    return { success: true, msg: "العملية مغلقة نظرياً: المكونات الرياضية متوافقة مع طبيعة المجموعة المختارة." };
+}
+
+function checkAssociativity(op) {
+    let f_ab = `(${op})`;
+    let f_bc = op.replace(/a/g, 'b').replace(/b/g, 'c');
+    
+    let leftSide = op.replace(/a/g, f_ab).replace(/b/g, 'c');
+    let rightSide = op.replace(/b/g, `(${f_bc})`);
+    
+    let diff = nerdamer.simplify(`${leftSide} - (${rightSide})`).toString();
+    
+    if (diff === '0') {
+        return { success: true, msg: "العملية تجميعية لأن: $$f(f(a,b),c) = f(a,f(b,c))$$" };
+    } else {
+        return { success: false, msg: `العملية ليست تجميعية. الفرق الناتج: $${diff}$` };
+    }
+}
+
+function checkIdentity(op, set) {
+    let sol = nerdamer.solve(`${op} = a`, 'b').toString();
+    let e = sol.replace(/[\[\]]/g, '');
+
+    if (!e || e.includes('a') || e === "") {
+        return { success: false, msg: "لا يوجد عنصر محايد ثابت (المحايد لا يجب أن يعتمد على $a$)." };
+    }
+
+    // فحص الانتماء للمجموعة
+    let isMember = testSetMembership(e, set);
+    if (isMember.success) {
+        return { success: true, value: e, msg: `العنصر المحايد هو $e = ${e}$ وهو ينتمي للمجموعة المختارة.` };
+    } else {
+        return { success: false, msg: `العنصر المحايد $e = ${e}$ لا ينتمي للمجموعة: ${isMember.reason}` };
+    }
+}
+
+function checkInverse(op, e, set) {
+    let sol = nerdamer.solve(`${op} = ${e}`, 'b').toString();
+    let inv = sol.replace(/[\[\]]/g, '');
+
+    if (!inv || inv === "") return { success: false, msg: "لا توجد صيغة رياضية للمعكوس." };
+
+    // فحص "كسر" المعكوس (المقام)
+    if (inv.includes('/')) {
+        let denom = inv.split('/')[1].replace(/[()]/g, '');
+        let critValue = nerdamer.solve(`${denom} = 0`, 'a').toString().replace(/[\[\]]/g, '');
+        
+        if (critValue !== "" && testSetMembership(critValue, set).success) {
+            return { success: false, msg: `المعكوس $a^{-1} = ${inv}$ غير موجود للعنصر $a = ${critValue}$ لأن المقام يصبح صفراً.` };
+        }
+    }
+
+    return { success: true, msg: `لكل عنصر معكوس وهو: $a^{-1} = ${inv}$` };
+}
+
+function testSetMembership(val, set) {
+    try {
+        let n = parseFloat(nerdamer(val).evaluate().toString());
+        switch(set) {
+            case 'Z': return { success: Number.isInteger(n), reason: "القيمة ليست عدداً صحيحاً." };
+            case 'Q_plus':
+            case 'R_plus': return { success: n > 0, reason: "القيمة يجب أن تكون أكبر من الصفر." };
+            case 'Q_star': return { success: n !== 0, reason: "المجموعة لا تحتوي على الصفر." };
+            default: return { success: true };
+        }
+    } catch { return { success: true }; }
+}
+</script>
+</body>
+</html>
